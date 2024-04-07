@@ -1,3 +1,3 @@
 <ActorFrame InitCommand="%gimmick.s.ScreenTitleMenu.background.init"><children>
-	<Layer File="../../actors.xml" InitCommand="%gimmick.s.ScreenTitleMenu.background.initEnd"/>
+	<Layer File="../actors.xml" InitCommand="%gimmick.s.ScreenTitleMenu.background.initEnd"/>
 </children></ActorFrame>
