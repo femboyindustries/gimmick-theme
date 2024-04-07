@@ -15,11 +15,13 @@ return {
     logo:zoom(1)
 
     self:SetDrawFunction(function()
+      -- GAMESTATE:GetSongTime() kind of snaps in the first few frames, prob will add an aux to this later
+      -- edit: I do not feel like adding multiple aux actors for this rn -rya
       blank:xywh(scx - BLUR_WIDTH/2, scy, 2, sh)
-      blank:skewx(BLUR_SKEW / 2)
+      blank:skewx((BLUR_SKEW / 2) + math.sin(GAMESTATE:GetSongTime() / 2) * 10)
       blank:Draw()
       blank:xywh(scx + BLUR_WIDTH/2, scy, 2, sh)
-      blank:skewx(BLUR_SKEW / 2)
+      blank:skewx((BLUR_SKEW / 2) + math.sin(GAMESTATE:GetSongTime() / 2) * 10)
       blank:Draw()
 
       logo:diffuse(0, 0, 0, 1)
@@ -32,9 +34,11 @@ return {
   background = gimmick.common.background(function(ctx)
     local mask = ctx:Quad()
     mask:diffuse(1, 0.6, 0.5, 1)
-    mask:skewx(BLUR_SKEW / BLUR_WIDTH)
     mask:xywh(scx, scy, BLUR_WIDTH, sh)
-    return function() mask:Draw() end
+    return function()
+      mask:skewx((BLUR_SKEW / BLUR_WIDTH) + math.sin(GAMESTATE:GetSongTime() / 2) * 0.05)
+      mask:Draw()
+    end
   end),
   choices = gimmick.ChoiceProvider({
     {
