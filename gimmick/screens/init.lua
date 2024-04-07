@@ -4,7 +4,7 @@ gimmick.ChoiceProvider = function(choices)
   local init = iterFunction(function(n, self)
     self:removecommand('Init')
 
-    local ctx = gimmick.actorgen.Context.new()
+    local ctx = actorgen.Context.new()
 
     local text = choices[n].name
 
@@ -33,7 +33,7 @@ gimmick.ChoiceProvider = function(choices)
       text:sleep(.2) text:linear(.5) text:diffusealpha(0)
     end)
 
-    gimmick.actorgen.ready(ctx)
+    actorgen.ready(ctx)
   end)
   local command = iterFunction(function(n)
     return choices[n].command
@@ -43,7 +43,7 @@ gimmick.ChoiceProvider = function(choices)
     init = init,
     initEnd = function(self)
       self:removecommand('Init')
-      gimmick.actorgen.finalize()
+      actorgen.finalize()
     end,
     ChoiceNames = function()
       init:reset()
@@ -60,15 +60,15 @@ function gimmick.ActorScreen(initFunc)
     init = function(self)
       self:removecommand('Init')
 
-      local ctx = gimmick.actorgen.Context.new()
+      local ctx = actorgen.Context.new()
 
       initFunc(self, ctx)
 
-      gimmick.actorgen.ready(ctx)
+      actorgen.ready(ctx)
     end,
     initEnd = function(self)
       self:removecommand('Init')
-      gimmick.actorgen.finalize()
+      actorgen.finalize()
     end
   }
 end

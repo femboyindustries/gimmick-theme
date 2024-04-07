@@ -7,6 +7,6 @@ require 'gimmick.lib.easings'
 event = require 'gimmick.lib.event235'
 
 require 'gimmick.screens'
-gimmick.actorgen = require 'gimmick.lib.actor235'
+actorgen = require 'gimmick.lib.actor235'
 
 print('Gimmick bootstrapped!!! yippee!!')

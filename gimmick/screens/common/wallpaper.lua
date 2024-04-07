@@ -13,7 +13,7 @@ function gimmick.common.wallpaper(ctx)
     end)
 
     bgShaderSpr:addcommand('Init', function(self)
-      self:SetShader(gimmick.actorgen.Proxy.getRaw(bgShader))
+      self:SetShader(actorgen.Proxy.getRaw(bgShader))
     end)
   else
     bgShaderSpr = ctx:Sprite('Graphics/background.png')
