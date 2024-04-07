@@ -1,0 +1,24 @@
+<ActorFrame><children>
+
+  <Layer Condition="paw.actor.Condition(false)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" InitCommand="%paw.actor.Init(1)" />
+  <Layer Condition="paw.actor.Condition(true)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" Frag="@paw.actor.Frag()" Vert="@paw.actor.Vert()" InitCommand="%paw.actor.Init(1)" />
+  <Layer Condition="paw.actor.Condition(false)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" InitCommand="%paw.actor.Init(2)" />
+  <Layer Condition="paw.actor.Condition(true)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" Frag="@paw.actor.Frag()" Vert="@paw.actor.Vert()" InitCommand="%paw.actor.Init(2)" />
+  <Layer Condition="paw.actor.Condition(false)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" InitCommand="%paw.actor.Init(3)" />
+  <Layer Condition="paw.actor.Condition(true)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" Frag="@paw.actor.Frag()" Vert="@paw.actor.Vert()" InitCommand="%paw.actor.Init(3)" />
+  <Layer Condition="paw.actor.Condition(false)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" InitCommand="%paw.actor.Init(4)" />
+  <Layer Condition="paw.actor.Condition(true)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" Frag="@paw.actor.Frag()" Vert="@paw.actor.Vert()" InitCommand="%paw.actor.Init(4)" />
+  <Layer Condition="paw.actor.Condition(false)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" InitCommand="%paw.actor.Init(5)" />
+  <Layer Condition="paw.actor.Condition(true)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" Frag="@paw.actor.Frag()" Vert="@paw.actor.Vert()" InitCommand="%paw.actor.Init(5)" />
+  <Layer Condition="paw.actor.Condition(false)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" InitCommand="%paw.actor.Init(6)" />
+  <Layer Condition="paw.actor.Condition(true)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" Frag="@paw.actor.Frag()" Vert="@paw.actor.Vert()" InitCommand="%paw.actor.Init(6)" />
+  <Layer Condition="paw.actor.Condition(false)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" InitCommand="%paw.actor.Init(7)" />
+  <Layer Condition="paw.actor.Condition(true)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" Frag="@paw.actor.Frag()" Vert="@paw.actor.Vert()" InitCommand="%paw.actor.Init(7)" />
+  <Layer Condition="paw.actor.Condition(false)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" InitCommand="%paw.actor.Init(8)" />
+  <Layer Condition="paw.actor.Condition(true)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" Frag="@paw.actor.Frag()" Vert="@paw.actor.Vert()" InitCommand="%paw.actor.Init(8)" />
+  <Layer Condition="paw.actor.Condition(false)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" InitCommand="%paw.actor.Init(9)" />
+  <Layer Condition="paw.actor.Condition(true)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" Frag="@paw.actor.Frag()" Vert="@paw.actor.Vert()" InitCommand="%paw.actor.Init(9)" />
+  <Layer Condition="paw.actor.Condition(false)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" InitCommand="%paw.actor.Init(10)" />
+  <Layer Condition="paw.actor.Condition(true)" Type="@paw.actor.Type()" File="@paw.actor.File()" Font="@paw.actor.Font()" Frag="@paw.actor.Frag()" Vert="@paw.actor.Vert()" InitCommand="%paw.actor.Init(10)" />
+
+</children></ActorFrame>
