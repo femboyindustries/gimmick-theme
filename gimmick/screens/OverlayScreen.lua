@@ -34,9 +34,10 @@ local function init(self, ctx)
 
       if consoleOpen then
         if key == 'enter' then
-          loadstring(t.text, 'console')()
+          loadstring(t:toString(), 'console')()
           t.cursor = 0
-          t.text = ''
+          t.text = {}
+          return
         end
 
         t:onKey(key, inputs.rawInputs[device])
@@ -50,8 +51,13 @@ local function init(self, ctx)
       quad:xywh(scx, scy, sw, sh)
       quad:Draw()
 
+      bitmapText:xy(12, 12)
       bitmapText:wrapwidthpixels((sw - 12 * 2) / 0.5)
-      bitmapText:settext(t.text)
+      bitmapText:settext(t:toString())
+      bitmapText:Draw()
+
+      bitmapText:xy(12, 92)
+      bitmapText:settext(tostring(t.cursor) .. ', ' .. tostring(#t.text) .. ', ' .. fullDump(t.text, nil, true))
       bitmapText:Draw()
     end
   end)

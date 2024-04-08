@@ -39,7 +39,7 @@ end
 ---@param o any
 ---@param r number?
 ---@return string
-function fullDump(o, r)
+function fullDump(o, r, forceFull)
   if type(o) == 'table' and (not r or r > 0) then
     local s = '{'
     local first = true
@@ -51,7 +51,7 @@ function fullDump(o, r)
       if r then
         nr = r - 1
       end
-      if type(k) ~= 'number' then
+      if type(k) ~= 'number' or forceFull then
         s = s .. tostring(k) .. ' = ' .. fullDump(v, nr)
       else
         s = s .. fullDump(v, nr)

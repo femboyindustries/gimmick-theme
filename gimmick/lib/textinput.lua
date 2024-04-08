@@ -29,7 +29,7 @@ end
 M.capsLock = false
 
 ---@class TextInput
----@field text string
+---@field text string[]
 ---@field cursor number @ the cursor shows up AFTER the character of this index
 ---@field insert boolean
 ---@field special { shift: boolean, ctrl: boolean, alt: boolean, meta: boolean, altgr: boolean }
@@ -48,8 +48,10 @@ function TextInput:onKey(key, held)
     M.capsLock = not M.capsLock
     return
   elseif key == 'backspace' then
-    self.text = string.sub(self.text, 1, self.cursor - 1) .. string.sub(self.text, self.cursor + 1)
-    self.cursor = self.cursor - 1
+    if self.cursor > 0 then
+      table.remove(self.text, self.cursor)
+      self.cursor = self.cursor - 1
+    end
     return
   elseif key == 'left' then
     self.cursor = self.cursor - 1
@@ -79,24 +81,34 @@ function TextInput:onKey(key, held)
     end
 
     if not self.insert then
-      self.text = string.sub(self.text, 1, self.cursor) .. out .. string.sub(self.text, self.cursor + 1)
+      table.insert(self.text, self.cursor + 1, out)
     else
-      self.text = string.sub(self.text, 1, self.cursor) .. out .. string.sub(self.text, self.cursor + 2)
+      self.text[self.cursor + 1] = out
     end
     self.cursor = self.cursor + 1
   end
+
+  local t = {}
+  for k, v in pairs(self.text) do
+    t[k] = v
+  end
+  self.text = t
 
   self.cursor = math.max(self.cursor, 0)
   self.cursor = math.min(self.cursor, #self.text)
 end
 
+function TextInput:toString()
+  return table.concat(self.text, '')
+end
+
 TextInput.__index = TextInput
 
----@param text string?
+---@param text string[]?
 ---@return TextInput
 function M.new(text)
   return setmetatable({
-    text = text or '',
+    text = text or {},
     cursor = 0,
     insert = false,
     special = {
