@@ -8,6 +8,9 @@ local TextInput = require 'gimmick.lib.textinput'
 
 local consoleOpen = false
 
+-- !!!!: actors built by `init` MUST remain deterministic.
+-- in other words, make sure the actors initialized never change conditionally
+
 ---@param ctx Context
 local function init(self, ctx)
   local bitmapText = ctx:BitmapText(FONTS.monospace, '')
