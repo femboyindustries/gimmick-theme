@@ -45,5 +45,5 @@ DRAW_ORDER_AFTER_EVERYTHING = 200
 
 FONTS = {
   sans_serif = '_renogare 42px',
-  monospace = '_renogare 42px',
+  monospace = '_recursive 42px',
 }

@@ -2,6 +2,10 @@
 -- reset at some point, rendering all lua data of the actors completely useless.
 -- so we resort to the mirin-esque strat of name lookups!
 
+local TextInput = require 'gimmick.lib.textinput'
+
+local consoleOpen = false
+
 return {
   overlay = {
     init = function(self)
@@ -9,9 +13,16 @@ return {
 
       local ctx = actorgen.Context.new()
 
-      local bitmapText = ctx:BitmapText('_renogare 42px', '')
-      bitmapText:xy(scx, scy)
+      local bitmapText = ctx:BitmapText(FONTS.monospace, '')
+      bitmapText:xy(12, 12)
+      bitmapText:zoom(0.5)
+      bitmapText:shadowlength(0)
+      bitmapText:align(0, 0)
+      bitmapText:diffuse(1, 1, 1, 1)
       bitmapText:SetName('TextInput')
+
+      local quad = ctx:Quad()
+      quad:SetName('Quad')
 
       actorgen.ready(ctx)
     end,
@@ -22,19 +33,40 @@ return {
     load = function(self)
       print(actorToString(self))
 
-      local t = ''
+      local t = TextInput.new()
       local bitmapText = getRecursive(self, 'TextInput') --[[ @as BitmapText ]]
+      local quad = getRecursive(self, 'Quad') --[[ @as Quad ]]
 
       event.on('keypress', function(device, key)
         if device == InputDevice.Key then
-          print(t)
-          t = t .. key
+          if key == '9' and inputs.rawInputs[device]['left ctrl'] or inputs.rawInputs[device]['right ctrl'] then
+            consoleOpen = not consoleOpen
+            SCREENMAN:SetInputMode(consoleOpen and 1 or 0)
+            return
+          end
+
+          if consoleOpen then
+            if key == 'enter' then
+              loadstring(t.text, 'console')()
+              t.cursor = 0
+              t.text = ''
+            end
+
+            t:onKey(key, inputs.rawInputs[device])
+          end
         end
       end)
 
       self:SetDrawFunction(function()
-        bitmapText:settext(t)
-        bitmapText:Draw()
+        if consoleOpen then
+          quad:diffuse(0, 0, 0, 0.6)
+          quad:xywh(scx, scy, sw, sh)
+          quad:Draw()
+
+          bitmapText:wrapwidthpixels((sw - 12 * 2) / 0.5)
+          bitmapText:settext(t.text)
+          bitmapText:Draw()
+        end
       end)
     end
   },
