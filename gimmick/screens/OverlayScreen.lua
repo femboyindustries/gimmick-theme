@@ -1,10 +1,58 @@
 -- overlay screens are funny in that after they're initialized, the lua state is
 -- reset at some point, rendering all lua data of the actors completely useless.
--- so we resort to the mirin-esque strat of name lookups!
+-- luckily i found a way to force evaluate actor235 a second time, but
+-- pretend-running through to get all the actors from the already-generated
+-- actorframe. yippee!
 
 local TextInput = require 'gimmick.lib.textinput'
 
 local consoleOpen = false
+
+---@param ctx Context
+local function init(self, ctx)
+  local bitmapText = ctx:BitmapText(FONTS.monospace, '')
+  bitmapText:xy(12, 12)
+  bitmapText:zoom(0.5)
+  bitmapText:shadowlength(0)
+  bitmapText:align(0, 0)
+  bitmapText:diffuse(1, 1, 1, 1)
+
+  local quad = ctx:Quad()
+
+  local t = TextInput.new()
+
+  event.on('keypress', function(device, key)
+    if device == InputDevice.Key then
+      if key == '9' and inputs.rawInputs[device]['left ctrl'] or inputs.rawInputs[device]['right ctrl'] then
+        consoleOpen = not consoleOpen
+        SCREENMAN:SetInputMode(consoleOpen and 1 or 0)
+        return
+      end
+
+      if consoleOpen then
+        if key == 'enter' then
+          loadstring(t.text, 'console')()
+          t.cursor = 0
+          t.text = ''
+        end
+
+        t:onKey(key, inputs.rawInputs[device])
+      end
+    end
+  end)
+
+  self:SetDrawFunction(function()
+    if consoleOpen then
+      quad:diffuse(0, 0, 0, 0.6)
+      quad:xywh(scx, scy, sw, sh)
+      quad:Draw()
+
+      bitmapText:wrapwidthpixels((sw - 12 * 2) / 0.5)
+      bitmapText:settext(t.text)
+      bitmapText:Draw()
+    end
+  end)
+end
 
 return {
   overlay = {
@@ -13,16 +61,7 @@ return {
 
       local ctx = actorgen.Context.new()
 
-      local bitmapText = ctx:BitmapText(FONTS.monospace, '')
-      bitmapText:xy(12, 12)
-      bitmapText:zoom(0.5)
-      bitmapText:shadowlength(0)
-      bitmapText:align(0, 0)
-      bitmapText:diffuse(1, 1, 1, 1)
-      bitmapText:SetName('TextInput')
-
-      local quad = ctx:Quad()
-      quad:SetName('Quad')
+      init(self, ctx)
 
       actorgen.ready(ctx)
     end,
@@ -30,44 +69,18 @@ return {
       self:removecommand('Init')
       actorgen.finalize()
     end,
+    ---@param self ActorFrame
     load = function(self)
-      print(actorToString(self))
+      --print(actorToString(self))
 
-      local t = TextInput.new()
-      local bitmapText = getRecursive(self, 'TextInput') --[[ @as BitmapText ]]
-      local quad = getRecursive(self, 'Quad') --[[ @as Quad ]]
+      local ctx = actorgen.Context.new()
 
-      event.on('keypress', function(device, key)
-        if device == InputDevice.Key then
-          if key == '9' and inputs.rawInputs[device]['left ctrl'] or inputs.rawInputs[device]['right ctrl'] then
-            consoleOpen = not consoleOpen
-            SCREENMAN:SetInputMode(consoleOpen and 1 or 0)
-            return
-          end
+      init(self, ctx)
 
-          if consoleOpen then
-            if key == 'enter' then
-              loadstring(t.text, 'console')()
-              t.cursor = 0
-              t.text = ''
-            end
-
-            t:onKey(key, inputs.rawInputs[device])
-          end
-        end
-      end)
-
-      self:SetDrawFunction(function()
-        if consoleOpen then
-          quad:diffuse(0, 0, 0, 0.6)
-          quad:xywh(scx, scy, sw, sh)
-          quad:Draw()
-
-          bitmapText:wrapwidthpixels((sw - 12 * 2) / 0.5)
-          bitmapText:settext(t.text)
-          bitmapText:Draw()
-        end
-      end)
+      actorgen.ready(ctx)
+      -- force-evaluate the actors.xml
+      actorgen.forceEvaluate(self:GetChildAt(0))
+      actorgen.finalize()
     end
   },
   Inputs = {

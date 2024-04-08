@@ -734,6 +734,22 @@ function M.ready(ctx)
   local tree = ctx:toTree()
   prettyPrintTree(tree)
   pushNewLayer(tree)
+  forcedEvaluation = false
+end
+
+-- For repeat initializations to persist state across Lua state resets.
+-- Will function without `Condition` and pretend those are set correctly.
+---@param frame ActorFrame
+function M.forceEvaluate(frame)
+  for i, child in ipairs(frame:GetChildren()) do
+    local cond = actorInit.Condition((i - 1) % 2 ~= 0)
+    if child.GetChildren then
+      M.forceEvaluate(child)
+    end
+    if cond then
+      actorInit.Init(i)(child)
+    end
+  end
 end
 
 -- Call this once all of the actors have been initialized
