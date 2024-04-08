@@ -325,7 +325,7 @@ function actorInit.Condition(hasShader)
   local s = stack:top()
 
   if not s then
-    warn('ready() was not called, and yet actors.xml has been loaded?')
+    warn('ready() was not called, and yet actors.xml has been loaded? if it has, the stack is glogged')
     return false
   end
 
@@ -741,13 +741,14 @@ end
 -- Will function without `Condition` and pretend those are set correctly.
 ---@param frame ActorFrame
 function M.forceEvaluate(frame)
+  print('BEGIN FORCED EVALUATION')
   for i, child in ipairs(frame:GetChildren()) do
     local cond = actorInit.Condition((i - 1) % 2 ~= 0)
-    if child.GetChildren then
+    if getActorType(child) == 'ActorFrame' then
       M.forceEvaluate(child)
     end
     if cond then
-      actorInit.Init(i)(child)
+      actorInit.Init(math.ceil(i / 2))(child)
     end
   end
 end

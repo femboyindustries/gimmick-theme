@@ -219,6 +219,11 @@ function countKeys(t)
   return n
 end
 
+function getActorType(actor)
+  local _, _, type = string.find(tostring(actor), '(%a+)%s.*')
+  return type
+end
+
 ---@param actor Actor | ActorFrame
 ---@param depth number?
 function actorToString(actor, depth)
@@ -226,7 +231,7 @@ function actorToString(actor, depth)
 
   local name = 'Layer'
 
-  local _, _, type = string.find(tostring(actor), '(%a+)%s.*')
+  local type = getActorType(actor)
 
   local str = {
     '<', name,

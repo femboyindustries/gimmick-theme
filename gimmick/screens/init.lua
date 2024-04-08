@@ -85,6 +85,7 @@ gimmick.Screen = function()
     footer = gimmick.NopScreen,
     underlay = gimmick.NopScreen,
     overlay = gimmick.NopScreen,
+    background = gimmick.NopScreen,
     ['in'] = gimmick.NopScreen,
     out = gimmick.NopScreen,
     cancel = gimmick.NopScreen,

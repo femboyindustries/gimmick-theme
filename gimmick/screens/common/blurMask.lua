@@ -21,6 +21,7 @@ function gimmick.common.blurMask(ctx, maskFunc)
   maskAFT:EnableFloat(false)
   maskAFT:EnablePreserveTexture(true)
   maskAFT:Create()
+  maskAFT:Recreate()
 
   local blurAFTV = ctx:ActorFrameTexture()
 
@@ -31,6 +32,7 @@ function gimmick.common.blurMask(ctx, maskFunc)
   blurAFTV:EnableFloat(false)
   blurAFTV:EnablePreserveTexture(true)
   blurAFTV:Create()
+  blurAFTV:Recreate()
 
   local blurSpriteV = ctx:Sprite()
 
@@ -48,6 +50,7 @@ function gimmick.common.blurMask(ctx, maskFunc)
   blurAFTH:EnableFloat(false)
   blurAFTH:EnablePreserveTexture(true)
   blurAFTH:Create()
+  blurAFTH:Recreate()
 
   local blurSpriteH = ctx:Sprite()
 
