@@ -1,0 +1,203 @@
+import click
+
+ScreenClasses = [
+    'ScreenAttract',
+    'ScreenCredits',
+    'ScreenEnding',
+    'ScreenHowToPlay',
+    'ScreenLogo',
+    'ScreenMusicScroll',
+    'ScreenRanking',
+    'ScreenUnlock',
+    'ScreenOptionsMaster',
+    'ScreenPlayerOptions',
+    'ScreenSongOptions',
+    'ScreenMiniMenu',
+    'ScreenNetworkOptions',
+    'ScreenProfileOptions',
+    'ScreenSMOnlineLogin',
+    'ScreenSelectMaster',
+    'ScreenTitleMenu',
+    'ScreenSelectDifficulty',
+    'ScreenSelectMode',
+    'ScreenSelectStyle',
+    'ScreenNetSelectBase',
+    'ScreenNetRoom',
+    'ScreenNetSelectMusic',
+    'ScreenGameplay',
+    'ScreenJukebox',
+    'ScreenDemonstration',
+    'ScreenEvaluation',
+    'ScreenNetEvaluation',
+    'ScreenArcadeDiagnostics',
+    'ScreenArcadePatch',
+    'ScreenArcadeStart',
+    'ScreenBookkeeping',
+    'ScreenCenterImage',
+    'ScreenEdit',
+    'ScreenEditCoursesMenu',
+    'ScreenEditMenu',
+    'ScreenEz2SelectMusic',
+    'ScreenEz2SelectPlayer',
+    'ScreenInstructions',
+    'ScreenMapControllers',
+    'ScreenNameEntryTraditional',
+    'ScreenPackages',
+    'ScreenPlayLights',
+    'ScreenSelectCharacter',
+    'ScreenSelectGroup',
+    'ScreenSelectMusic',
+    'ScreenSetTime',
+    'ScreenSplash',
+    'ScreenTestInput',
+    'ScreenTestLights',
+    'ScreenUserPacks',
+    'ScreenBranch',
+    'ScreenDebugOverlay',
+    'ScreenEndlessBreak',
+    'ScreenExit',
+    'ScreenExitCommand',
+    'ScreenGameplayMultiplayer',
+    'ScreenNameEntry',
+    'ScreenSaveSync',
+    'ScreenReloadSongs',
+    'ScreenSandbox',
+    'ScreenStage',
+    'ScreenSyncOverlay',
+    'ScreenSystemLayer',
+    'ScreenTest',
+    'ScreenTestFonts',
+    'ScreenTestSound',
+]
+
+
+
+@click.group()
+def cli():
+    """GIMMICKMAN - The easy way to become MANLY"""
+    pass
+
+@cli.command()
+@click.option('-v',help='Verbose',is_flag=True)
+@click.option('--klass',help='Define what kind of screen you wish to make')
+@click.option('--name',help='give your Screen a fun name (Screen is automatically Prepended)')
+def make(klass,name,v):
+    """Make a new Screen"""
+    def cecho(str):
+        if (v):
+            click.echo("    "+str)
+
+    if not (klass and name):
+        click.echo('Must give a Class and Name to the screen!')
+        return
+    if not (klass in ScreenClasses):
+        click.echo('Nice Class idiot')
+        return
+        
+
+    metrics = open('metrics.ini','r+')
+    if metrics:
+        #adding a newline so it wont become unreadable
+        metrics.write('\n')
+        metrics.write('\n')
+        cecho('Loaded metrics.ini')
+
+        ScreenCount = 0
+        Screens = []
+        while True:
+            line = metrics.readline()
+            if not line:
+                cecho('Current Screens: '+str(ScreenCount))
+                break
+            if line.startswith('[Screen'):
+                Screens.append(line [1:-2]) #remove the brackets from the name
+                ScreenCount += 1
+
+        if 'Screen'+str(name) in Screens:
+                print('This Screen already exists!')
+                return
+        else:
+            ScreenName = 'Screen'+str(name)
+            title = '['+ScreenName+']'
+            metrics.write(title)
+        
+        metrics.write('\n')
+        
+        metrics.write('Class='+klass)
+        cecho('Created '+title+" with Class "+klass)
+        metrics.write('\n')
+        metrics.write('InitCommand=%gimmick.s.'+ScreenName+".Init")
+        metrics.close()
+    screenLua = open('./gimmick/screens/'+ScreenName+'.lua','x')
+    if screenLua:
+        cecho(ScreenName+"? only lua! 🔥")
+        Lua = """
+return {
+    Init = function(self) Trace('theme.com') end,
+    overlay = gimmick.ActorScreen(function(self, ctx)
+    end),
+    underlay = gimmick.ActorScreen(function(self, ctx)
+    end),
+    header = gimmick.ActorScreen(function(self, ctx)
+    end),
+    footer = gimmick.ActorScreen(function(self, ctx)
+    end),
+}
+        """
+    screenLua.write(Lua)
+    screenLua.close()
+    
+    ScreenParts = ['overlay','underlay','header','footer']
+    
+    for fuck in ScreenParts:
+        file = open('./BGAnimations/'+ScreenName+" "+fuck+".xml",'x')
+        file.write(
+"""
+<ActorFrame InitCommand="%gimmick.s.{ScreenName}.{fuck}.init"><children>
+	<Layer File="../actors.xml" InitCommand="%gimmick.s.{ScreenName}.{fuck}.initEnd"/>
+</children></ActorFrame>
+""".format(ScreenName=ScreenName,fuck=fuck)
+        )
+        file.close()
+        cecho('Wrote to '+ScreenName+" "+fuck+".xml")
+        
+    print('')
+    print('If your Screen Class requires specific parameters in metrics.ini you will have to add them manually!')
+            
+
+
+
+    
+    
+
+
+    
+@cli.command()
+@click.option('-v',help='Verbose',is_flag=True)
+#v is just verbose
+def list(v):
+    """List All Screens currently defined in metrics.ini"""
+    def cecho(str):
+        if (v):
+            click.echo("    "+str)
+    
+    metrics = open('metrics.ini','r')
+    count = 0
+    ScreenCount = 0
+    while True:
+        count += 1
+    
+        # Get next line from file
+        line = metrics.readline()
+    
+        # if line is empty
+        # end of file is reached
+        if not line:
+            print('Total Screens: '+str(ScreenCount))
+            break
+        if line.startswith('[Screen'):
+            ScreenCount += 1
+            print(line.strip())
+
+if __name__ == '__main__':
+    cli()

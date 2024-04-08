@@ -54,6 +54,10 @@ return {
       command = 'stopmusic;screen,ScreenOptionsMenu',
     },
     {
+      name = 'Test',
+      command = 'stopmusic;screen,ScreenMayf'
+    },
+    {
       name = 'Exit',
       command = 'stopmusic;screen,ScreenExit'
     }
