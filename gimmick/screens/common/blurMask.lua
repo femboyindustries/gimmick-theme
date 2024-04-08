@@ -2,7 +2,10 @@ local DO_BLUR = true
 
 ---@param ctx Context
 ---@param maskFunc fun(ctx: Context): (fun(): nil) @ Given a Context, returns a drawfunction
-function gimmick.common.blurMask(ctx, maskFunc)
+---@param radius number?
+function gimmick.common.blurMask(ctx, maskFunc, radius)
+  radius = radius or 25
+
   local blurShaderV = ctx:Shader('Shaders/blurMaskV.frag')
   local blurShaderH = ctx:Shader('Shaders/blurMaskH.frag')
 
@@ -60,9 +63,9 @@ function gimmick.common.blurMask(ctx, maskFunc)
   blurSpriteH:y(scy)
 
   blurShaderV:uniform1f('strength', 1)
-  blurShaderV:uniform1f('radius', 25)
+  blurShaderV:uniform1f('radius', radius)
   blurShaderH:uniform1f('strength', 1)
-  blurShaderH:uniform1f('radius', 25)
+  blurShaderH:uniform1f('radius', radius)
 
   blurSpriteH:addcommand('Init', function()
     blurShaderV:uniformTexture('samplerMask', maskAFT:GetTexture())

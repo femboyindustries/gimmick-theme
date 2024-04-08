@@ -58,7 +58,7 @@ local function init(self, ctx)
 
   local blur = gimmick.common.blurMask(ctx, function()
     return function()
-      quad:diffuse(1, 0.5, 0.5, 1)
+      quad:diffuse(1, 0.4, 0.55, 1)
       quad:xywh(scx, HISTORY_HEIGHT/2, sw, HISTORY_HEIGHT)
       quad:Draw()
 
@@ -67,15 +67,15 @@ local function init(self, ctx)
       quad:xywh(scx, HISTORY_HEIGHT + backHeight/2, sw, backHeight)
       quad:Draw()
     end
-  end)
+  end, 30)
 
   self:SetDrawFunction(function()
     if consoleOpen then
       blur()
 
-      quad:diffuse(0, 0, 0, 0.4)
-      quad:xywh(scx, HISTORY_HEIGHT/2, sw, HISTORY_HEIGHT)
-      quad:Draw()
+      --quad:diffuse(0, 0, 0, 0.4)
+      --quad:xywh(scx, HISTORY_HEIGHT/2, sw, HISTORY_HEIGHT)
+      --quad:Draw()
 
       bitmapText:diffuse(1, 1, 1, 0.2)
       bitmapText:align(1, 0)
@@ -90,7 +90,7 @@ local function init(self, ctx)
       local positions, width, height = TextInput.wrapText(t.text, bitmapText, maxWidth)
       textWidth, textHeight = width, height
 
-      quad:diffuse(0, 0, 0, 0.6)
+      quad:diffuse(0, 0, 0, 0.2)
       local backHeight = height + PADDING*2
       quad:xywh(scx, HISTORY_HEIGHT + backHeight/2, sw, backHeight)
       quad:Draw()
