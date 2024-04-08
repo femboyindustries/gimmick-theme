@@ -13,9 +13,15 @@ local consoleOpen = false
 
 ---@param ctx Context
 local function init(self, ctx)
+  local ZOOM = 0.4
+  local PADDING = 8
+  local LEFT_PADDING = 12
+
+  local blink = os.clock()
+
   local bitmapText = ctx:BitmapText(FONTS.monospace, '')
-  bitmapText:xy(12, 12)
-  bitmapText:zoom(0.5)
+  bitmapText:xy(PADDING, PADDING)
+  bitmapText:zoom(ZOOM)
   bitmapText:shadowlength(0)
   bitmapText:align(0, 0)
   bitmapText:diffuse(1, 1, 1, 1)
@@ -33,7 +39,9 @@ local function init(self, ctx)
       end
 
       if consoleOpen then
-        if key == 'enter' then
+        blink = os.clock()
+
+        if key == 'enter' and not (inputs.rawInputs[device]['left shift'] or inputs.rawInputs[device]['right shift']) then
           loadstring(t:toString(), 'console')()
           t.cursor = 0
           t.text = {}
@@ -47,18 +55,47 @@ local function init(self, ctx)
 
   self:SetDrawFunction(function()
     if consoleOpen then
+      local maxWidth = sw - PADDING * 2 - LEFT_PADDING
+
+      local positions, width, height = TextInput.wrapText(t.text, bitmapText, maxWidth)
+
       quad:diffuse(0, 0, 0, 0.6)
-      quad:xywh(scx, scy, sw, sh)
+      local backHeight = height + PADDING*2
+      quad:xywh(scx, backHeight/2, sw, backHeight)
       quad:Draw()
 
-      bitmapText:xy(12, 12)
-      bitmapText:wrapwidthpixels((sw - 12 * 2) / 0.5)
-      bitmapText:settext(t:toString())
+      bitmapText:diffuse(1, 1, 1, 1)
+      bitmapText:align(1, 0)
+
+      for _, char in ipairs(positions) do
+        bitmapText:xy(PADDING + LEFT_PADDING + char.x, PADDING + char.y)
+        bitmapText:settext(char.char)
+        bitmapText:Draw()
+      end
+
+      -- hardcoded. Who gives a care
+      local cursorOffset = -10
+      if t.insert then
+        cursorOffset = 0
+      end
+
+      local cursorPos = positions[t.cursor] or { x = 0, y = 0 }
+
+      bitmapText:align(0, 0)
+      bitmapText:xy(PADDING + LEFT_PADDING + cursorPos.x + cursorOffset * ZOOM, PADDING + cursorPos.y)
+      bitmapText:settext(t.insert and '_' or '|')
+      local fade = (os.clock() - blink) % 1
+      bitmapText:diffuse(1, 1, 1, fade < 0.5 and 0.5 or 0)
       bitmapText:Draw()
 
-      bitmapText:xy(12, 92)
-      bitmapText:settext(tostring(t.cursor) .. ', ' .. tostring(#t.text) .. ', ' .. fullDump(t.text, nil, true))
+      bitmapText:xy(PADDING, PADDING)
+      bitmapText:settext('$')
+      bitmapText:diffuse(0.6, 1, 0.4, 1)
       bitmapText:Draw()
+
+      --bitmapText:xy(12, 92)
+      --bitmapText:settext(tostring(t.cursor) .. ', ' .. tostring(#t.text) .. ', ' .. fullDump(t.text, nil, true))
+      --bitmapText:Draw()
     end
   end)
 end

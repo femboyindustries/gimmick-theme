@@ -14,13 +14,15 @@ local layout = layouts[LAYOUT_NAME]
 local cmd = {
   ['left shift'] = true, ['right shift'] = true,
   ['left ctrl'] = true, ['right ctrl'] = true,
-  ['right meta'] = true, ['left meta'] = true,
+  ['left meta'] = true, ['right meta'] = true,
+  ['left wnd'] = true, ['right wnd'] = true,
   ['left alt'] = true, ['right alt'] = true,
   backspace = true, menu = true, escape = true,
   left = true, right = true, up = true, down = true,
   ['caps lock'] = true, ['num lock'] = true, ['scroll lock'] = true,
   pgdn = true, pgup = true, ['end'] = true, home = true,
-  prtsc = true, insert = true, pause = true, delete = true
+  prtsc = true, insert = true, pause = true, delete = true,
+  unknown = true
 }
 for i=1, 12 do
   cmd['F' .. i] = true
@@ -38,6 +40,13 @@ local TextInput = {}
 ---@param key string
 ---@param held table<string, number>
 function TextInput:onKey(key, held)
+  if string.sub(key, 1, 3) == 'KP ' then
+    key = string.sub(key, 4)
+  end
+  if key == 'KP' then
+    return
+  end
+
   self.special.shift = (held['left shift'] or held['right shift']) ~= nil
   self.special.ctrl = (held['left ctrl'] or held['right ctrl']) ~= nil
   self.special.alt = (held['left alt'] or held['right alt']) ~= nil
@@ -47,7 +56,7 @@ function TextInput:onKey(key, held)
   if key == 'caps lock' then
     M.capsLock = not M.capsLock
     return
-  elseif key == 'backspace' then
+  elseif key == 'backspace' or key == 'delete' then
     if self.cursor > 0 then
       table.remove(self.text, self.cursor)
       self.cursor = self.cursor - 1
@@ -57,6 +66,14 @@ function TextInput:onKey(key, held)
     self.cursor = self.cursor - 1
   elseif key == 'right' then
     self.cursor = self.cursor + 1
+  elseif key == 'home' then
+    while self.text[self.cursor] ~= '\n' and self.cursor > 0 do
+      self.cursor = self.cursor - 1
+    end
+  elseif key == 'end' then
+    while self.text[self.cursor + 1] ~= '\n' and self.cursor < #self.text do
+      self.cursor = self.cursor + 1
+    end
   elseif key == 'insert' then
     self.insert = not self.insert
   elseif not cmd[key] then
@@ -119,6 +136,60 @@ function M.new(text)
       altgr = false
     }
   }, TextInput)
+end
+
+local testString = 'aeiouAEOIU'
+
+---@param chars string[]
+---@param text BitmapText
+function M.wrapText(chars, text, maxWidth)
+  local glyphLen = {}
+
+  text:settext(testString .. testString)
+  local extra = text:GetWidth() * (text:GetZoomX() * text:GetBaseZoomX())
+  local fontHeight = text:GetHeight() * (text:GetZoomY() * text:GetBaseZoomY()) * 1.3
+
+  local positions = {}
+
+  local width = 0
+  local x, y = 0,0
+
+  for i = 1, #chars do
+    local char = chars[i]
+
+    if char == '\n' then
+      y = y + fontHeight
+      x = 0
+
+      table.insert(positions, {
+        char = char,
+        x = x,
+        y = y,
+      })
+    else
+      if not glyphLen[char] then
+        text:settext(testString .. char .. testString)
+        glyphLen[char] = text:GetWidth() * (text:GetZoomX() * text:GetBaseZoomX()) - extra
+      end
+
+      if (x + glyphLen[char]) > maxWidth then
+        width = maxWidth
+        y = y + fontHeight
+        x = 0
+      end
+
+      x = x + glyphLen[char]
+      width = math.max(width, x)
+
+      table.insert(positions, {
+        char = char,
+        x = x,
+        y = y,
+      })
+    end
+  end
+
+  return positions, x, y + fontHeight
 end
 
 return M
