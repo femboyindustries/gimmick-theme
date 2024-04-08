@@ -96,6 +96,15 @@ local function init(self, ctx)
       --bitmapText:xy(12, 92)
       --bitmapText:settext(tostring(t.cursor) .. ', ' .. tostring(#t.text) .. ', ' .. fullDump(t.text, nil, true))
       --bitmapText:Draw()
+
+      if TextInput.capsLock then
+        bitmapText:settext('!')
+        bitmapText:xy(sw - PADDING - 20 * ZOOM, backHeight - PADDING - 38 * ZOOM)
+        bitmapText:diffuse(0, 0, 0, 1)
+        drawBorders(bitmapText, 1)
+        bitmapText:diffuse(1, 0.2, 0.2, 1)
+        bitmapText:Draw()
+      end
     end
   end)
 end
