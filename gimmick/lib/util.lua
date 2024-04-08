@@ -219,7 +219,7 @@ function countKeys(t)
   return n
 end
 
----@param actor Actor
+---@param actor Actor | ActorFrame
 ---@param depth number?
 function actorToString(actor, depth)
   depth = depth or 0
@@ -259,4 +259,19 @@ function actorToString(actor, depth)
   end
 
   return table.concat(str, '')
+end
+
+-- Recursively seraches for an actor with `name`
+---@param actor Actor | ActorFrame
+---@param name string
+function getRecursive(actor, name)
+  if actor.GetName and actor:GetName() == name then
+    return actor
+  end
+  if actor.GetChildren then
+    for _, child in ipairs(actor:GetChildren()) do
+      local res = getRecursive(child, name)
+      if res then return res end
+    end
+  end
 end

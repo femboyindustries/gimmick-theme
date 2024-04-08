@@ -1,12 +1,6 @@
 -- kinda luxurious of OpenITG to hand us plain Lua files instead of XML for 
 -- these
 
-if not DISPLAY then
-  Debug('Gimmick tried to load before DISPLAY is even available, suppressing load.')
-  Debug('(This message is safe to ignore)')
-  return
-end
-
 if _G.gimmick then
   -- already loaded. great!
   return _G.gimmick
@@ -49,6 +43,16 @@ end
 paw.print = gimmick.print
 
 print('Hello! running gimmick ' .. gimmick._VERSION)
+
+-- Whether this is a pre-run; more specifically, whether DISPLAY is not defined.
+LITE = false
+if not DISPLAY then
+  print(' DISPLAY is not defined, meaning we\'re in a "pre-run" stage of sorts.')
+  print(' Load will still proceed as normal, since this is necessary for OverlayScreens,')
+  print(' but certain functionality will be disabled.')
+
+  LITE = true
+end
 
 -- borrowing some loading code directly from stitch
 

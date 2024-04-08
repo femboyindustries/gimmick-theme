@@ -1,0 +1,3 @@
+<ActorFrame InitCommand="%gimmick.s.OverlayScreen.overlay.init" GimmickLoadMessageCommand="%function(s) gimmick.s.OverlayScreen.overlay.load(s) end"><children>
+	<Layer File="../actors.xml" InitCommand="%gimmick.s.OverlayScreen.overlay.initEnd"/>
+</children></ActorFrame>

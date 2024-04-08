@@ -29,8 +29,10 @@ scy = SCREEN_CENTER_Y
 sw = SCREEN_WIDTH
 sh = SCREEN_HEIGHT
 
-dw = DISPLAY:GetDisplayWidth()
-dh = DISPLAY:GetDisplayHeight()
+if not LITE then
+  dw = DISPLAY:GetDisplayWidth()
+  dh = DISPLAY:GetDisplayHeight()
+end
 
 -- https://github.com/openitg/openitg/blob/master/src/Actor.h#L17
 
@@ -40,3 +42,8 @@ DRAW_ORDER_UNDERLAY				   = -100
 DRAW_ORDER_OVERLAY          = 100
 DRAW_ORDER_TRANSITIONS      = 110
 DRAW_ORDER_AFTER_EVERYTHING = 200
+
+FONTS = {
+  sans_serif = '_renogare 42px',
+  monospace = '_renogare 42px',
+}

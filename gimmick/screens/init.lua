@@ -8,7 +8,7 @@ gimmick.ChoiceProvider = function(choices)
 
     local text = choices[n].name
 
-    local text = ctx:BitmapText('common', text)
+    local text = ctx:BitmapText(FONTS.sans_serif, text)
     text:zoom(0.8)
     text:horizalign('center')
     text:shadowlength(1)

@@ -2,10 +2,10 @@ local BLUR_WIDTH = 400
 local BLUR_SKEW = 80
 
 return {
-  Init = function(self)
-    print('hello from ScreenTitleMenu')
-    print(actorToString(self))
-  end,
+  --Init = function(self)
+  --  print('hello from ScreenTitleMenu')
+  --  print(actorToString(self))
+  --end,
   underlay = gimmick.ActorScreen(function(self, ctx)
     local blank = ctx:Quad()
     blank:diffuse(0, 0, 0, 1)
