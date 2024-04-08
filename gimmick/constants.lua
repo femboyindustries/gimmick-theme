@@ -32,6 +32,9 @@ sh = SCREEN_HEIGHT
 if not LITE then
   dw = DISPLAY:GetDisplayWidth()
   dh = DISPLAY:GetDisplayHeight()
+else
+  dw = sw
+  dh = sh
 end
 
 -- https://github.com/openitg/openitg/blob/master/src/Actor.h#L17

@@ -16,6 +16,7 @@ local function init(self, ctx)
   local ZOOM = 0.4
   local PADDING = 8
   local LEFT_PADDING = 12
+  local HISTORY_HEIGHT = 250
 
   local blink = os.clock()
 
@@ -31,44 +32,74 @@ local function init(self, ctx)
   local t = TextInput.new()
 
   event.on('keypress', function(device, key)
-    if device == InputDevice.Key then
-      if key == '9' and inputs.rawInputs[device]['left ctrl'] or inputs.rawInputs[device]['right ctrl'] then
-        consoleOpen = not consoleOpen
-        SCREENMAN:SetInputMode(consoleOpen and 1 or 0)
+    if device ~= InputDevice.Key then return end
+
+    blink = os.clock()
+
+    if key == '9' and inputs.rawInputs[device]['left ctrl'] or inputs.rawInputs[device]['right ctrl'] then
+      consoleOpen = not consoleOpen
+      SCREENMAN:SetInputMode(consoleOpen and 1 or 0)
+      return
+    end
+
+    if consoleOpen then
+      if key == 'enter' and not (inputs.rawInputs[device]['left shift'] or inputs.rawInputs[device]['right shift']) then
+        loadstring(t:toString(), 'console')()
+        t.cursor = 0
+        t.text = {}
         return
       end
 
-      if consoleOpen then
-        blink = os.clock()
+      t:onKey(key, inputs.rawInputs[device])
+    end
+  end)
 
-        if key == 'enter' and not (inputs.rawInputs[device]['left shift'] or inputs.rawInputs[device]['right shift']) then
-          loadstring(t:toString(), 'console')()
-          t.cursor = 0
-          t.text = {}
-          return
-        end
+  local textWidth, textHeight = 0, 0
 
-        t:onKey(key, inputs.rawInputs[device])
-      end
+  local blur = gimmick.common.blurMask(ctx, function()
+    return function()
+      quad:diffuse(1, 0.5, 0.5, 1)
+      quad:xywh(scx, HISTORY_HEIGHT/2, sw, HISTORY_HEIGHT)
+      quad:Draw()
+
+      quad:diffuse(1, 0.3, 0.5, 1)
+      local backHeight = textHeight + PADDING*2
+      quad:xywh(scx, HISTORY_HEIGHT + backHeight/2, sw, backHeight)
+      quad:Draw()
     end
   end)
 
   self:SetDrawFunction(function()
     if consoleOpen then
+      blur()
+
+      quad:diffuse(0, 0, 0, 0.4)
+      quad:xywh(scx, HISTORY_HEIGHT/2, sw, HISTORY_HEIGHT)
+      quad:Draw()
+
+      bitmapText:diffuse(1, 1, 1, 0.2)
+      bitmapText:align(1, 0)
+      bitmapText:xy(sw - PADDING, PADDING)
+      bitmapText:zoom(0.3)
+      bitmapText:settext('GIMMICK v' .. gimmick._VERSION)
+      bitmapText:Draw()
+      bitmapText:zoom(ZOOM)
+
       local maxWidth = sw - PADDING * 2 - LEFT_PADDING
 
       local positions, width, height = TextInput.wrapText(t.text, bitmapText, maxWidth)
+      textWidth, textHeight = width, height
 
       quad:diffuse(0, 0, 0, 0.6)
       local backHeight = height + PADDING*2
-      quad:xywh(scx, backHeight/2, sw, backHeight)
+      quad:xywh(scx, HISTORY_HEIGHT + backHeight/2, sw, backHeight)
       quad:Draw()
 
       bitmapText:diffuse(1, 1, 1, 1)
       bitmapText:align(1, 0)
 
       for _, char in ipairs(positions) do
-        bitmapText:xy(PADDING + LEFT_PADDING + char.x, PADDING + char.y)
+        bitmapText:xy(PADDING + LEFT_PADDING + char.x, HISTORY_HEIGHT + PADDING + char.y)
         bitmapText:settext(char.char)
         bitmapText:Draw()
       end
@@ -82,13 +113,13 @@ local function init(self, ctx)
       local cursorPos = positions[t.cursor] or { x = 0, y = 0 }
 
       bitmapText:align(0, 0)
-      bitmapText:xy(PADDING + LEFT_PADDING + cursorPos.x + cursorOffset * ZOOM, PADDING + cursorPos.y)
+      bitmapText:xy(PADDING + LEFT_PADDING + cursorPos.x + cursorOffset * ZOOM, HISTORY_HEIGHT + PADDING + cursorPos.y)
       bitmapText:settext(t.insert and '_' or '|')
       local fade = (os.clock() - blink) % 1
       bitmapText:diffuse(1, 1, 1, fade < 0.5 and 0.5 or 0)
       bitmapText:Draw()
 
-      bitmapText:xy(PADDING, PADDING)
+      bitmapText:xy(PADDING, HISTORY_HEIGHT + PADDING)
       bitmapText:settext('$')
       bitmapText:diffuse(0.6, 1, 0.4, 1)
       bitmapText:Draw()
@@ -99,7 +130,7 @@ local function init(self, ctx)
 
       if TextInput.capsLock then
         bitmapText:settext('!')
-        bitmapText:xy(sw - PADDING - 20 * ZOOM, backHeight - PADDING - 38 * ZOOM)
+        bitmapText:xy(sw - PADDING - 20 * ZOOM, HISTORY_HEIGHT + backHeight - PADDING - 38 * ZOOM)
         bitmapText:diffuse(0, 0, 0, 1)
         drawBorders(bitmapText, 1)
         bitmapText:diffuse(1, 0.2, 0.2, 1)
