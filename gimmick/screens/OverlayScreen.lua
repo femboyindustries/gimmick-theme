@@ -13,8 +13,14 @@ local names = {
   'Powershell (Mayflower suggested this one)',
   'GNU (Gimmick NotITG Utility)',
   'FISH (Fanciest Interactive SHell)',
+  'RACISM (Really awesome console i started making)',
 }
 local name = names[math.random(1, #names)]
+local tips = {
+  'Use PgUp and PgDown to scroll through the history',
+  'Use Ctrl + and Ctrl - to zoom the console in or out',
+}
+local tip = tips[math.random(1, #tips)]
 
 local consoleOpen = false
 local history = {}
@@ -78,7 +84,7 @@ end
 
 ---@param ctx Context
 local function init(self, ctx)
-  local ZOOM = 0.4
+  local zoom = 0.4
   local PADDING = 8
   local LEFT_PADDING = 16
   local HISTORY_HEIGHT = 250
@@ -96,7 +102,7 @@ local function init(self, ctx)
 
   local bitmapText = ctx:BitmapText(FONTS.monospace, '')
   bitmapText:xy(PADDING, PADDING)
-  bitmapText:zoom(ZOOM)
+  bitmapText:zoom(zoom)
   bitmapText:shadowlength(0)
   bitmapText:align(0, 0)
   bitmapText:diffuse(1, 1, 1, 1)
@@ -144,6 +150,11 @@ local function init(self, ctx)
       if key == 'pgup' or key == 'pgdn' then
         scroll = scroll + ((key == 'pgup' and 1 or -1)) * 70
         scroll = math.max(scroll, 0)
+      end
+      if (inputs.rawInputs[device]['left ctrl'] or inputs.rawInputs[device]['right ctrl']) and (key == '-' or key == '=') then
+        local mult = key == '=' and (1 / 0.85) or 0.85
+        zoom = zoom * mult
+        return
       end
 
       repeatT[key] = REPEAT_DELAY
@@ -203,13 +214,13 @@ local function init(self, ctx)
       bitmapText:zoom(0.3)
       bitmapText:settext('GIMMICK v' .. gimmick._VERSION)
       bitmapText:Draw()
-      bitmapText:zoom(ZOOM)
+      bitmapText:zoom(zoom)
 
       local maxWidth = sw - PADDING * 2 - LEFT_PADDING
 
       bitmapText:diffuse(1, 1, 1, 1)
       bitmapText:align(0, 0)
-      bitmapText:wrapwidthpixels(maxWidth / ZOOM)
+      bitmapText:wrapwidthpixels(maxWidth / zoom)
 
       local y = HISTORY_HEIGHT + scroll
       local totalHeight = 0
@@ -217,7 +228,7 @@ local function init(self, ctx)
         local hist = history[i]
         local status, text = hist[1], hist[2]
         bitmapText:settext(text)
-        local height = (bitmapText:GetHeight() + 40) * ZOOM
+        local height = (bitmapText:GetHeight() + 40) * zoom
         y = y - height
         totalHeight = totalHeight + height
 
@@ -241,25 +252,25 @@ local function init(self, ctx)
           if status == HistoryType.OK and text == 'nil' then
             bitmapText:diffuse(0.9, 0.9, 0.9, 1)
           end
-          bitmapText:xy(PADDING + LEFT_PADDING, y + 8)
+          bitmapText:xy(PADDING + LEFT_PADDING, y + 20 * zoom)
           bitmapText:Draw()
 
           if status == HistoryType.Error then
-            bitmapText:xy(PADDING, y + 8)
+            bitmapText:xy(PADDING, y + 20 * zoom)
             bitmapText:settext('!')
             bitmapText:diffuse(0, 0, 0, 1)
             drawBorders(bitmapText, 1)
             bitmapText:diffuse(1, 0.2, 0.2, 1)
             bitmapText:Draw()
           elseif status == HistoryType.OK then
-            bitmapText:xy(PADDING, y + 8)
+            bitmapText:xy(PADDING, y + 20 * zoom)
             bitmapText:settext('>')
             bitmapText:diffuse(0, 0, 0, 1)
             drawBorders(bitmapText, 1)
             bitmapText:diffuse(0.2, 1, 0.2, 1)
             bitmapText:Draw()
           elseif status == HistoryType.Log then
-            bitmapText:xy(PADDING, y + 8)
+            bitmapText:xy(PADDING, y + 20 * zoom)
             bitmapText:settext('?')
             bitmapText:diffuse(0, 0, 0, 1)
             drawBorders(bitmapText, 1)
@@ -287,9 +298,9 @@ local function init(self, ctx)
       end
 
       if #history == 0 then
-        bitmapText:settext('Welcome to ' .. name .. '\nType a Lua expression...')
+        bitmapText:settext('Welcome to ' .. name .. '\n' .. 'Tip: ' .. tip .. '\nType a Lua expression...')
         bitmapText:diffuse(1, 1, 1, 1)
-        bitmapText:xy(PADDING + LEFT_PADDING, HISTORY_HEIGHT - bitmapText:GetHeight() * ZOOM - 12)
+        bitmapText:xy(PADDING + LEFT_PADDING, HISTORY_HEIGHT - bitmapText:GetHeight() * zoom - 12)
         bitmapText:Draw()
       end
 
@@ -319,7 +330,7 @@ local function init(self, ctx)
       local cursorPos = positions[t.cursor] or { x = 0, y = 0 }
 
       bitmapText:align(0, 0)
-      bitmapText:xy(PADDING + LEFT_PADDING + cursorPos.x + cursorOffset * ZOOM, HISTORY_HEIGHT + PADDING + cursorPos.y)
+      bitmapText:xy(PADDING + LEFT_PADDING + cursorPos.x + cursorOffset * zoom, HISTORY_HEIGHT + PADDING + cursorPos.y)
       bitmapText:settext(t.insert and '_' or '|')
       local fade = (os.clock() - blink) % 1
       bitmapText:diffuse(1, 1, 1, fade < 0.5 and 0.5 or 0)
@@ -336,7 +347,7 @@ local function init(self, ctx)
 
       if TextInput.capsLock then
         bitmapText:settext('!')
-        bitmapText:xy(sw - PADDING - 20 * ZOOM, HISTORY_HEIGHT + backHeight - PADDING - 38 * ZOOM)
+        bitmapText:xy(sw - PADDING - 20 * zoom, HISTORY_HEIGHT + backHeight - PADDING - 38 * zoom)
         bitmapText:diffuse(0, 0, 0, 1)
         drawBorders(bitmapText, 1)
         bitmapText:diffuse(1, 0.2, 0.2, 1)
