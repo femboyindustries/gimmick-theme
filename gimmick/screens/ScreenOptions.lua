@@ -33,33 +33,10 @@ return {
           }
     }),
 
-    Line01 = {
-	
-		Name = "Weight",
-		LayoutType = "ShowOneInRow",
-		SelectType = "SelectOne",
-		OneChoiceForAllPlayers = false,
-		ExportOnChange = false,
-		Choices = AllChoices(),
-		LoadSelections = function(self, list, pn)
-			local val = PROFILEMAN:GetProfile(pn):GetWeightPounds()
-			if val <= 0 then val = 100 end
-			for i = 1,table.getn(self.Choices) do
-				if val == IndexToPounds(i) then
-					list[i] = true
-					return
-				end
-			end
-			list[20] = true -- 100 lbs
-		end,
-		SaveSelections = function(self, list, pn)
-			for i = 1,table.getn(self.Choices) do
-				if list[i] then
-					PROFILEMAN:GetProfile(pn):SetWeightPounds( IndexToPounds(i) )
-					return
-				end
-			end
-		end,
-	}	
+    Line1 = function()
+        local t = gimmick.OptionRowBase()
+
+        return t
+	end
 }
         

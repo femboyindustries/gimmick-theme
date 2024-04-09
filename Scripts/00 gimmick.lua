@@ -46,7 +46,21 @@ paw.screeninfo = function()
   --paws at You are using an outdated NotITG version ( hello bro
   print(actorToString(SCREENMAN:GetTopScreen()))
   return "i dont know why return doesnt get shown and returning the function is an infinite loop, ill figure this out later"
+end
 
+---😢
+function gimmick.OptionRowBase(name,modList)
+	local t = {
+		Name = name or 'Unnamed Options',
+		LayoutType = (ShowAllInRow and 'ShowAllInRow') or 'ShowOneInRow',
+		SelectType = 'SelectOne',
+		OneChoiceForAllPlayers = false,
+		ExportOnChange = true,
+		Choices = modList or {'Off','On'},
+		LoadSelections = function(self, list, pn) list[1] = true end,
+		SaveSelections = function(self, list, pn)	 end
+	}
+	return t
 end
 
 print('Hello! running gimmick ' .. gimmick._VERSION)
