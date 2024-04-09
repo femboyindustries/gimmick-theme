@@ -9,6 +9,7 @@ local TextInput = require 'gimmick.lib.textinput'
 local consoleOpen = false
 local history = {}
 local typedHistory = {}
+local historyIdx = 0
 
 local HistoryType = {
   OK = 0,
@@ -103,13 +104,27 @@ local function init(self, ctx)
 
     if consoleOpen then
       if key == 'enter' and not (inputs.rawInputs[device]['left shift'] or inputs.rawInputs[device]['right shift']) then
-        table.insert(typedHistory, t:toString())
+        table.insert(typedHistory, t.text)
+        historyIdx = 0
         table.insert(history, {HistoryType.Input, t:toString()})
         local status, res = eval(t:toString())
         table.insert(history, {status, res})
         t.cursor = 0
         t.text = {}
         return
+      end
+
+      if key == 'up' or key == 'down' then
+        historyIdx = historyIdx + ((key == 'up') and 1 or -1)
+        historyIdx = math.max(historyIdx, 0)
+        historyIdx = math.min(historyIdx, #typedHistory)
+
+        if historyIdx == 0 then
+          t.text = {}
+        else
+          t.text = typedHistory[#typedHistory - (historyIdx - 1)]
+        end
+        t.cursor = #t.text
       end
 
       repeatT[key] = REPEAT_DELAY
