@@ -7,7 +7,7 @@ local M = {}
 -- todo: selections
 
 local layouts = require 'gimmick.lib.layouts'
-local LAYOUT_NAME = 'QwertzDE' -- todo
+local LAYOUT_NAME = 'WorkmanUS' -- todo
 
 local layout = layouts[LAYOUT_NAME]
 
