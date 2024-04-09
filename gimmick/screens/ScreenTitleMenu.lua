@@ -52,7 +52,7 @@ return {
       command = 'stopmusic;screen,ScreenOptionsMenu',
     },
     {
-      name = 'Test',
+      name = 'Elevate to Admin',
       command = 'stopmusic;screen,ScreenMayf'
     },
     {

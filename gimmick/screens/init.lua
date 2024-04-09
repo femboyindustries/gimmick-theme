@@ -54,6 +54,60 @@ gimmick.ChoiceProvider = function(choices)
   }
 end
 
+gimmick.LineProvider = function(choices)
+  local init = iterFunction(function(n, self)
+    self:removecommand('Init')
+
+    local ctx = actorgen.Context.new()
+
+    local text = choices[n].name
+
+    local text = ctx:BitmapText(FONTS.sans_serif, text)
+    text:zoom(0.8)
+    text:horizalign('center')
+    text:shadowlength(1)
+    text:diffusealpha(0)
+    text:sleep(0.1 * n)
+    text:accelerate(0.4)
+    text:diffusealpha(1)
+
+    text:addcommand('GainFocus', function()
+      text:tween(1/3, outElastic)
+      text:diffuse(1, 0, 1, 1)
+      text:zoom(1)
+    end)
+    text:addcommand('LoseFocus', function()
+      text:diffuse(1, 1, 1, 1)
+      text:zoom(0.8)
+    end)
+    text:addcommand('Disabled', function()
+      text:diffuse(0.5, 0.5, 0.5, 1)
+    end)
+    text:addcommand('Off', function()
+      text:sleep(.2) text:linear(.5) text:diffusealpha(0)
+    end)
+
+    actorgen.ready(ctx)
+  end)
+  local command = iterFunction(function(n)
+    return choices[n].command
+  end)
+
+  return {
+    init = init,
+    initEnd = function(self)
+      self:removecommand('Init')
+      actorgen.finalize()
+    end,
+    ChoiceNames = function()
+      init:reset()
+      command:reset()
+      return string.sub(string.rep(',1', #choices), 2)
+    end,
+    Choice1 = command,
+  }
+end
+
 ---@param initFunc fun(self: ActorFrame, ctx: Context): nil
 function gimmick.ActorScreen(initFunc)
   return {

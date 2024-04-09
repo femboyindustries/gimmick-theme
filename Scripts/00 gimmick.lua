@@ -133,6 +133,15 @@ end
 -- strictly for type checker purposes
 gimmick.require = require
 
+gimmick.NotJailbroken = not (pcall(os.execute, "") and true or false)
+gimmick.isJailbroken = function()
+    return not gimmick.NotJailbroken
+end
+
+if not gimmick.NotJailbroken then
+  Trace('Based alert')
+end
+
 -- do a check for the NotITG version
 --
 -- we don't do an initial FUCK_EXE check because OpenITG would've already
