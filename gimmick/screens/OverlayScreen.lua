@@ -33,6 +33,8 @@ local function eval(str)
     return HistoryType.Error, err
   end
 
+  paw(fn)
+
   local res = {pcall(function()
     return (function(...)
       return arg
