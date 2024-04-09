@@ -14,6 +14,7 @@ local names = {
   'GNU (Gimmick NotITG Utility)',
   'FISH (Fanciest Interactive SHell)',
   'RACISM (Really awesome console i started making)',
+  'ITG (I hate Theming _G)',
 }
 local name = names[math.random(1, #names)]
 local tips = {
