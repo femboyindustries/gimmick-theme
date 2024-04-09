@@ -21,13 +21,18 @@ local function formatReturn(args, n)
   n = n or 1
   local text = {}
   for i = n, math.max(n, #args) do
-    table.insert(text, fullDump(args[i]))
+    table.insert(text, pretty(args[i]))
   end
   return table.concat(text, ', ')
 end
 
 local function eval(str)
-  local fn, err = loadstring(str, 'console')
+  local fn, err = loadstring(
+    string.format('return (%s)', str), 'console')
+
+  if not fn then
+    fn, err = loadstring(str, 'console')
+  end
 
   if not fn then
     return HistoryType.Error, err
@@ -167,14 +172,14 @@ local function init(self, ctx)
 
       bitmapText:diffuse(1, 1, 1, 1)
       bitmapText:align(0, 0)
-      bitmapText:maxwidth(maxWidth / ZOOM)
+      bitmapText:wrapwidthpixels(maxWidth / ZOOM)
 
       local y = HISTORY_HEIGHT
       for i = #history, 1, -1 do
         local hist = history[i]
         local status, text = hist[1], hist[2]
         bitmapText:settext(text)
-        local height = bitmapText:GetHeight()
+        local height = (bitmapText:GetHeight() + 40) * ZOOM
         y = y - height
 
         if (#history - i) % 2 == 1 then
