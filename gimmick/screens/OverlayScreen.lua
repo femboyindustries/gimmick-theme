@@ -6,6 +6,16 @@
 
 local TextInput = require 'gimmick.lib.textinput'
 
+local names = {
+  'GOCK (Gimmick Official Console Kontext)',
+  'GIC (Gimmick Interactive Console)',
+  'GREAT- (Gimmick\'s Read-Evaluate-Achieve Tool)',
+  'Powershell (Mayflower suggested this one)',
+  'GNU (Gimmick NotITG Utility)',
+  'FISH (Fanciest Interactive SHell)',
+}
+local name = names[math.random(1, #names)]
+
 local consoleOpen = false
 local history = {}
 local typedHistory = {}
@@ -78,7 +88,11 @@ local function init(self, ctx)
 
   local blink = os.clock()
 
+  local scroll = 0
+
   local repeatT = {}
+
+  local scissor = ctx:Shader('Shaders/scissor.frag')
 
   local bitmapText = ctx:BitmapText(FONTS.monospace, '')
   bitmapText:xy(PADDING, PADDING)
@@ -111,6 +125,7 @@ local function init(self, ctx)
         table.insert(history, {status, res})
         t.cursor = 0
         t.text = {}
+        scroll = 0
         return
       end
 
@@ -125,6 +140,10 @@ local function init(self, ctx)
           t.text = typedHistory[#typedHistory - (historyIdx - 1)]
         end
         t.cursor = #t.text
+      end
+      if key == 'pgup' or key == 'pgdn' then
+        scroll = scroll + ((key == 'pgup' and 1 or -1)) * 70
+        scroll = math.max(scroll, 0)
       end
 
       repeatT[key] = REPEAT_DELAY
@@ -171,6 +190,9 @@ local function init(self, ctx)
     if consoleOpen then
       blur()
 
+      bitmapText:SetShader(actorgen.Proxy.getRaw(scissor))
+      scissor:uniform2f('res', dw, dh)
+
       --quad:diffuse(0, 0, 0, 0.4)
       --quad:xywh(scx, HISTORY_HEIGHT/2, sw, HISTORY_HEIGHT)
       --quad:Draw()
@@ -189,61 +211,87 @@ local function init(self, ctx)
       bitmapText:align(0, 0)
       bitmapText:wrapwidthpixels(maxWidth / ZOOM)
 
-      local y = HISTORY_HEIGHT
+      local y = HISTORY_HEIGHT + scroll
+      local totalHeight = 0
       for i = #history, 1, -1 do
         local hist = history[i]
         local status, text = hist[1], hist[2]
         bitmapText:settext(text)
         local height = (bitmapText:GetHeight() + 40) * ZOOM
         y = y - height
+        totalHeight = totalHeight + height
 
-        if (#history - i) % 2 == 1 then
-          quad:diffuse(0, 0, 0, 0.04)
-          quad:xywh(scx, y + height/2, sw, height)
-          quad:Draw()
-        end
-        if status == HistoryType.Error then
-          quad:diffuse(1, 0, 0, 0.15)
-          quad:xywh(scx, y + height/2, sw, height)
-          quad:Draw()
-        end
+        if (y + height) > 0 and y < HISTORY_HEIGHT then
+          height = math.min(height, HISTORY_HEIGHT - y)
+          --bitmapText:cropbottom(height / bitmapText:GetHeight())
+          scissor:uniform1f('bottom', 1 - HISTORY_HEIGHT / sh)
 
-        bitmapText:diffuse(1, 1, 1, 1)
-        if status == HistoryType.OK and text == 'nil' then
-          bitmapText:diffuse(0.9, 0.9, 0.9, 1)
-        end
-        bitmapText:xy(PADDING + LEFT_PADDING, y + 8)
-        bitmapText:Draw()
+          if (#history - i) % 2 == 1 then
+            quad:diffuse(0, 0, 0, 0.04)
+            quad:xywh(scx, y + height/2, sw, height)
+            quad:Draw()
+          end
+          if status == HistoryType.Error then
+            quad:diffuse(1, 0, 0, 0.15)
+            quad:xywh(scx, y + height/2, sw, height)
+            quad:Draw()
+          end
 
-        if status == HistoryType.Error then
-          bitmapText:xy(PADDING, y + 8)
-          bitmapText:settext('!')
-          bitmapText:diffuse(0, 0, 0, 1)
-          drawBorders(bitmapText, 1)
-          bitmapText:diffuse(1, 0.2, 0.2, 1)
+          bitmapText:diffuse(1, 1, 1, 1)
+          if status == HistoryType.OK and text == 'nil' then
+            bitmapText:diffuse(0.9, 0.9, 0.9, 1)
+          end
+          bitmapText:xy(PADDING + LEFT_PADDING, y + 8)
           bitmapText:Draw()
-        elseif status == HistoryType.OK then
-          bitmapText:xy(PADDING, y + 8)
-          bitmapText:settext('>')
-          bitmapText:diffuse(0, 0, 0, 1)
-          drawBorders(bitmapText, 1)
-          bitmapText:diffuse(0.2, 1, 0.2, 1)
-          bitmapText:Draw()
-        elseif status == HistoryType.Log then
-          bitmapText:xy(PADDING, y + 8)
-          bitmapText:settext('?')
-          bitmapText:diffuse(0, 0, 0, 1)
-          drawBorders(bitmapText, 1)
-          bitmapText:diffuse(0.3, 0.4, 1, 1)
-          bitmapText:Draw()
-        end
 
-        if y < 0 then
-          break
+          if status == HistoryType.Error then
+            bitmapText:xy(PADDING, y + 8)
+            bitmapText:settext('!')
+            bitmapText:diffuse(0, 0, 0, 1)
+            drawBorders(bitmapText, 1)
+            bitmapText:diffuse(1, 0.2, 0.2, 1)
+            bitmapText:Draw()
+          elseif status == HistoryType.OK then
+            bitmapText:xy(PADDING, y + 8)
+            bitmapText:settext('>')
+            bitmapText:diffuse(0, 0, 0, 1)
+            drawBorders(bitmapText, 1)
+            bitmapText:diffuse(0.2, 1, 0.2, 1)
+            bitmapText:Draw()
+          elseif status == HistoryType.Log then
+            bitmapText:xy(PADDING, y + 8)
+            bitmapText:settext('?')
+            bitmapText:diffuse(0, 0, 0, 1)
+            drawBorders(bitmapText, 1)
+            bitmapText:diffuse(0.3, 0.4, 1, 1)
+            bitmapText:Draw()
+          end
         end
       end
+      scroll = math.min(scroll, math.max(totalHeight - HISTORY_HEIGHT, 0))
 
+      scissor:uniform1f('bottom', 0)
       bitmapText:maxwidth(0)
+
+      if totalHeight > HISTORY_HEIGHT then
+        local scrollHeight = HISTORY_HEIGHT / totalHeight
+        local scrollPos = scroll / (totalHeight - HISTORY_HEIGHT)
+        local top = mix(1 - scrollHeight, 0, scrollPos)
+        local bot = mix(1, scrollHeight, scrollPos)
+
+        local barWidth = 4
+
+        quad:diffuse(1, 1, 1, 0.4)
+        quad:xywh(sw - barWidth/2, ((top + bot) / 2) * HISTORY_HEIGHT, barWidth, HISTORY_HEIGHT * scrollHeight)
+        quad:Draw()
+      end
+
+      if #history == 0 then
+        bitmapText:settext('Welcome to ' .. name .. '\nType a Lua expression...')
+        bitmapText:diffuse(1, 1, 1, 1)
+        bitmapText:xy(PADDING + LEFT_PADDING, HISTORY_HEIGHT - bitmapText:GetHeight() * ZOOM - 12)
+        bitmapText:Draw()
+      end
 
       local positions, width, height = TextInput.wrapText(t.text, bitmapText, maxWidth)
       textWidth, textHeight = width, height
