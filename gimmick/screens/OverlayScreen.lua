@@ -7,6 +7,53 @@
 local TextInput = require 'gimmick.lib.textinput'
 
 local consoleOpen = false
+local history = {}
+local typedHistory = {}
+
+local HistoryType = {
+  OK = 0,
+  Error = 1,
+  Input = 2,
+  Log = 3,
+}
+
+local function formatReturn(args, n)
+  n = n or 1
+  local text = {}
+  for i = n, math.max(n, #args) do
+    table.insert(text, fullDump(args[i]))
+  end
+  return table.concat(text, ', ')
+end
+
+local function eval(str)
+  local fn, err = loadstring(str, 'console')
+
+  if not fn then
+    return HistoryType.Error, err
+  end
+
+  local res = {pcall(function()
+    return (function(...)
+      return arg
+    end)(fn())
+  end)}
+  local ok = res[1]
+
+  if not ok then
+    return HistoryType.Error, res[2]
+  else
+    return HistoryType.OK, formatReturn(res[2], 1)
+  end
+end
+
+-- check this shit out
+
+local _print = print
+_G.print = function(...)
+  table.insert(history, {HistoryType.Log, formatReturn(arg)})
+  return _print(unpack(arg))
+end
 
 -- !!!!: actors built by `init` MUST remain deterministic.
 -- in other words, make sure the actors initialized never change conditionally
@@ -49,7 +96,10 @@ local function init(self, ctx)
 
     if consoleOpen then
       if key == 'enter' and not (inputs.rawInputs[device]['left shift'] or inputs.rawInputs[device]['right shift']) then
-        loadstring(t:toString(), 'console')()
+        table.insert(typedHistory, t:toString())
+        table.insert(history, {HistoryType.Input, t:toString()})
+        local status, res = eval(t:toString())
+        table.insert(history, {status, res})
         t.cursor = 0
         t.text = {}
         return
@@ -70,11 +120,11 @@ local function init(self, ctx)
 
   local blur = gimmick.common.blurMask(ctx, function()
     return function()
-      quad:diffuse(1, 0.4, 0.55, 1)
+      quad:diffuse(1, 0.4, 0.6, 1)
       quad:xywh(scx, HISTORY_HEIGHT/2, sw, HISTORY_HEIGHT)
       quad:Draw()
 
-      quad:diffuse(1, 0.3, 0.5, 1)
+      quad:diffuse(1, 0.3, 0.55, 1)
       local backHeight = textHeight + PADDING*2
       quad:xywh(scx, HISTORY_HEIGHT + backHeight/2, sw, backHeight)
       quad:Draw()
@@ -112,6 +162,66 @@ local function init(self, ctx)
       bitmapText:zoom(ZOOM)
 
       local maxWidth = sw - PADDING * 2 - LEFT_PADDING
+
+      bitmapText:diffuse(1, 1, 1, 1)
+      bitmapText:align(0, 0)
+      bitmapText:maxwidth(maxWidth / ZOOM)
+
+      local y = HISTORY_HEIGHT
+      for i = #history, 1, -1 do
+        local hist = history[i]
+        local status, text = hist[1], hist[2]
+        bitmapText:settext(text)
+        local height = bitmapText:GetHeight()
+        y = y - height
+
+        if (#history - i) % 2 == 1 then
+          quad:diffuse(0, 0, 0, 0.04)
+          quad:xywh(scx, y + height/2, sw, height)
+          quad:Draw()
+        end
+        if status == HistoryType.Error then
+          quad:diffuse(1, 0, 0, 0.15)
+          quad:xywh(scx, y + height/2, sw, height)
+          quad:Draw()
+        end
+
+        bitmapText:diffuse(1, 1, 1, 1)
+        if status == HistoryType.OK and text == 'nil' then
+          bitmapText:diffuse(0.9, 0.9, 0.9, 1)
+        end
+        bitmapText:xy(PADDING + LEFT_PADDING, y + 8)
+        bitmapText:Draw()
+
+        if status == HistoryType.Error then
+          bitmapText:xy(PADDING, y + 8)
+          bitmapText:settext('!')
+          bitmapText:diffuse(0, 0, 0, 1)
+          drawBorders(bitmapText, 1)
+          bitmapText:diffuse(1, 0.2, 0.2, 1)
+          bitmapText:Draw()
+        elseif status == HistoryType.OK then
+          bitmapText:xy(PADDING, y + 8)
+          bitmapText:settext('>')
+          bitmapText:diffuse(0, 0, 0, 1)
+          drawBorders(bitmapText, 1)
+          bitmapText:diffuse(0.2, 1, 0.2, 1)
+          bitmapText:Draw()
+        elseif status == HistoryType.Log then
+          bitmapText:xy(PADDING, y + 8)
+          bitmapText:settext('?')
+          bitmapText:diffuse(0, 0, 0, 1)
+          drawBorders(bitmapText, 1)
+          bitmapText:diffuse(0.3, 0.4, 1, 1)
+          bitmapText:Draw()
+        end
+
+        if y < 0 then
+          break
+        end
+      end
+
+      bitmapText:maxwidth(0)
 
       local positions, width, height = TextInput.wrapText(t.text, bitmapText, maxWidth)
       textWidth, textHeight = width, height
