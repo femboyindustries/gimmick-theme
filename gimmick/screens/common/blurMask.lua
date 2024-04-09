@@ -6,8 +6,10 @@ local DO_BLUR = true
 function gimmick.common.blurMask(ctx, maskFunc, radius)
   radius = radius or 25
 
-  local blurShaderV = ctx:Shader('Shaders/blurMaskV.frag')
-  local blurShaderH = ctx:Shader('Shaders/blurMaskH.frag')
+  local blurShaderV = ctx:Shader('Shaders/blurMask.frag')
+  local blurShaderH = ctx:Shader('Shaders/blurMask.frag')
+  blurShaderH:define('H', true)
+  blurShaderH:compileImmediate()
 
   local blank = ctx:Quad()
   blank:diffuse(0, 0, 0, 1)

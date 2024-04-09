@@ -15,10 +15,15 @@ local consoleOpen = false
 local function init(self, ctx)
   local ZOOM = 0.4
   local PADDING = 8
-  local LEFT_PADDING = 12
+  local LEFT_PADDING = 16
   local HISTORY_HEIGHT = 250
 
+  local REPEAT_DELAY = 0.35
+  local REPEAT_INTERVAL = 0.03
+
   local blink = os.clock()
+
+  local repeatT = {}
 
   local bitmapText = ctx:BitmapText(FONTS.monospace, '')
   bitmapText:xy(PADDING, PADDING)
@@ -50,8 +55,15 @@ local function init(self, ctx)
         return
       end
 
+      repeatT[key] = REPEAT_DELAY
+
       t:onKey(key, inputs.rawInputs[device])
     end
+  end)
+  event.on('keyrelease', function(device, key)
+    if device ~= InputDevice.Key then return end
+
+    repeatT[key] = nil
   end)
 
   local textWidth, textHeight = 0, 0
@@ -69,7 +81,21 @@ local function init(self, ctx)
     end
   end, 30)
 
+  local time = 0
+
   self:SetDrawFunction(function()
+    local newTime = os.clock()
+    local dt = newTime - time
+    time = newTime
+
+    for key, clock in pairs(repeatT) do
+      repeatT[key] = clock - dt
+      if repeatT[key] <= 0 then
+        repeatT[key] = repeatT[key] + REPEAT_INTERVAL
+        t:onKey(key, inputs.rawInputs[InputDevice.Key])
+      end
+    end
+
     if consoleOpen then
       blur()
 
