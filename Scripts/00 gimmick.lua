@@ -42,6 +42,13 @@ end
 -- 🐾🐾🐾
 paw.print = gimmick.print
 
+paw.screeninfo = function()
+  --paws at You are using an outdated NotITG version ( hello bro
+  print(actorToString(SCREENMAN:GetTopScreen()))
+  return "i dont know why return doesnt get shown and returning the function is an infinite loop, ill figure this out later"
+
+end
+
 print('Hello! running gimmick ' .. gimmick._VERSION)
 
 -- Whether this is a pre-run; more specifically, whether DISPLAY is not defined.
