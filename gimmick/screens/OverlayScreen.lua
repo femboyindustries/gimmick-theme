@@ -15,7 +15,7 @@ local consoleOpen = false
 local function init(self, ctx)
   local ZOOM = 0.4
   local PADDING = 8
-  local LEFT_PADDING = 12
+  local LEFT_PADDING = 16
   local HISTORY_HEIGHT = 250
 
   local blink = os.clock()
