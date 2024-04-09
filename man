@@ -80,54 +80,62 @@ def cli():
 @cli.command()
 @click.option('-v',help='Verbose',is_flag=True)
 @click.option('--klass',help='Define what kind of screen you wish to make')
-@click.option('--name',help='give your Screen a fun name (Screen is automatically Prepended)')
-def make(klass,name,v):
+@click.option('--name',help='give your Screen a fun name')
+@click.option('--append',help='Create Files for a Screen that already exists (does NOT write to metrics.ini)')
+def make(klass,name,v,append):
     """Make a new Screen"""
     def cecho(str):
         if (v):
             click.echo("    "+str)
 
-    if not (klass and name):
+    if (not (klass and name)) and (not append):
         click.echo('Must give a Class and Name to the screen!')
         return
-    if not (klass in ScreenClasses):
+    if (not (klass in ScreenClasses)) and (not append):
         click.echo('Nice Class idiot')
         return
-        
+    
+    if append:
+        pre = str(append).removeprefix('Screen')
+        ScreenName = 'Screen'+pre
+    else: 
+        pre = str(name).removeprefix('Screen')
+        ScreenName = 'Screen'+pre
+    
+    
+    if not append:
+        metrics = open('metrics.ini','r+')
+        if metrics:
+            #adding a newline so it wont become unreadable
+            metrics.write('\n')
+            metrics.write('\n')
+            cecho('Loaded metrics.ini')
 
-    metrics = open('metrics.ini','r+')
-    if metrics:
-        #adding a newline so it wont become unreadable
-        metrics.write('\n')
-        metrics.write('\n')
-        cecho('Loaded metrics.ini')
+            ScreenCount = 0
+            Screens = []
+            while True:
+                line = metrics.readline()
+                if not line:
+                    cecho('Current Screens: '+str(ScreenCount))
+                    break
+                if line.startswith('[Screen'):
+                    Screens.append(line [1:-2]) #remove the brackets from the name
+                    ScreenCount += 1
 
-        ScreenCount = 0
-        Screens = []
-        while True:
-            line = metrics.readline()
-            if not line:
-                cecho('Current Screens: '+str(ScreenCount))
-                break
-            if line.startswith('[Screen'):
-                Screens.append(line [1:-2]) #remove the brackets from the name
-                ScreenCount += 1
-
-        if 'Screen'+str(name) in Screens:
-                print('This Screen already exists!')
-                return
-        else:
-            ScreenName = 'Screen'+str(name)
-            title = '['+ScreenName+']'
-            metrics.write(title)
-        
-        metrics.write('\n')
-        
-        metrics.write('Class='+klass)
-        cecho('Created '+title+" with Class "+klass)
-        metrics.write('\n')
-        metrics.write('InitCommand=%gimmick.s.'+ScreenName+".Init")
-        metrics.close()
+            if 'Screen'+str(name) in Screens:
+                    print('This Screen already exists!')
+                    return
+            else:
+                title = '['+ScreenName+']'
+                metrics.write(title)
+            
+            metrics.write('\n')
+            
+            metrics.write('Class='+klass)
+            cecho('Created '+title+" with Class "+klass)
+            metrics.write('\n')
+            metrics.write('InitCommand=%gimmick.s.'+ScreenName+".Init")
+            metrics.close()
     screenLua = open('./gimmick/screens/'+ScreenName+'.lua','x')
     if screenLua:
         cecho(ScreenName+"? only lua! 🔥")
