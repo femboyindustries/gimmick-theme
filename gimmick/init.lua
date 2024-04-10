@@ -2,6 +2,7 @@ require 'gimmick.constants'
 require 'gimmick.lib.util'
 require 'gimmick.lib.draw'
 require 'gimmick.iterfunction'
+require 'gimmick.lib.color'
 if not LITE then require 'gimmick.lib.easings' end
 
 event = require 'gimmick.lib.event235'
