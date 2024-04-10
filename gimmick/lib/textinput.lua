@@ -8,7 +8,7 @@ local M = {}
 
 local layouts = require 'gimmick.lib.layouts'
 
-local LAYOUT_NAME = gimmick.onWine and 'WorkmanUS' or 'QwertzDE' -- if you are on linux and not jill you will big fuck
+local LAYOUT_NAME = USING_WINE and 'WorkmanUS' or 'QwertzDE' -- if you are on linux and not jill you will big fuck
 
 local layout = layouts[LAYOUT_NAME]
 

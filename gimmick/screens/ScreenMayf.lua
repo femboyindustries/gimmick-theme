@@ -1,7 +1,7 @@
 return {
     Init = function(self) end,
     overlay = gimmick.ActorScreen(function(self, ctx)
-        if gimmick.isJailbroken() then
+        if IS_JAILBROKEN then
             SCREENMAN:SystemMessage('We are hacking in')
             -- Windows: Command to run your program as admin using PowerShell
             local program_path = "./Program/NotITG-v4.3.0.exe" -- Adjust the path as necessary

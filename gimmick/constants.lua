@@ -52,22 +52,17 @@ FONTS = {
 }
 
 if LITE then
-  gimmick.onWine = false ---😢
+  USING_WINE = false ---😢
 else
-  gimmick.onWine = includes(INPUTMAN:GetDescriptions(), 'Wine Keyboard')
+  USING_WINE = includes(INPUTMAN:GetDescriptions(), 'Wine Keyboard')
 end
 
-gimmick.NotJailbroken = not (pcall(os.execute, "") and true or false)
-gimmick.isJailbroken = function()
-    return not gimmick.NotJailbroken
-end
-
-
-
-if gimmick.onWine then
+if USING_WINE then
   Trace('mason Alert') --hi mason
 end
 
-if not gimmick.NotJailbroken then
+IS_JAILBROKEN = pcall(os.execute, '')
+
+if IS_JAILBROKEN then
   Trace('Based alert')
 end
