@@ -153,23 +153,28 @@ return {
   footer = gimmick.ActorScreen(function(self, ctx)
   end),
 }
-    """
+""".lstrip()
   screenLua.write(Lua)
   screenLua.close()
   
-  ScreenParts = ['overlay','underlay','header','footer']
+  ScreenParts = [
+    { 'type': 'BGAnimations', 'name': 'overlay' },
+    { 'type': 'BGAnimations', 'name': 'underlay' },
+    { 'type': 'Graphics', 'name': 'header' },
+    { 'type': 'Graphics', 'name': 'footer' },
+  ]
   
   for fuck in ScreenParts:
-    file = open('./BGAnimations/'+ScreenName+" "+fuck+".xml",'x')
+    file = open(f'./{fuck['type']}/{ScreenName} {fuck['name']}.xml','x')
     file.write(
 """
 <ActorFrame InitCommand="%gimmick.s.{ScreenName}.{fuck}.init"><children>
 	<Layer File="../actors.xml" InitCommand="%gimmick.s.{ScreenName}.{fuck}.initEnd"/>
 </children></ActorFrame>
-""".format(ScreenName=ScreenName,fuck=fuck)
+""".format(ScreenName=ScreenName,fuck=fuck['name']).lstrip()
     )
     file.close()
-    cecho('Wrote to '+ScreenName+" "+fuck+".xml")
+    cecho(f'Wrote to {ScreenName} {fuck['name']}.xml')
     
   print('')
   print('If your Screen Class requires specific parameters in metrics.ini you will have to add them manually!')
