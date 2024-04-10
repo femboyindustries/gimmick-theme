@@ -1,14 +1,10 @@
 require 'gimmick.screens.common.init'
 
-gimmick.ChoiceProvider = function(choices)
-  local init = iterFunction(function(n, self)
-    self:removecommand('Init')
-
-    local ctx = actorgen.Context.new()
-
-    local text = choices[n].name
-
-    local text = ctx:BitmapText(FONTS.sans_serif, text)
+---@param choices { name: string, command: string }[]
+---@param setupChoice? fun(self: ActorFrame, ctx: Context, i: number, name: string): nil
+gimmick.ChoiceProvider = function(choices, setupChoice)
+  setupChoice = setupChoice or function(self, ctx, i, name)
+    local text = ctx:BitmapText(FONTS.sans_serif, name)
     text:zoom(0.8)
     text:horizalign('center')
     text:shadowlength(1)
@@ -32,6 +28,14 @@ gimmick.ChoiceProvider = function(choices)
     text:addcommand('Off', function()
       text:sleep(.2) text:linear(.5) text:diffusealpha(0)
     end)
+  end
+
+  local init = iterFunction(function(n, self)
+    self:removecommand('Init')
+
+    local ctx = actorgen.Context.new()
+
+    setupChoice(self, ctx, n, choices[n].name)
 
     actorgen.ready(ctx)
   end)
