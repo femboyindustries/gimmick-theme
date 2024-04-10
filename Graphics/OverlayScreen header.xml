@@ -1,0 +1,3 @@
+<ActorFrame InitCommand="%function(s) gimmick.s.OverlayScreen.header.init(s) end"><children>
+	<Layer File="../actors.xml" InitCommand="%function(s) gimmick.s.OverlayScreen.header.initEnd(s) end"/>
+</children></ActorFrame>
