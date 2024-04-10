@@ -173,6 +173,16 @@ function slice(tbl, s, e)
   return new
 end
 
+---@param tab any[]
+---@param elem any
+function includes(tab, elem)
+  if not tab then error('bad argument #1 (expected table, got nil)', 2) end
+  for _, v in pairs(tab) do
+    if elem == v then return true end
+  end
+  return false
+end
+
 -- prefers tab1 with type mismatches; prefers tab2 with value mismatches
 function mergeTable(tab1, tab2)
   local tab = {}

@@ -1,5 +1,5 @@
-require 'gimmick.constants'
 require 'gimmick.lib.util'
+require 'gimmick.constants'
 require 'gimmick.lib.draw'
 require 'gimmick.iterfunction'
 require 'gimmick.lib.color'

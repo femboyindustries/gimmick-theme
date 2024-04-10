@@ -34,7 +34,11 @@ return {
     }),
 
     Line1 = function()
-        local t = gimmick.OptionRowBase()
+        local t = gimmick.OptionRowBase('Console (Ctrl+9)')
+
+        t.Choices = {'ON', 'OFF'}
+        t.LayoutType = 'ShowAllInRow'
+        t.LoadSelections = function(self,list)  end
 
         return t
 	end

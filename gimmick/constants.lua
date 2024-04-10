@@ -50,3 +50,24 @@ FONTS = {
   sans_serif = '_renogare 42px',
   monospace = '_recursive 42px',
 }
+
+if LITE then
+  gimmick.onWine = false ---😢
+else
+  gimmick.onWine = includes(INPUTMAN:GetDescriptions(), 'Wine Keyboard')
+end
+
+gimmick.NotJailbroken = not (pcall(os.execute, "") and true or false)
+gimmick.isJailbroken = function()
+    return not gimmick.NotJailbroken
+end
+
+
+
+if gimmick.onWine then
+  Trace('mason Alert') --hi mason
+end
+
+if not gimmick.NotJailbroken then
+  Trace('Based alert')
+end

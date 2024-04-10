@@ -7,7 +7,8 @@ local M = {}
 -- todo: selections
 
 local layouts = require 'gimmick.lib.layouts'
-local LAYOUT_NAME = 'WorkmanUS' -- todo
+
+local LAYOUT_NAME = gimmick.onWine and 'WorkmanUS' or 'QwertzDE' -- if you are on linux and not jill you will big fuck
 
 local layout = layouts[LAYOUT_NAME]
 

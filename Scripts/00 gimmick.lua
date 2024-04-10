@@ -48,13 +48,23 @@ paw.screeninfo = function()
   return "i dont know why return doesnt get shown and returning the function is an infinite loop, ill figure this out later"
 end
 
+---Saves a setting or other to the Profile
+function gimmick.ezSave(key,data)
+  local saved = PROFILEMAN:GetMachineProfile():GetSaved()
+  if not saved.theme_gimmick then
+    saved.theme_gimmick = {}
+  else 
+    saved.theme_gimmick[key] = data
+  end
+end
+
 ---😢
 function gimmick.OptionRowBase(name,modList)
 	local t = {
 		Name = name or 'Unnamed Options',
 		LayoutType = (ShowAllInRow and 'ShowAllInRow') or 'ShowOneInRow',
 		SelectType = 'SelectOne',
-		OneChoiceForAllPlayers = false,
+		OneChoiceForAllPlayers = true,
 		ExportOnChange = true,
 		Choices = modList or {'Off','On'},
 		LoadSelections = function(self, list, pn) list[1] = true end,
