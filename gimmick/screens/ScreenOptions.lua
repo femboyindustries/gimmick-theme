@@ -1,6 +1,10 @@
 
 return {
-    Init = function(self) Trace('theme.com') end,
+    Init = function(self)
+      if not gimmick.getSaved() then
+        gimmick.saveInit()
+      end
+    end,
     overlay = gimmick.ActorScreen(function(self, ctx)
     end),
     underlay = gimmick.ActorScreen(function(self, ctx)
