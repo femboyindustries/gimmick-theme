@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "sumneko.lua",
-    "fms-cat.xml-stepmania"
+    "fms-cat.xml-stepmania",
+    "EditorConfig.EditorConfig"
   ],
 }
