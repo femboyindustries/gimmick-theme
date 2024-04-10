@@ -1,0 +1,4 @@
+
+<ActorFrame InitCommand="%gimmick.s.ScreenSelectMusic.background.init"><children>
+	<Layer File="../actors.xml" InitCommand="%gimmick.s.ScreenSelectMusic.background.initEnd"/>
+</children></ActorFrame>

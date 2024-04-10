@@ -1,0 +1,4 @@
+
+<ActorFrame InitCommand="%gimmick.s.ScreenSelectMusic.overlay.init"><children>
+	<Layer File="../actors.xml" InitCommand="%gimmick.s.ScreenSelectMusic.overlay.initEnd"/>
+</children></ActorFrame>
