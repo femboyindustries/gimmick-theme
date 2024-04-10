@@ -1,6 +1,8 @@
 local BLUR_WIDTH = 400
 local BLUR_SKEW = 80
 
+local BACK_C = hex('19232a')
+
 return {
   --Init = function(self)
   --  print('hello from ScreenTitleMenu')
@@ -8,21 +10,18 @@ return {
   --end,
   underlay = gimmick.ActorScreen(function(self, ctx)
     local blank = ctx:Quad()
-    blank:diffuse(0, 0, 0, 1)
+    blank:diffuse(BACK_C:unpack())
 
     local logo = ctx:Sprite('Graphics/NotITG')
     logo:xy(scx, scy - 50)
     logo:zoom(1)
 
     self:SetDrawFunction(function()
-      blank:xywh(scx - BLUR_WIDTH/2, scy, 2, sh)
-      blank:skewx((BLUR_SKEW / 2) + math.sin(os.clock() / 2) * 10)
-      blank:Draw()
-      blank:xywh(scx + BLUR_WIDTH/2, scy, 2, sh)
-      blank:skewx((BLUR_SKEW / 2) + math.sin(os.clock() / 2) * 10)
+      blank:xywh(scx, scy, BLUR_WIDTH - 60, sh)
+      blank:skewx((BLUR_SKEW + math.sin(os.clock() / 2) * 10) / (BLUR_WIDTH - 60))
       blank:Draw()
 
-      logo:diffuse(0, 0, 0, 1)
+      logo:diffuse(BACK_C:unpack())
       drawBorders(logo, 2)
 
       logo:diffuse(1, 1, 1, 1)
@@ -34,7 +33,7 @@ return {
     mask:diffuse(1, 0.6, 0.5, 1)
     mask:xywh(scx, scy, BLUR_WIDTH, sh)
     return function()
-      mask:skewx((BLUR_SKEW / BLUR_WIDTH) + math.sin(os.clock() / 2) * 0.05)
+      mask:skewx((BLUR_SKEW + math.sin(os.clock() / 2) * 10) / BLUR_WIDTH)
       mask:Draw()
     end
   end),
