@@ -11,3 +11,6 @@ developers aiming to make a theme with no idea where to begin.
 Because I really don't know if any of what I'm doing is going to stick. The
 stuff presented here is highly experimental and prone to breaking under
 pressure!
+
+# WINDOWS IS GERMAN
+# LINUX IS WORKMAN

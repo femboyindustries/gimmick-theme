@@ -4,41 +4,27 @@ return {
     overlay = gimmick.ActorScreen(function(self, ctx)
     end),
     underlay = gimmick.ActorScreen(function(self, ctx)
+      local bg = ctx:Sprite('Graphics/_missing')
+      bg:scaletocover(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)
     end),
     header = gimmick.ActorScreen(function(self, ctx)
     end),
     footer = gimmick.ActorScreen(function(self, ctx)
     end),
 
-    Choices = gimmick.LineProvider({
-        {
-            name = 'Play',
-            command = 'stopmusic;style,versus;PlayMode,regular;lua,function() PREFSMAN:SetPreference(\'InputDuplication\',1) end;Difficulty,beginner;deletepreparedscreens;screen,ScreenSelectMusic',
-          },
-          {
-            name = 'Edit',
-            command = 'stopmusic;screen,ScreenEditMenu',
-          },
-          {
-            name = 'Options',
-            command = 'stopmusic;screen,ScreenOptionsMenu',
-          },
-          {
-            name = 'Elevate to Admin',
-            command = 'stopmusic;screen,ScreenMayf'
-          },
-          {
-            name = 'Exit',
-            command = 'stopmusic;screen,ScreenExit'
-          }
-    }),
-
+    --- El soyjak
     Line1 = function()
         local t = gimmick.OptionRowBase('Console (Ctrl+9)')
 
         t.Choices = {'ON', 'OFF'}
         t.LayoutType = 'ShowAllInRow'
-        t.LoadSelections = function(self,list)  end
+        t.LoadSelections = function(self,list) 
+          local option = search(t.Choices,gimmick.getSavedOption('Console')) or 1 
+          list[option] = true 
+        end
+        t.SaveSelections = function(self,list)
+          gimmick.ezSave('Console',t.Choices[search(list,true)] or 1)
+        end
 
         return t
 	end

@@ -7,6 +7,7 @@ if not LITE then require 'gimmick.lib.easings' end
 
 event = require 'gimmick.lib.event235'
 inputs = require 'gimmick.lib.inputs'
+save = require 'gimmick.save'
 
 require 'gimmick.screens'
 actorgen = require 'gimmick.lib.actor235'
