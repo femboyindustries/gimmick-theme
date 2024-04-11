@@ -4,6 +4,7 @@ function gimmick.saveInit()
     data.theme_gimmick = {}
     PROFILEMAN:SaveMachineProfile()
   end
+  return true
 end
 
 ---Saves a setting or other to the Profile
@@ -41,12 +42,15 @@ end
 ---@param key string
 ---@return mixed
 function gimmick.getSavedOption(key)
-  local tbl = gimmick.getSaved()
+  -- Usually the save data is initialized before this function is called
+  -- ...but for some reason the InitCommand in ScreenOptions menu is called after this function.
+  -- This check is to make sure that tbl is not nil. Am I stupid? Probably. -rya
+  local tbl = gimmick.getSaved() or (gimmick.saveInit() and gimmick.getSaved())
   if not tbl[key] then
     paw.print('Could not find Option '..key)
     SCREENMAN:SystemMessage('Could not find Option '..key)
     return false
   end
-
+  
   return tbl[key]
 end
