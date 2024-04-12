@@ -117,7 +117,7 @@ local function init(self, ctx)
 
     blink = os.clock()
 
-    if key == '9' and inputs.rawInputs[device]['left ctrl'] or inputs.rawInputs[device]['right ctrl'] then
+    if key == '9' and (inputs.rawInputs[device]['left ctrl'] or inputs.rawInputs[device]['right ctrl']) then
       consoleOpen = not consoleOpen
       SCREENMAN:SetInputMode(consoleOpen and 1 or 0)
       return
