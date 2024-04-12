@@ -221,6 +221,17 @@ function mergeTableLenient(tab1, tab2)
   return tab
 end
 
+---@generic T
+---@param t table<T, unknown>
+---@return T[]
+function keys(t)
+  local tab = {}
+  for k, v in pairs(t) do
+    table.insert(tab, k)
+  end
+  return tab
+end
+
 function countKeys(t)
   local n = 0
   for _ in pairs(t) do

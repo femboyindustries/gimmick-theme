@@ -1,14 +1,14 @@
 local M = {}
 
-local serpent = require 'gimmick.lib.serpent'
-
 local SAVE_NAME = 'gimmick!'
 
 M.data = {
   settings = {
-    console = true,
+    console_layout = 'QwertyUS'
   },
 }
+
+M.defaults = deepcopy(M.data)
 
 function M.load()
   local saved = PROFILEMAN:GetMachineProfile():GetSaved()

@@ -14,6 +14,6 @@ return {
 
   --- El soyjak
   lines = options.LineProvider('ScreenOptions', {
-    options.option.settingToggle('Console (Ctrl+9)', 'console')
+    options.option.settingChoice('Console Layout', 'console_layout', keys(require 'gimmick.lib.layouts')),
   }),
 }

@@ -8,9 +8,9 @@ local M = {}
 
 local layouts = require 'gimmick.lib.layouts'
 
-local LAYOUT_NAME = USING_WINE and 'WorkmanUS' or 'QwertzDE' -- if you are on linux and not jill you will big fuck
-
-local layout = layouts[LAYOUT_NAME]
+local function getLayout()
+  return layouts[save.data.settings.console_layout]
+end
 
 local cmd = {
   ['left shift'] = true, ['right shift'] = true,
@@ -53,6 +53,8 @@ function TextInput:onKey(key, held)
   self.special.alt = (held['left alt'] or held['right alt']) ~= nil
   self.special.meta = (held['left meta'] or held['right meta']) ~= nil
   self.special.altgr = held['right alt'] ~= nil or (self.special.alt and self.special.ctrl)
+
+  local layout = getLayout()
 
   if key == 'caps lock' then
     M.capsLock = not M.capsLock
