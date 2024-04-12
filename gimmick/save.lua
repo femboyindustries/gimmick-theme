@@ -13,12 +13,12 @@ M.data = {
 function M.load()
   local saved = PROFILEMAN:GetMachineProfile():GetSaved()
   if saved[SAVE_NAME] then
-    local ok, parsed = serpent.load(saved[SAVE_NAME])
-    if ok then
-      M.data = mergeTable(M.data, parsed)
+    local parsed, err = loadstring('return ' .. saved[SAVE_NAME])
+    if parsed then
+      M.data = mergeTable(M.data, parsed())
     else
       print('failed to deserialize save data')
-      print(parsed)
+      print(err)
     end
   else
     print('savedata not found; resetting to defaults')
@@ -26,7 +26,7 @@ function M.load()
 end
 function M.save()
   local saved = PROFILEMAN:GetMachineProfile():GetSaved()
-  saved[SAVE_NAME] = serpent.line(M.data)
+  saved[SAVE_NAME] = pretty(M.data)
   PROFILEMAN:SaveMachineProfile()
 end
 

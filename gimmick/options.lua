@@ -47,6 +47,7 @@ function M.option.settingToggle(name, key)
     selected[option] = true
   end, function(self, selected, pn)
     save.data.settings[key] = selected[1] -- 'ON'
+    save.save()
   end)
 end
 

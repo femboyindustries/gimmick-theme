@@ -379,11 +379,12 @@ function pretty(o, depth, seen)
 
     return '{ ' .. str
   elseif type(o) == 'string' then
-    if string.find(o, '\n') then
-      return '[[' .. string.gsub(o, '\\', '\\\\') .. ']]'
-    else
-      return '"' .. string.gsub(string.gsub(o, '\\', '\\\\'), '"', '\\"') .. '"'
-    end
+    return string.format('%q', o)
+    --if string.find(o, '\n') then
+    --  return '[[' .. string.gsub(o, '\\', '\\\\') .. ']]'
+    --else
+    --  return '"' .. string.gsub(string.gsub(o, '\\', '\\\\'), '"', '\\"') .. '"'
+    --end
   elseif type(o) == 'nil' then
     return 'nil'
   else
