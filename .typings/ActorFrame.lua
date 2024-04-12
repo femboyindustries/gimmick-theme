@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 -- Note for future me: You can't simply just type `ActorFrame` into a Lua console to get info about methods in
 -- `ActorFrame` - instead, you can do something like `SCREENMAN("Footer").__index`
 

@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class RageTexture
 --- @field public __index table Gives you the ``RageTexture`` table again
 local RageTexture = {}

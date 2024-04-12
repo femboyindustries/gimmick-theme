@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class MessageManager
 --- @field public __index table Gives you the ``MessageManager`` table again
 local MessageManager = {}

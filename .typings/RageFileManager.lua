@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class RageFileManager
 --- @field public __index table Gives you the ``RageFileManager`` table again
 local RageFileManager = {}

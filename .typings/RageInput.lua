@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class RageInput
 --- @field public __index table Gives you the ``RageInput`` table again
 local RageInput = {}

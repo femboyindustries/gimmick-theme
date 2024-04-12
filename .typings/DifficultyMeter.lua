@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class DifficultyMeter: ActorFrame
 --- @field public __index table Gives you the ``DifficultyMeter`` table again
 local DifficultyMeter = {}

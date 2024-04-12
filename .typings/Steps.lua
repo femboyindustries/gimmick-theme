@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class Steps
 --- @field public __index table Gives you the ``Steps`` table again
 local Steps = {}

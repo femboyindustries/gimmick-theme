@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 -- NOTE
 -- Proxied actors on ActorProxy can be disconnected
     -- Just pass nothing to it, example: ``proxy:SetTarget()``

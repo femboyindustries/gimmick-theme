@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class NoteSkinManager
 --- @field public __index table Gives you the ``NoteSkinManager`` table again
 local NoteSkinManager = {}

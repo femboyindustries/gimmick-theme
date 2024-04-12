@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class HighScore
 --- @field public __index table Gives you the ``HighScore`` table again
 local HighScore = {}

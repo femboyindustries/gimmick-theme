@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class ActorScroller: ActorFrame
 --- @field public __index table Gives you the ``ActorScroller`` table again
 local ActorScroller = {}

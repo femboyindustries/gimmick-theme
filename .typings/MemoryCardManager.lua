@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class MemoryCardManager
 --- @field public __index table Gives you the ``MemoryCardManager`` table again
 local MemoryCardManager = {}

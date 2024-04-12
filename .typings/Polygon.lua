@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class Polygon: Actor
 --- @field public __index table Gives you the ``Polygon`` table again
 local Polygon = {}

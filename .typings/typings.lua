@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 
 -- cleaning up some notitg typing jank... ehe
 ---@alias int integer

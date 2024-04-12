@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class GameSoundManager
 --- @field public __index table Gives you the ``GameSoundManager`` table again
 local GameSoundManager = {}

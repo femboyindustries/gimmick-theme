@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class Course
 --- @field public __index table Gives you the ``Course`` table again
 local Course = {}

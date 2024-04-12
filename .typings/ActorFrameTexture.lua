@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class ActorFrameTexture: ActorFrame
 --- @field public __index table Gives you the ``ActorFrameTexture`` table again
 local ActorFrameTexture = {}

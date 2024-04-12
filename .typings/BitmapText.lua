@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class BitmapText: Actor
 --- @field public __index table Gives you the ``BitmapText`` table again
 local BitmapText = {}

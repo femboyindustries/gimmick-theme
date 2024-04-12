@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class ThemeManager
 --- @field public __index table Gives you the ``ThemeManager`` table again
 local ThemeManager = {}

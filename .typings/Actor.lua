@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class Actor
 --- @field public __index table Gives you the ``Actor`` table again
 local Actor = {}

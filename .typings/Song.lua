@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class Song
 --- @field public __index table Gives you the ``Song`` table again
 local Song = {}

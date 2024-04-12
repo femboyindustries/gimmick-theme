@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class GameState
 --- @field public __index table Gives you the ``GameState`` table again
 local GameState = {}

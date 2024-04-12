@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class ActorSound: Actor
 --- @field public __index table Gives you the ``ActorSound`` table again
 local ActorSound = {}

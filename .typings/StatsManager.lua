@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class StatsManager
 --- @field public __index table Gives you the ``StatsManager`` table again
 local StatsManager = {}

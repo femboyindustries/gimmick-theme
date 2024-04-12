@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class ScreenManager
 --- @field public __index table Gives you the ``ScreenManager`` table again
 local ScreenManager = {}

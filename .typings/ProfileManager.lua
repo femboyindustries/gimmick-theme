@@ -1,4 +1,5 @@
 ---@meta
+---@diagnostic disable
 --- @class ProfileManager
 --- @field public __index table Gives you the ``ProfileManager`` table again
 local ProfileManager = {}
