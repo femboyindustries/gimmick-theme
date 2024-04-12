@@ -191,6 +191,11 @@ local function init(self, ctx)
     local dt = newTime - time
     time = newTime
 
+    if save.shouldSaveNextFrame then
+      save.shouldSaveNextFrame = false
+      save.save()
+    end
+
     for key, clock in pairs(repeatT) do
       repeatT[key] = clock - dt
       if repeatT[key] <= 0 then

@@ -53,6 +53,7 @@ function M.option.settingToggle(name, key)
     selected[option] = true
   end, function(self, selected, pn)
     save.data.settings[key] = selected[1] -- 'ON'
+    save.maskAsDirty()
   end)
 end
 ---@param showAll boolean?
@@ -64,6 +65,7 @@ function M.option.settingChoice(name, key, choices, showAll)
   end, function(self, selected, pn)
     local optI = search(selected, true) or default
     save.data.settings[key] = choices[optI]
+    save.maskAsDirty()
   end, showAll)
 end
 

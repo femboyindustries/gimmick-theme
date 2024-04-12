@@ -30,6 +30,23 @@ function M.save()
   PROFILEMAN:SaveMachineProfile()
 end
 
+M.shouldSaveNextFrame = false
+
+function M.saveNextFrame()
+  M.shouldSaveNextFrame = true
+end
+
+local isDirty = false
+function M.maskAsDirty()
+  isDirty = true
+end
+
+function M.saveIfDirty()
+  if isDirty then
+    M.shouldSaveNextFrame = true
+  end
+end
+
 if not LITE then
   M.load()
 end
