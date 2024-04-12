@@ -58,26 +58,6 @@ gimmick.ChoiceProvider = function(choices, setupChoice)
   }
 end
 
-gimmick.LineProvider = function(choices)
-  local t = gimmick.OptionRowBase()
-  local init = iterFunction(function(n, self)
-    self:removecommand('Init')
-
-    local ctx = actorgen.Context.new()
-
-    local text = choices[n].name
-
-   
-
-    actorgen.ready(ctx)
-  end)
-  local command = iterFunction(function(n)
-    return choices[n].command
-  end)
-
-  return t
-end
-
 ---@param initFunc fun(self: ActorFrame, ctx: Context): nil
 function gimmick.ActorScreen(initFunc)
   return {

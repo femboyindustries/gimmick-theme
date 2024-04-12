@@ -329,7 +329,7 @@ function pretty(o, depth, seen)
     local onlyNumbers = true
     for i = 1, keys do
       if o[i] == nil then
-        onlyNumbers = true
+        onlyNumbers = false
         break
       end
     end
@@ -413,13 +413,13 @@ function ot_enough_memory()
   end
 end
 
----@param table table
----@param value only_bros
+---@generic T
+---@param table T[]
+---@param value T
 ---Returns index of entry
----@return number
+---@return number?
 function search( table, value )
   for i = 1, #table do
-      if table[i] == value then return i end
+    if table[i] == value then return i end
   end
-  return false
 end
