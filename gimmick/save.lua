@@ -40,7 +40,7 @@ end
 
 ---Get saved data by its key
 ---@param key string
----@return mixed
+---@return false | any
 function gimmick.getSavedOption(key)
   -- Usually the save data is initialized before this function is called
   -- ...but for some reason the InitCommand in ScreenOptions menu is called after this function.
