@@ -82,21 +82,23 @@ function M.option.settingChoice(name, key, choices, showAll)
 end
 ---@param name string
 ---@param value string
----@param onPress fun()
+---@param onPress fun(pn: number)
 ---@return OptionRow
 function M.option.button(name, value, onPress)
-  return M.option.base(name, 'ShowAllInRow', 'SelectNone', {value}, function() end, function()
-    onPress()
+  return M.option.base(name, 'ShowAllInRow', 'SelectNone', {value}, function() end, function(self, selected, pn)
+    if selected[1] then
+      onPress(pn)
+    end
   end)
 end
 
 ---@alias Option { type: 'lua', optionRow: OptionRow } | { type: 'conf', pref: string } | { type: 'list', list: string }
 
 ---@param screenName string
----@param options Option[]
-function M.LineProvider(screenName, options)
+---@param optionsGetter fun(): Option[]
+function M.LineProvider(screenName, optionsGetter)
   local command = iterFunction(function(n)
-    local opt = options[n]
+    local opt = optionsGetter()[n]
 
     if opt.type == 'lua' then
       -- terrible, but oh well
@@ -111,11 +113,11 @@ function M.LineProvider(screenName, options)
   return {
     LineNames = function()
       command:reset()
-      return string.sub(string.rep(',1', #options), 2)
+      return string.sub(string.rep(',1', #optionsGetter()), 2)
     end,
     Line1 = command,
     option = function(n)
-      return options[n].optionRow
+      return optionsGetter()[n].optionRow
     end,
   }
 end
