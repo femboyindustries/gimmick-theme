@@ -17,52 +17,11 @@ function gimmick.common.blurMask(ctx, maskFunc, radius)
 
   local maskDrawFunc = maskFunc(ctx)
 
-  local maskAFT = ctx:ActorFrameTexture()
+  local maskAFT = aft(ctx, true)
 
-  maskAFT:SetWidth(dw)
-  maskAFT:SetHeight(dh)
-  maskAFT:EnableDepthBuffer(false)
-  maskAFT:EnableAlphaBuffer(false)
-  maskAFT:EnableFloat(false)
-  maskAFT:EnablePreserveTexture(true)
-  maskAFT:Create()
-  maskAFT:Recreate()
+  local blurAFTV, blurSpriteV = aftSpritePair(ctx, true)
 
-  local blurAFTV = ctx:ActorFrameTexture()
-
-  blurAFTV:SetWidth(dw)
-  blurAFTV:SetHeight(dh)
-  blurAFTV:EnableDepthBuffer(false)
-  blurAFTV:EnableAlphaBuffer(false)
-  blurAFTV:EnableFloat(false)
-  blurAFTV:EnablePreserveTexture(true)
-  blurAFTV:Create()
-  blurAFTV:Recreate()
-
-  local blurSpriteV = ctx:Sprite()
-
-  blurSpriteV:basezoomx(sw / dw)
-  blurSpriteV:basezoomy(-sh / dh)
-  blurSpriteV:x(scx)
-  blurSpriteV:y(scy)
-
-  local blurAFTH = ctx:ActorFrameTexture()
-
-  blurAFTH:SetWidth(dw)
-  blurAFTH:SetHeight(dh)
-  blurAFTH:EnableDepthBuffer(false)
-  blurAFTH:EnableAlphaBuffer(false)
-  blurAFTH:EnableFloat(false)
-  blurAFTH:EnablePreserveTexture(true)
-  blurAFTH:Create()
-  blurAFTH:Recreate()
-
-  local blurSpriteH = ctx:Sprite()
-
-  blurSpriteH:basezoomx(sw / dw)
-  blurSpriteH:basezoomy(-sh / dh)
-  blurSpriteH:x(scx)
-  blurSpriteH:y(scy)
+  local blurAFTH, blurSpriteH = aftSpritePair(ctx, true)
 
   blurShaderV:uniform1f('strength', 1)
   blurShaderV:uniform1f('radius', radius)
@@ -73,9 +32,7 @@ function gimmick.common.blurMask(ctx, maskFunc, radius)
     blurShaderV:uniformTexture('samplerMask', maskAFT:GetTexture())
     blurShaderH:uniformTexture('samplerMask', maskAFT:GetTexture())
     blurSpriteV:SetShader(actorgen.Proxy.getRaw(blurShaderV))
-    blurSpriteV:SetTexture(blurAFTV:GetTexture())
     blurSpriteH:SetShader(actorgen.Proxy.getRaw(blurShaderH))
-    blurSpriteH:SetTexture(blurAFTH:GetTexture())
   end)
 
   return function()

@@ -14,12 +14,19 @@ local function init(self, ctx)
   local drawConsole = console.init(self, ctx)
   local drawSave = save.init(self, ctx)
 
+  local lastdw, lastdh = dw, dh
+
   local time = 0
 
   self:SetDrawFunction(function()
     local newTime = os.clock()
     local dt = newTime - time
     time = newTime
+
+    if lastdw ~= dw or lastdh ~= dh then
+      event.call('resize', dw, dh)
+      lastdw, lastdh = dw, dh
+    end
 
     drawConsole(dt)
     drawSave(dt)
