@@ -13,7 +13,7 @@ return {
   end),
 
   --- El soyjak
-  lines = options.LineProvider('ScreenOptions', {
+  lines = options.LineProvider('ScreenOptionsMenu', {
     {
       type = 'lua',
       optionRow = options.option.settingChoice('Console Layout', 'console_layout', keys(require 'gimmick.lib.layouts')),

@@ -1,0 +1,4 @@
+
+<ActorFrame InitCommand="%gimmick.s.ScreenOptionsMenu.header.init"><children>
+	<Layer File="../actors.xml" InitCommand="%gimmick.s.ScreenOptionsMenu.header.initEnd"/>
+</children></ActorFrame>
