@@ -37,16 +37,24 @@ function M.option.base(name, layoutType, selectType, choices, load, save)
   }
 end
 
+---@param name string
+---@param choices string[]
 ---@param showAll boolean?
+---@return OptionRow
 function M.option.choice(name, choices, load, save, showAll)
   if showAll == nil then showAll = true end
   return M.option.base(name, showAll and 'ShowAllInRow' or 'ShowOneInRow', 'SelectOne', choices, load, save)
 end
 
+---@param name string
+---@return OptionRow
 function M.option.toggle(name, load, save)
   return M.option.base(name, 'ShowAllInRow', 'SelectOne', {'ON', 'OFF'}, load, save)
 end
 
+---@param name string
+---@param key string
+---@return OptionRow
 function M.option.settingToggle(name, key)
   return M.option.toggle(name, function(self, selected)
     local option = save.data.settings[key] and 1 or 2
@@ -56,7 +64,11 @@ function M.option.settingToggle(name, key)
     save.maskAsDirty()
   end)
 end
+---@param name string
+---@param key string
+---@param choices string[]
 ---@param showAll boolean?
+---@return OptionRow
 function M.option.settingChoice(name, key, choices, showAll)
   local default = search(choices, save.defaults.settings[key]) or 1
   return M.option.choice(name, choices, function(self, selected)
@@ -68,13 +80,32 @@ function M.option.settingChoice(name, key, choices, showAll)
     save.maskAsDirty()
   end, showAll)
 end
+---@param name string
+---@param value string
+---@param onPress fun()
+---@return OptionRow
+function M.option.button(name, value, onPress)
+  return M.option.base(name, 'ShowAllInRow', 'SelectNone', {value}, function() end, function()
+    onPress()
+  end)
+end
+
+---@alias Option { type: 'lua', optionRow: OptionRow } | { type: 'conf', pref: string } | { type: 'list', list: string }
 
 ---@param screenName string
----@param options OptionRow[]
+---@param options Option[]
 function M.LineProvider(screenName, options)
   local command = iterFunction(function(n)
-    -- terrible, but oh well
-    return 'lua,gimmick.s.' .. screenName .. '.lines.option(' .. n .. ')'
+    local opt = options[n]
+
+    if opt.type == 'lua' then
+      -- terrible, but oh well
+      return 'lua,gimmick.s.' .. screenName .. '.lines.option(' .. n .. ')'
+    elseif opt.type == 'conf' then
+      return 'conf,' .. opt.pref
+    elseif opt.type == 'list' then
+      return 'list,' .. opt.list
+    end
   end)
 
   return {
@@ -84,7 +115,7 @@ function M.LineProvider(screenName, options)
     end,
     Line1 = command,
     option = function(n)
-      return options[n]
+      return options[n].optionRow
     end,
   }
 end

@@ -435,3 +435,8 @@ function search( table, value )
     if table[i] == value then return i end
   end
 end
+
+---@param screen string
+function delayedSetScreen(screen)
+  GAMESTATE:DelayedGameCommand('screen,' .. screen)
+end

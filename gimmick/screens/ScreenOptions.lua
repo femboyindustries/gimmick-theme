@@ -14,6 +14,28 @@ return {
 
   --- El soyjak
   lines = options.LineProvider('ScreenOptions', {
-    options.option.settingChoice('Console Layout', 'console_layout', keys(require 'gimmick.lib.layouts')),
+    {
+      type = 'lua',
+      optionRow = options.option.settingChoice('Console Layout', 'console_layout', keys(require 'gimmick.lib.layouts')),
+    },
+    {
+      type = 'conf',
+      pref = 'SoundVolume',
+    },
+    {
+      type = 'conf',
+      pref = 'AspectRatio',
+    },
+    {
+      type = 'conf',
+      pref = 'EventMode',
+    },
+    {
+      type = 'lua',
+      optionRow = options.option.button('Button that creates a SystemMessage that says "penis"', 'Button that creates a SystemMessage that says "penis"', function()
+        SCREENMAN:SystemMessage('penis')
+        delayedSetScreen('ScreenOptionsMenu')
+      end)
+    }
   }),
 }
