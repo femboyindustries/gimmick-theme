@@ -44,6 +44,7 @@ end
 function M.saveIfDirty()
   if isDirty then
     M.shouldSaveNextFrame = true
+    isDirty = false
   end
 end
 

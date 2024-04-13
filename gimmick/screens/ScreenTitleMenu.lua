@@ -33,10 +33,9 @@ for i = 1, #choices do
 end
 
 return {
-  --Init = function(self)
-  --  print('hello from ScreenTitleMenu')
-  --  print(actorToString(self))
-  --end,
+  Init = function(self)
+    gimmick.s.ScreenOptionsMenu.resetStack()
+  end,
   underlay = gimmick.ActorScreen(function(self, ctx)
     local gradShader = ctx:Shader('Shaders/grad.frag')
     gradShader:uniform2f('res', dw, dh)

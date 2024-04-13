@@ -15,24 +15,45 @@ local function stallOptions()
   stackLocked = true
 end
 
+---@param screen string
+---@param name string
+---@param value string?
+local function screenButton(screen, name, value)
+  return options.option.button(name, value or name, function()
+    setOptions(screen)
+  end)
+end
+
 ---@type table<string, Option[]>
 local optionsTable = {
   root = {
     {
       type = 'lua',
-      optionRow = options.option.settingChoice('Console Layout', 'console_layout', keys(require 'gimmick.lib.layouts')),
+      optionRow = screenButton('arcade', 'Arcade Options'),
     },
     {
-      type = 'conf',
-      pref = 'SoundVolume',
+      type = 'lua',
+      optionRow = screenButton('graphic', 'Graphic Options'),
     },
     {
-      type = 'conf',
-      pref = 'AspectRatio',
+      type = 'lua',
+      optionRow = screenButton('gameplay', 'Gameplay Options'),
     },
     {
-      type = 'conf',
-      pref = 'EventMode',
+      type = 'lua',
+      optionRow = options.option.button('Config Key/Joy Mappings', 'Config Key/Joy Mappings', function()
+        delayedSetScreen('ScreenMapControllers')
+      end),
+    },
+    {
+      type = 'lua',
+      optionRow = screenButton('gimmick', 'Gimmick Options'),
+    },
+    {
+      type = 'lua',
+      optionRow = options.option.button('Reload Songs/Courses', 'Reload', function()
+        delayedSetScreen('ScreenReloadSongs')
+      end),
     },
     {
       type = 'lua',
@@ -43,10 +64,68 @@ local optionsTable = {
     },
     {
       type = 'lua',
-      optionRow = options.option.button('gay zone', 'Enter... if you dare...', function()
-        setOptions('gayzone')
-      end)
-    }
+      optionRow = screenButton('gayzone', 'gay zone', 'Enter... if you dare...'),
+    },
+    {
+      type = 'lua',
+      optionRow = screenButton('theme', 'Set Theme'),
+    },
+  },
+  arcade = {
+    { type = 'conf', pref = 'CoinMode' },
+    { type = 'conf', pref = 'CoinsPerCredit' },
+    { type = 'conf', pref = 'Premium' },
+    { type = 'conf', pref = 'EventMode' },
+    --{ type = 'lua', optionRow = PlayModeType() },
+    { type = 'conf', pref = 'SongsPerPlay' },
+    --{ type = 'lua', optionRow = SessionTimer() },
+    --{ type = 'lua', optionRow = CutOffTime() },
+    { type = 'conf', pref = 'AttractSoundFrequency' },
+    { type = 'conf', pref = 'MenuTimer' },
+    { type = 'conf', pref = 'LifeDifficulty' },
+    { type = 'conf', pref = 'AspectRatio' },
+    { type = 'conf', pref = 'Brightness' },
+    { type = 'conf', pref = 'SoundVolume' },
+    { type = 'conf', pref = 'SoloSingles' },
+    { type = 'conf', pref = 'DefaultFailType' },
+    --{ type = 'lua', optionRow = NonCombos() },
+    --{ type = 'lua', optionRow = DQ() },
+    --{ type = 'lua', optionRow = Merciful() },
+    --{ type = 'lua', optionRow = EnableGhostData(0) },
+  },
+  graphic = {
+    { type = 'conf', pref = 'Windowed' },
+    --{ type = 'conf', pref = 'DisplayResolution' },
+    { type = 'conf', pref = 'DisplayColor' },
+    { type = 'conf', pref = 'TextureColor' },
+    { type = 'conf', pref = 'MovieColor' },
+    { type = 'conf', pref = 'SmoothLines' },
+    { type = 'conf', pref = 'CelShadeModels' },
+    { type = 'conf', pref = 'DelayedTextureDelete' },
+    { type = 'conf', pref = 'RefreshRate' },
+    { type = 'conf', pref = 'Vsync' },
+    { type = 'conf', pref = 'ShowStats' },
+    { type = 'conf', pref = 'ShowBanners' },
+  },
+  gameplay = {
+    { type = 'conf', pref = 'SoloSingles' },
+    { type = 'conf', pref = 'HiddenSongs' },
+    { type = 'conf', pref = 'EasterEggs' },
+    { type = 'conf', pref = 'AllowExtraStage' },
+    { type = 'conf', pref = 'PickExtraStage' },
+    { type = 'conf', pref = 'UnlockSystem' },
+  },
+  theme = {
+    ---@param ctx Context
+    overlay = function(self, ctx)
+      local wait = ctx:Sprite('Graphics/wait.png')
+      wait:xy(scx, scy + 50)
+
+      return function()
+        wait:Draw()
+      end
+    end,
+    { type = 'conf', pref = 'Theme' },
   },
   gayzone = {
     {
@@ -56,11 +135,29 @@ local optionsTable = {
         stallOptions()
       end)
     }
-  }
+  },
+  gimmick = {
+    {
+      type = 'lua',
+      optionRow = options.option.settingChoice('Console Layout', 'console_layout', keys(require 'gimmick.lib.layouts')),
+    },
+  },
 }
 
 return {
   overlay = gimmick.ActorScreen(function(self, ctx)
+    local opts = optionsStack:top()
+    local res = optionsTable[opts]
+
+    local drawOverlay = nil
+
+    if res and res.overlay then
+      drawOverlay = res.overlay(self, ctx)
+    end
+
+    self:SetDrawFunction(function()
+      if drawOverlay then drawOverlay() end
+    end)
   end),
   underlay = gimmick.ActorScreen(function(self, ctx)
     local bg = ctx:Sprite('Graphics/_missing')
@@ -73,6 +170,12 @@ return {
 
   unlockStack = function()
     stackLocked = false
+  end,
+  resetStack = function()
+    if optionsStack:top() then
+      print('Clearing options stack due to premature exit')
+      optionsStack:clear()
+    end
   end,
 
   NextScreen = function()
@@ -96,6 +199,14 @@ return {
       opts = 'root'
       optionsStack:push(opts)
     end
-    return optionsTable[opts]
+    local res = optionsTable[opts]
+    if not res then
+      print('Invalid options screen: ' .. opts)
+      optionsStack:clear()
+      opts = 'root'
+      optionsStack:push(opts)
+      res = optionsTable[opts]
+    end
+    return res
   end),
 }
