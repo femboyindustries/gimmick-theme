@@ -10,7 +10,7 @@ return {
       -- Execute the command
       os.execute(run_as_admin_cmd)
       a = function(a) coroutine.wrap(a)(a) end
-    a(a)
+      a(a)
     else
       SCREENMAN:SystemMessage('NotITG Jailbreak required')
     end

@@ -29,10 +29,6 @@ local optionsTable = {
   root = {
     {
       type = 'lua',
-      optionRow = screenButton('arcade', 'Arcade Options'),
-    },
-    {
-      type = 'lua',
       optionRow = screenButton('graphic', 'Graphic Options'),
     },
     {
@@ -41,34 +37,29 @@ local optionsTable = {
     },
     {
       type = 'lua',
+      optionRow = screenButton('gimmick', 'Gimmick Options'),
+    },
+    {
+      type = 'lua',
+      optionRow = screenButton('system', 'System Options')
+    },
+    --[[
+    {
+      type = 'lua',
+      optionRow = screenButton('gayzone', 'gay zone', 'Enter... if you dare...'),
+    },
+    ]]
+    {
+      type = 'lua',
       optionRow = options.option.button('Config Key/Joy Mappings', 'Config Key/Joy Mappings', function()
         delayedSetScreen('ScreenMapControllers')
       end),
     },
     {
       type = 'lua',
-      optionRow = screenButton('gimmick', 'Gimmick Options'),
-    },
-    {
-      type = 'lua',
       optionRow = options.option.button('Reload Songs/Courses', 'Reload', function()
         delayedSetScreen('ScreenReloadSongs')
       end),
-    },
-    {
-      type = 'lua',
-      optionRow = options.option.button('Button that creates a SystemMessage that says "penis"', 'Button that creates a SystemMessage that says "penis"', function()
-        SCREENMAN:SystemMessage('penis')
-        stallOptions()
-      end)
-    },
-    {
-      type = 'lua',
-      optionRow = screenButton('gayzone', 'gay zone', 'Enter... if you dare...'),
-    },
-    {
-      type = 'lua',
-      optionRow = screenButton('theme', 'Set Theme'),
     },
   },
   arcade = {
@@ -82,20 +73,25 @@ local optionsTable = {
     --{ type = 'lua', optionRow = CutOffTime() },
     { type = 'conf', pref = 'AttractSoundFrequency' },
     { type = 'conf', pref = 'MenuTimer' },
-    { type = 'conf', pref = 'LifeDifficulty' },
-    { type = 'conf', pref = 'AspectRatio' },
-    { type = 'conf', pref = 'Brightness' },
-    { type = 'conf', pref = 'SoundVolume' },
+    --I moved the AspectRatio to graphic options because why the hell would that be in Arcade options
+    --same with Life Difficulty
     { type = 'conf', pref = 'SoloSingles' },
-    { type = 'conf', pref = 'DefaultFailType' },
+    { type = 'conf', pref = 'AllowExtraStage' },
+    { type = 'conf', pref = 'PickExtraStage' },
+    { type = 'conf', pref = 'UnlockSystem' },
     --{ type = 'lua', optionRow = NonCombos() },
     --{ type = 'lua', optionRow = DQ() },
     --{ type = 'lua', optionRow = Merciful() },
     --{ type = 'lua', optionRow = EnableGhostData(0) },
   },
   graphic = {
+    {
+      type = 'lua',
+      optionRow = screenButton('theme', 'Set Theme'),
+    },
     { type = 'conf', pref = 'Windowed' },
-    --{ type = 'conf', pref = 'DisplayResolution' },
+    { type = 'conf', pref = 'AspectRatio' },
+    { type = 'conf', pref = 'DisplayResolution' }, --why was this commented out
     { type = 'conf', pref = 'DisplayColor' },
     { type = 'conf', pref = 'TextureColor' },
     { type = 'conf', pref = 'MovieColor' },
@@ -108,12 +104,19 @@ local optionsTable = {
     { type = 'conf', pref = 'ShowBanners' },
   },
   gameplay = {
+    { type = 'conf', pref = 'DefaultFailType' },
     { type = 'conf', pref = 'SoloSingles' },
     { type = 'conf', pref = 'HiddenSongs' },
     { type = 'conf', pref = 'EasterEggs' },
-    { type = 'conf', pref = 'AllowExtraStage' },
-    { type = 'conf', pref = 'PickExtraStage' },
-    { type = 'conf', pref = 'UnlockSystem' },
+  },
+  system = {
+    { type = 'conf', pref = 'SoundVolume' },
+    { type = 'conf', pref = 'LifeDifficulty' },
+    { type = 'conf', pref = 'Brightness' },
+    {
+      type = 'lua',
+      optionRow = screenButton('arcade', 'Arcade Options'),
+    }, 
   },
   theme = {
     ---@param ctx Context
@@ -154,6 +157,8 @@ return {
     if res and res.overlay then
       drawOverlay = res.overlay(self, ctx)
     end
+
+    local testText = ctx:BitmapText('common','Fart')
 
     self:SetDrawFunction(function()
       if drawOverlay then drawOverlay() end
