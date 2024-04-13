@@ -145,6 +145,10 @@ local optionsTable = {
       type = 'lua',
       optionRow = options.option.settingChoice('Console Layout', 'console_layout', keys(require 'gimmick.lib.layouts')),
     },
+    {
+      type = 'lua',
+      optionRow = options.option.settingToggle('Prevent Stretching', 'prevent_stretching'),
+    },
   },
 }
 

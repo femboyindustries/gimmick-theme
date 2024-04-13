@@ -4,7 +4,8 @@ local SAVE_NAME = 'gimmick!'
 
 M.data = {
   settings = {
-    console_layout = 'QwertyUS'
+    console_layout = 'QwertyUS',
+    prevent_stretching = true,
   },
 }
 

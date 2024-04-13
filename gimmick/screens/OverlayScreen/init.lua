@@ -4,17 +4,45 @@
 -- pretend-running through to get all the actors from the already-generated
 -- actorframe. yippee!
 
-local console = require 'gimmick.screens.OverlayScreen.console'
-local save = require 'gimmick.screens.OverlayScreen.save'
+local consoleModule = require 'gimmick.screens.OverlayScreen.console'
+local saveModule = require 'gimmick.screens.OverlayScreen.save'
 
 -- !!!!: actors built by `init` MUST remain deterministic.
 -- in other words, make sure the actors initialized never change conditionally
 
+---@param self ActorFrame
+---@param ctx Context
 local function init(self, ctx)
-  local drawConsole = console.init(self, ctx)
-  local drawSave = save.init(self, ctx)
+  local drawConsole = consoleModule.init(self, ctx)
+  local drawSave = saveModule.init(self, ctx)
 
   local lastdw, lastdh = dw, dh
+
+  self:SetUpdateFunction(function()
+    if save.data.settings.prevent_stretching then
+      local aspectRatio = PREFSMAN:GetPreference('DisplayAspectRatio')
+      local screenWidth = sh * aspectRatio
+      local actualScreenWidth = sh * (dw / dh)
+
+      _G.SCREEN_WIDTH = screenWidth
+      _G.SCREEN_CENTER_X = screenWidth / 2
+      _G.SCREEN_RIGHT = screenWidth
+      sw = screenWidth
+      scx = sw / 2
+      SCREEN_WIDTH = screenWidth
+      SCREEN_CENTER_X = screenWidth / 2
+      SCREEN_RIGHT = screenWidth
+
+      SCREENMAN:GetTopScreen():basezoomx(screenWidth / actualScreenWidth)
+    end
+
+    dw, dh = DISPLAY:GetWindowWidth(), DISPLAY:GetWindowHeight()
+
+    if lastdw ~= dw or lastdh ~= dh then
+      event.call('resize', dw, dh)
+      lastdw, lastdh = dw, dh
+    end
+  end)
 
   local time = 0
 
@@ -22,11 +50,6 @@ local function init(self, ctx)
     local newTime = os.clock()
     local dt = newTime - time
     time = newTime
-
-    if lastdw ~= dw or lastdh ~= dh then
-      event.call('resize', dw, dh)
-      lastdw, lastdh = dw, dh
-    end
 
     drawConsole(dt)
     drawSave(dt)
