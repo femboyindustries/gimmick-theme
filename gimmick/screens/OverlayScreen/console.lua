@@ -2,6 +2,8 @@ local M = {}
 
 local TextInput = require 'gimmick.lib.textinput'
 
+local samsung_button_ok_color = hex('3749D3')
+
 local names = {
   'GOCK (Gimmick Official Console Kontext)',
   'GIC (Gimmick Interactive Console)',
@@ -11,6 +13,7 @@ local names = {
   'FISH (Fanciest Interactive SHell)',
   'RACISM (Really awesome console i started making)',
   'ITG (I hate Theming _G)',
+  'SHIT (SHell In Theme)',
 }
 local name = names[math.random(1, #names)]
 local tips = {
@@ -102,6 +105,20 @@ function M.init(self, ctx)
   bitmapText:diffuse(1, 1, 1, 1)
 
   local quad = ctx:Quad()
+
+  local ban_bg = ctx:Sprite('Graphics/square')
+  ban_bg:diffuse(1,1,1,1)
+  ban_bg:stretchto(SCREEN_CENTER_X*0.4,SCREEN_CENTER_Y*0.6+20,SCREEN_CENTER_X*1.6,SCREEN_CENTER_Y*1.4+20)
+  local ban_caption = ctx:BitmapText(FONTS.sans_serif,'You are permanently banned\nfrom using the console')
+  ban_caption:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y)
+  ban_caption:zoom(0.5)
+  ban_caption:shadowlength(0)
+  ban_caption:diffuse(0,0,0,1)
+  local ban_btn = ctx:BitmapText(FONTS.sans_serif,'OK')
+  ban_btn:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y*1.33)
+  ban_btn:zoom(0.5)
+  ban_btn:shadowlength(0)
+  ban_btn:diffuse(samsung_button_ok_color:unpack())
 
   local t = TextInput.new()
 
@@ -340,6 +357,12 @@ function M.init(self, ctx)
         drawBorders(bitmapText, 1)
         bitmapText:diffuse(1, 0.2, 0.2, 1)
         bitmapText:Draw()
+      end
+
+      if IS_JAILBROKEN then
+        ban_bg:Draw()
+        ban_caption:Draw()
+        ban_btn:Draw()
       end
     end
   end

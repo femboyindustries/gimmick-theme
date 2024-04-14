@@ -49,6 +49,7 @@ local optionsTable = {
       optionRow = screenButton('gayzone', 'gay zone', 'Enter... if you dare...'),
     },
     ]]
+
     {
       type = 'lua',
       optionRow = options.option.button('Config Key/Joy Mappings', 'Config Key/Joy Mappings', function()
@@ -158,7 +159,7 @@ return {
       drawOverlay = res.overlay(self, ctx)
     end
 
-    local testText = ctx:BitmapText('common','Fart')
+    --local testText = ctx:BitmapText('common','Fart')
 
     self:SetDrawFunction(function()
       if drawOverlay then drawOverlay() end
