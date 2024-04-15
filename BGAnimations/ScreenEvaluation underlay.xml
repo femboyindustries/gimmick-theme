@@ -1,0 +1,3 @@
+<ActorFrame InitCommand="%gimmick.s.ScreenEvaluation.underlay.init"><children>
+	<Layer File="../actors.xml" InitCommand="%gimmick.s.ScreenEvaluation.underlay.initEnd"/>
+</children></ActorFrame>

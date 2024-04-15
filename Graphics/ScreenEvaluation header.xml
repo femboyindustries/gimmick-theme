@@ -1,0 +1,3 @@
+<ActorFrame InitCommand="%gimmick.s.ScreenEvaluation.header.init"><children>
+	<Layer File="../actors.xml" InitCommand="%gimmick.s.ScreenEvaluation.header.initEnd"/>
+</children></ActorFrame>

@@ -1,0 +1,4 @@
+
+<ActorFrame InitCommand="%gimmick.s.ScreenEvaluation.background.init"><children>
+	<Layer File="../actors.xml" InitCommand="%gimmick.s.ScreenEvaluation.background.initEnd"/>
+</children></ActorFrame>
