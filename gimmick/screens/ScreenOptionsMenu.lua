@@ -149,6 +149,14 @@ local optionsTable = {
       type = 'lua',
       optionRow = options.option.settingToggle('Prevent Stretching', 'prevent_stretching'),
     },
+    {
+      type = 'lua',
+      optionRow = options.option.settingToggle('Mascot Enabled','mascot_enabled')
+    },
+    {
+      type = 'lua',
+      optionRow = options.option.settingChoice('Theme Mascot','mascot',getFolderContents('Graphics/Mascots/')) --TODO: remove file extensions
+    }
   },
 }
 
@@ -164,6 +172,7 @@ return {
     end
 
     --local testText = ctx:BitmapText('common','Fart')
+
 
     self:SetDrawFunction(function()
       if drawOverlay then drawOverlay() end
@@ -219,4 +228,5 @@ return {
     end
     return res
   end),
+
 }

@@ -22,6 +22,10 @@ local choices = {
     command = 'stopmusic;screen,ScreenMayf'
   },
   {
+    name = 'TEMP - Choose Mascot',
+    command = 'stopmusic;screen,ScreenSelectMascot'
+  },
+  {
     name = 'Exit',
     command = 'stopmusic;screen,ScreenExit'
   }
@@ -49,6 +53,13 @@ return {
     local logo = ctx:Sprite('Graphics/NotITG')
 
     logo:addcommand('Init', function(s) s:SetShader(actorgen.Proxy.getRaw(gradShader)) end)
+
+
+    if save.data.settings.mascot_enabled then
+      char = ctx:Sprite('Graphics/Mascots/'..save.data.settings.mascot)
+      char:zoom(sw*0.0006)
+      char:xy(SCREEN_WIDTH*0.83,scy)
+    end
 
     local oldt = os.clock()
     self:SetDrawFunction(function()
@@ -105,6 +116,9 @@ return {
         grad:diffuse((mix(hex('ffd8ff'), rgb(1, 1, 1), choiceSelected[i].eased)):unpack())
 
         grad:Draw()
+        if save.data.settings.mascot_enabled then
+          char:Draw()
+        end
       end
     end)
   end),

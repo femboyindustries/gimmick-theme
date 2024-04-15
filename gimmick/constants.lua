@@ -66,3 +66,6 @@ IS_JAILBROKEN = pcall(os.execute, '')
 if IS_JAILBROKEN then
   Trace('Based alert')
 end
+
+--While this shouldnt ever change, Its good to assume it still might
+THEME_FOLDER = 'Themes'

@@ -5,6 +5,8 @@ local SAVE_NAME = 'gimmick!'
 M.data = {
   settings = {
     console_layout = 'QwertyUS',
+    mascot_enabled = false,
+    mascot = 'default',
     prevent_stretching = true,
   },
 }

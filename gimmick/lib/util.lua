@@ -442,3 +442,17 @@ end
 function delayedSetScreen(screen)
   GAMESTATE:DelayedGameCommand('screen,' .. screen)
 end
+
+---Gets Contents of a Folder within the theme
+---@generic T
+---@param path string
+---@return table
+function getFolderContents(path)
+  --TODO: Make it not require an ending slash
+  --Give the entire Theme folder if no arguments
+  if not path then path = '' end
+
+  local theme_path = THEME_FOLDER..'/'..THEME:GetCurThemeName()..'/'
+
+  return {GAMESTATE:GetFileStructure(theme_path..path)}
+end

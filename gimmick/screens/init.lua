@@ -58,6 +58,7 @@ gimmick.ChoiceProvider = function(choices, setupChoice)
   }
 end
 
+
 ---@param initFunc fun(self: ActorFrame, ctx: Context): nil
 function gimmick.ActorScreen(initFunc)
   return {

@@ -1,0 +1,3 @@
+<ActorFrame InitCommand="%gimmick.s.ScreenSelectMascot.footer.init"><children>
+	<Layer File="../actors.xml" InitCommand="%gimmick.s.ScreenSelectMascot.footer.initEnd"/>
+</children></ActorFrame>
