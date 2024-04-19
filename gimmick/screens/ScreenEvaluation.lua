@@ -1,3 +1,4 @@
+local TextPool = require 'gimmick.textpool'
 local AWESOME = false
 
 local judgements = {
@@ -63,9 +64,12 @@ return {
       return
     end
 
+    local pool = TextPool.new(ctx, FONTS.sans_serif, nil, function(actor)
+      actor:zoom(0.5)
+      actor:align(0, 0.5)
+    end)
+
     local winner = ctx:Sprite('Graphics/winner.png')
-    local text = ctx:BitmapText(FONTS.sans_serif)
-    text:zoom(0.5)
 
     local pn = 0
     local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(pn)
@@ -107,10 +111,10 @@ return {
     local score = decimal .. '.' .. fractional
 
     self:SetDrawFunction(function()
+      local text = pool:get(score)
+
       text:zoom(0.6)
-      text:settext(score)
       text:xy(15, 30)
-      text:align(0, 0.5)
       text:Draw()
 
       text:zoom(0.5)
@@ -119,23 +123,23 @@ return {
         local y = 60 + 30 * i
 
         if field.name then
-          text:settext(field.name)
+          local text = pool:get(field.name)
           text:xy(15, y)
           text:Draw()
         end
 
         if field.value then
-          text:settext(field.value)
+          local text = pool:get(field.value)
           text:xy(140, y)
           text:Draw()
         end
 
         if field.total then
-          text:settext('/')
+          local text = pool:get('/')
           text:xy(160, y)
           text:Draw()
 
-          text:settext(field.total)
+          local text = pool:get(field.total)
           text:xy(180, y)
           text:Draw()
         end
