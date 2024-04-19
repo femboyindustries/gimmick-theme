@@ -1,5 +1,38 @@
 local AWESOME = false
 
+local judgements = {
+  {
+    code = 'Marvelous',
+    score = 8, -- TNS_MARVELOUS
+    name = 'Fantastic',
+  },
+  {
+    code = 'Perfect',
+    score = 7, -- TNS_PERFECT
+    name = 'Excellent',
+  },
+  {
+    code = 'Great',
+    score = 6, -- TNS_GREAT
+    name = 'Great',
+  },
+  {
+    code = 'Good',
+    score = 5, -- TNS_GOOD
+    name = 'Decent',
+  },
+  {
+    code = 'Boo',
+    score = 4, -- TNS_BOO
+    name = 'Way Off',
+  },
+  {
+    code = 'Miss',
+    score = 3, -- TNS_MISS
+    name = 'Miss',
+  },
+}
+
 return {
   Init = function(self) Trace('theme.com') end,
   overlay = gimmick.ActorScreen(function(self, ctx)
@@ -30,7 +63,88 @@ return {
       return
     end
 
-    
+    local winner = ctx:Sprite('Graphics/winner.png')
+    local text = ctx:BitmapText(FONTS.sans_serif)
+    text:zoom(0.5)
+
+    local pn = 0
+    local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(pn)
+    local chart = stats:GetPossibleSteps()[1]:GetNoteData()
+
+    local holdsN = 0
+    local minesN = 0
+    for _, n in ipairs(chart) do
+      if n.length then holdsN = holdsN + 1 end
+      if n[3] == 'M' then minesN = minesN + 1 end
+    end
+
+    ---@type { name: string?, value: string?, total: string? }[]
+    local fields = {}
+
+    for _, judg in ipairs(judgements) do
+      table.insert(fields, {
+        name = judg.name,
+        value = tostring(stats:GetTapNoteScores(judg.score)),
+      })
+    end
+
+    table.insert(fields, {})
+
+    table.insert(fields, {
+      name = 'Holds',
+      value = stats:GetHoldNoteScores(2), -- HNS_OK
+      total = holdsN,
+    })
+    table.insert(fields, {
+      name = 'Mines',
+      value = stats:GetTapNoteScores(1), -- TNS_HITMINE
+      total = minesN,
+    })
+
+    local perc = stats:GetPercentDancePoints() * 100
+    local decimal = string.format('%02d', math.floor(perc))
+    local fractional = string.format('%02d', math.floor((perc % 1) * 100 + 0.5))
+    local score = decimal .. '.' .. fractional
+
+    self:SetDrawFunction(function()
+      text:zoom(0.6)
+      text:settext(score)
+      text:xy(15, 30)
+      text:align(0, 0.5)
+      text:Draw()
+
+      text:zoom(0.5)
+
+      for i, field in ipairs(fields) do
+        local y = 60 + 30 * i
+
+        if field.name then
+          text:settext(field.name)
+          text:xy(15, y)
+          text:Draw()
+        end
+
+        if field.value then
+          text:settext(field.value)
+          text:xy(140, y)
+          text:Draw()
+        end
+
+        if field.total then
+          text:settext('/')
+          text:xy(160, y)
+          text:Draw()
+
+          text:settext(field.total)
+          text:xy(180, y)
+          text:Draw()
+        end
+      end
+
+      winner:xy(scx, scy)
+      winner:scaletofit(scx - 100, scy - 100, scx + 100, scy + 100)
+      winner:Draw()
+    end)
   end),
   header = gimmick.ActorScreen(function(self, ctx)
   end),
