@@ -14,3 +14,8 @@ pressure!
 
 # WINDOWS IS GERMAN
 # LINUX IS WORKMAN
+
+actorframe transforms only apply to children when the children are drawn within the actorframe's draw function
+
+POSSIBLE BUTTONS event.on CAN SEND:
+https://github.com/openitg/openitg/blob/master/src/GameManager.cpp#L110
