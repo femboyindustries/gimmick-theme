@@ -79,8 +79,8 @@ function gimmick.ActorScreen(initFunc)
 end
 
 gimmick.NopScreen = {
-  init = function() end,
-  initEnd = function() end,
+  init = function() actorgen.ready(actorgen.Context.new()) end,
+  initEnd = function() actorgen.finalize() end,
 }
 
 gimmick.Screen = function()
