@@ -69,3 +69,5 @@ end
 
 --While this shouldnt ever change, Its good to assume it still might
 THEME_FOLDER = 'Themes'
+
+MASCOT_FOLDER = 'Graphics/Mascots/'

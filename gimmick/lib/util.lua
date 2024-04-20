@@ -486,3 +486,39 @@ function flexbox(ctx,conf,items)
 
   return af
 end
+
+---This purely exists to reduce the returns to 1e
+---@param s string
+---@param pattern string
+---@return string|nil
+string.betterfind = function(s,pattern)
+  _,_,result = string.find(s,pattern)
+  return result
+end
+
+---@param name string
+---@param extensions boolean?
+---Get the Filepath to a Mascot
+function getMascotPath(name,extensions)
+  if not extensions then extensions = false end
+
+  local folder = getFolderContents(MASCOT_FOLDER)
+  local basenames = {}
+
+  if extensions then
+    basenames = folder
+  else
+    for index, value in ipairs(folder) do
+      basenames[index] = string.betterfind(value,'^(.+)%.')
+    end
+    print('Available mascots: '..pretty(folder))
+  end
+  
+  result = search(basenames,name)
+
+  if result then
+    return MASCOT_FOLDER..folder[result]
+  else
+    return nil
+  end
+end
