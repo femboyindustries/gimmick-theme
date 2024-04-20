@@ -23,12 +23,10 @@ return {
   end,
   underlay = gimmick.ActorScreen(function (self, ctx)
     local config = {
-      x_pos = scx,
-      y_pos = scy,
       halign = 0.5,
       valign = 0.5,
       width = 100,
-      height = sh,
+      height = sh * 0.6,
     }
     local actors = {
       ctx:BitmapText(FONTS.sans_serif,'poop'),
@@ -37,20 +35,17 @@ return {
     }
 
     local bg = ctx:Quad()
-    bg:diffuse(1,1,1,1)
-    bg:xy(config['x_pos'] - config['width']*config['halign'], config['y_pos'] - config['height']*config['valign'])
+    bg:diffuse(1,1,1,0.2)
+    bg:xy(scx, scy)
     bg:SetWidth(config['width'])
     bg:SetHeight(config['height'])
 
     local af = flexbox(ctx,config,actors)
+    af:xy(scx, scy)
 
-    af:SetDrawFunction(function()
-      local children = self:GetChildren()
-      for index, value in ipairs(children) do
-        value:Draw()
-      end
+    self:SetDrawFunction(function()
       bg:Draw()
-      self:Draw()
+      af:Draw()
     end)
     
   end),

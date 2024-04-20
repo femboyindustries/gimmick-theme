@@ -444,7 +444,6 @@ function delayedSetScreen(screen)
 end
 
 ---Gets Contents of a Folder within the theme
----@generic T
 ---@param path string
 ---@return table
 function getFolderContents(path)
@@ -457,27 +456,33 @@ function getFolderContents(path)
   return {GAMESTATE:GetFileStructure(theme_path..path)}
 end
 
----@generic T
 ---@param ctx Context
 ---@param items Actor[]
 function flexbox(ctx,conf,items)
   local af = ctx:ActorFrame()
   local config = conf or {
-    x_pos = scx,
-    y_pos = scy,
     halign = 0.5,
     valign = 0.5,
     width = 100,
     height = 300,
   }
   print(pretty(config))
-  af:xy(config['x_pos'] - config['width'] * config['halign'], config['y_pos'] - config['height'] * config['valign'])
 
-  for index, value in ipairs(items) do
-      ctx:addChild(af,value)
-      --value:valign(0.5)
-      --value:halign(0.5)
-      value:xy(config['x_pos']+(config['width']*config['halign']),(config['height']/#items)*index)
+  for index, item in ipairs(items) do
+    ctx:addChild(af,item)
+    item:halign(config['halign'])
+    item:valign(config['valign'])
+    item:xy(
+      config['width'] * (config['halign'] - 0.5),
+      (config['height'] / #items) * (index - #items/2 - 0.5)
+    )
   end
+
+  af:SetDrawFunction(function()
+    for _, item in ipairs(items) do
+      item:Draw()
+    end
+  end)
+
   return af
 end
