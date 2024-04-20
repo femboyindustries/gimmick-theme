@@ -399,6 +399,9 @@ function actorInit.Init(idx)
       --print('--- layer ' .. #stack .. ' done ---')
       stack:pop()
       s = stack:top()
+
+      local actor = s.actors[s.actorIdx]
+      if actor.Init then actor.Init(self) end
     end
 
     if idx >= NODES_PER_AF or s.actorIdx == #s.actors then
