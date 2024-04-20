@@ -471,15 +471,12 @@ function flexbox(ctx,conf,items)
     height = 300,
   }
   print(pretty(config))
-  af:xy(config['x_pos']+(config['width']*config['halign']),config['y_pos']+(config['height']*config['valign']))
+  af:xy(config['x_pos'] - config['width'] * config['halign'], config['y_pos'] - config['height'] * config['valign'])
 
-  af:SetDrawFunction(function(self)
-    self:Draw()
-  end)
   for index, value in ipairs(items) do
       ctx:addChild(af,value)
-      value:valign(0.5)
-      value:halign(0.5)
+      --value:valign(0.5)
+      --value:halign(0.5)
       value:xy(config['x_pos']+(config['width']*config['halign']),(config['height']/#items)*index)
   end
   return af

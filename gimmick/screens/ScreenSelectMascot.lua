@@ -27,12 +27,31 @@ return {
       y_pos = scy,
       halign = 0.5,
       valign = 0.5,
-      width = 0,
-      height = 300,
+      width = 100,
+      height = sh,
     }
-    
+    local actors = {
+      ctx:BitmapText(FONTS.sans_serif,'poop'),
+      ctx:BitmapText(FONTS.sans_serif,'she'),
+      ctx:BitmapText(FONTS.sans_serif,'andrew tate')
+    }
 
-    flexbox(ctx,config)
+    local bg = ctx:Quad()
+    bg:diffuse(1,1,1,1)
+    bg:xy(config['x_pos'] - config['width']*config['halign'], config['y_pos'] - config['height']*config['valign'])
+    bg:SetWidth(config['width'])
+    bg:SetHeight(config['height'])
+
+    local af = flexbox(ctx,config,actors)
+
+    af:SetDrawFunction(function()
+      local children = self:GetChildren()
+      for index, value in ipairs(children) do
+        value:Draw()
+      end
+      bg:Draw()
+      self:Draw()
+    end)
     
   end),
 }
