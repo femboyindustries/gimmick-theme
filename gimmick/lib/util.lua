@@ -456,3 +456,31 @@ function getFolderContents(path)
 
   return {GAMESTATE:GetFileStructure(theme_path..path)}
 end
+
+---@generic T
+---@param ctx Context
+---@param items Actor[]
+function flexbox(ctx,conf,items)
+  local af = ctx:ActorFrame()
+  local config = conf or {
+    x_pos = scx,
+    y_pos = scy,
+    halign = 0.5,
+    valign = 0.5,
+    width = 100,
+    height = 300,
+  }
+  print(pretty(config))
+  af:xy(config['x_pos']+(config['width']*config['halign']),config['y_pos']+(config['height']*config['valign']))
+
+  af:SetDrawFunction(function(self)
+    self:Draw()
+  end)
+  for index, value in ipairs(items) do
+      ctx:addChild(af,value)
+      value:valign(0.5)
+      value:halign(0.5)
+      value:xy(config['x_pos']+(config['width']*config['halign']),(config['height']/#items)*index)
+  end
+  return af
+end
