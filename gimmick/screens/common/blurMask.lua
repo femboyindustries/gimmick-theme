@@ -1,15 +1,8 @@
-local DO_BLUR = true
-
 ---@param ctx Context
 ---@param maskFunc fun(ctx: Context): (fun(): nil) @ Given a Context, returns a drawfunction
 ---@param radius number?
 function gimmick.common.blurMask(ctx, maskFunc, radius)
   radius = radius or 25
-
-  local blurShaderV = ctx:Shader('Shaders/blurMask.frag')
-  local blurShaderH = ctx:Shader('Shaders/blurMask.frag')
-  blurShaderH:define('H', true)
-  blurShaderH:compileImmediate()
 
   local blank = ctx:Quad()
   blank:diffuse(0, 0, 0, 1)
@@ -18,6 +11,13 @@ function gimmick.common.blurMask(ctx, maskFunc, radius)
   local maskDrawFunc = maskFunc(ctx)
 
   local maskAFT = aft(ctx, true)
+
+  local blurShaderV = ctx:Shader('Shaders/blurMask.frag')
+  local blurShaderH = ctx:Shader('Shaders/blurMask.frag')
+  blurShaderH:define('H', true)
+  blurShaderH:compileImmediate()
+
+  local fauxShader = ctx:Shader('Shaders/blurMaskFaux.frag')
 
   local blurAFTV, blurSpriteV = aftSpritePair(ctx, true)
 
@@ -33,9 +33,27 @@ function gimmick.common.blurMask(ctx, maskFunc, radius)
     blurShaderH:uniformTexture('samplerMask', maskAFT:GetTexture())
     blurSpriteV:SetShader(actorgen.Proxy.getRaw(blurShaderV))
     blurSpriteH:SetShader(actorgen.Proxy.getRaw(blurShaderH))
+    fauxShader:uniformTexture('samplerBack', blurAFTV:GetTexture())
   end)
 
   return function()
+    if not save.data.settings.do_blur then
+      blurAFTV:Draw()
+
+      blank:Draw()
+      maskDrawFunc()
+      maskAFT:Draw()
+
+      blurSpriteH:SetShader(actorgen.Proxy.getRaw(fauxShader))
+      blurSpriteH:SetTexture(maskAFT:GetTexture())
+      blurSpriteH:Draw()
+
+      return
+    end
+
+    blurSpriteH:SetShader(actorgen.Proxy.getRaw(blurShaderH))
+    blurSpriteH:SetTexture(blurAFTH:GetTexture())
+
     blurAFTV:Draw()
 
     blank:Draw()

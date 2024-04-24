@@ -156,7 +156,11 @@ local optionsTable = {
     {
       type = 'lua',
       optionRow = options.option.settingChoice('Theme Mascot','mascot',getFolderContents('Graphics/Mascots/')) --TODO: remove file extensions
-    }
+    },
+    {
+      type = 'lua',
+      optionRow = options.option.settingToggle('Enable Blur', 'do_blur'),
+    },
   },
 }
 

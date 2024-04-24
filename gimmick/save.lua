@@ -8,6 +8,7 @@ M.data = {
     mascot_enabled = false,
     mascot = 'default',
     prevent_stretching = true,
+    do_blur = true,
   },
 }
 
