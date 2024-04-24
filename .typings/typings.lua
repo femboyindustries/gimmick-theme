@@ -16,3 +16,5 @@ SCREENMAN = {}
 PROFILEMAN = {}
 ---@type RageInput
 INPUTMAN = {}
+
+string.gfind = string.gmatch
