@@ -306,13 +306,24 @@ function copy(tab)
   return {unpack(tab)}
 end
 
+function stripMeta(tab)
+  local new = {}
+  for k, v in pairs(tab) do
+    if not(type(k) == 'string' and string.sub(k, 1, 2) == '__') then
+      new[k] = v
+    end
+  end
+  return new
+end
+
 ---@param o any
 function pretty(o, depth, seen)
   depth = depth or 0
-  if depth > 6 then
+  if depth > 3 then
     return '...'
   end
   seen = seen and copy(seen) or {}
+  --print(depth, countKeys(seen))
 
   if type(o) == 'userdata' then
     if seen[o] then return '(circular)' end
@@ -331,7 +342,7 @@ function pretty(o, depth, seen)
 
       return str
     else
-      return tostring(o)
+      return pretty(stripMeta(getmetatable(o)), depth + 1, seen)
     end
   elseif type(o) == 'table' then
     if seen[o] then return '(circular)' end
@@ -339,7 +350,7 @@ function pretty(o, depth, seen)
     local keys = countKeys(o)
     local onlyNumbers = true
     for i = 1, keys do
-      if o[i] == nil then
+      if rawget(o, i) == nil then
         onlyNumbers = false
         break
       end
@@ -351,7 +362,7 @@ function pretty(o, depth, seen)
 
     if onlyNumbers then
       for i, v in ipairs(o) do
-        local s = pretty(v, depth, seen)
+        local s = pretty(v, depth + 1, seen)
         if string.find(s, '\n') or (#str - nPos + #s + depth * 2) > 40 then
           linebreaks = true
           str = str .. '\n'
@@ -363,7 +374,7 @@ function pretty(o, depth, seen)
     else
       for k, v in pairs(o) do
         local ks = (type(k) == 'string' and string.find(k, '^[a-zA-Z0-9]+$')) and k or ('[' .. pretty(k, depth + 1, seen) .. ']')
-        local vs = pretty(v, depth, seen)
+        local vs = pretty(v, depth + 1, seen)
         local s = ks .. ' = ' .. vs
         local nPos = (string.find(str, '\n') or 0)
         if string.find(s, '\n') or (#str - nPos + #s + depth * 2) > 40 then
