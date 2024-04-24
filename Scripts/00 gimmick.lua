@@ -145,7 +145,7 @@ gimmick.require = require
 local MIN_SUPPORTED_VER = 20220925
 
 local versionDate = GAMESTATE:GetVersionDate()
-if tonumber(versionDate) < MIN_SUPPORTED_VER then
+if tonumber(versionDate) < MIN_SUPPORTED_VER and not LITE then
   -- very dumb way to display an error as a dialog
   GAMESTATE:ApplyGameCommand(
     '%\n\n' ..
