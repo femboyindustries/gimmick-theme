@@ -1,3 +1,4 @@
+require 'gimmick.env'
 require 'gimmick.lib.util'
 require 'gimmick.constants'
 require 'gimmick.lib.draw'
