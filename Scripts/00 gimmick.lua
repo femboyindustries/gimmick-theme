@@ -35,7 +35,11 @@ paw()
 function gimmick.print(...)
   local msg = {}
   for _, val in ipairs(arg) do
-    table.insert(msg, tostring(val))
+    if type(val) ~= 'string' and paw.pretty then
+      table.insert(msg, paw.pretty(val))
+    else
+      table.insert(msg, tostring(val))
+    end
   end
   Debug('[GIMMICK] ' .. table.concat(msg, '\t'))
 end
