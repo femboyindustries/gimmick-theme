@@ -19,3 +19,4 @@ actorframe transforms only apply to children when the children are drawn within 
 
 POSSIBLE BUTTONS event.on CAN SEND:
 https://github.com/openitg/openitg/blob/master/src/GameManager.cpp#L110
+

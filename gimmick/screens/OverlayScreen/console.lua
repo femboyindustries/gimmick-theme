@@ -14,6 +14,7 @@ local names = {
   'RACISM (Really awesome console i started making)',
   'ITG (I hate Theming _G)',
   'SHIT (SHell In Theme)',
+  'PENIS (penis)',
 }
 local name = names[math.random(1, #names)]
 local tips = {
@@ -97,6 +98,7 @@ function M.init(self, ctx)
 
   local scissor = ctx:Shader('Shaders/scissor.frag')
 
+  
   local bitmapText = ctx:BitmapText(FONTS.monospace, '')
   bitmapText:xy(PADDING, PADDING)
   bitmapText:zoom(zoom)
@@ -106,6 +108,7 @@ function M.init(self, ctx)
 
   local quad = ctx:Quad()
 
+  --[[
   local ban_bg = ctx:Sprite('Graphics/square')
   ban_bg:diffuse(1,1,1,1)
   ban_bg:stretchto(SCREEN_CENTER_X*0.4,SCREEN_CENTER_Y*0.6+20,SCREEN_CENTER_X*1.6,SCREEN_CENTER_Y*1.4+20)
@@ -119,6 +122,10 @@ function M.init(self, ctx)
   ban_btn:zoom(0.5)
   ban_btn:shadowlength(0)
   ban_btn:diffuse(samsung_button_ok_color:unpack())
+  ]]
+
+  local disclaimer = ctx:Sprite('Graphics/warning')
+  disclaimer:scaletocover(0,0,sw,sh)
 
   local t = TextInput.new()
 
@@ -360,9 +367,10 @@ function M.init(self, ctx)
       end
 
       if IS_JAILBROKEN then
-        ban_bg:Draw()
-        ban_caption:Draw()
-        ban_btn:Draw()
+        --ban_bg:Draw()
+        --ban_caption:Draw()
+        --ban_btn:Draw()
+        disclaimer:Draw()
       end
     end
   end

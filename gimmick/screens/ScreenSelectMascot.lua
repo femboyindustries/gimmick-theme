@@ -76,11 +76,20 @@ return {
 
   underlay = gimmick.ActorScreen(function(self,ctx)
     local mascot_actors = {}
+    local background_actors = {}
+
+
     for index, value in ipairs(mascots) do
       local actor = ctx:Sprite(mascot_paths[index]['character'])
       actor:scaletofit(0,0,sw*0.5,sh*0.5)
       actor:xy(scx*0.6,scy)
       table.insert(mascot_actors,actor)
+
+      local background = ctx:Sprite(mascot_paths[index]['background'])
+      background:scaletocover(0,0,sw,sh)
+
+      table.insert(background_actors,background)
+
       active[4] = true
     end
 
@@ -99,9 +108,15 @@ return {
         lastMenuRightPress = currentTime -- Update the time of the last press
         end
       end
-    end)
+    end) --( imdex of actor - cursor/active -> math.sin ) * 5
 
+  
+    local oldt = 0
     self:SetDrawFunction(function(self)
+      local newt = os.clock()
+      local dt = newt - oldt
+      oldt = newt --t thands for thog
+
       local active_i = 1 -- Default to the first element
       for i = 1, #active do
         if active[i] then
@@ -109,22 +124,30 @@ return {
           break
         end
       end
+
+      background_actors[((active_i-1) % #background_actors)+1]:Draw()  --why -1 and +1???? who knows
     
       for index, value in ipairs(mascot_actors) do
+        choiceSelected[index]:update(dt)
         local position_index = (index - active_i) % #mascot_actors
         if position_index < 0 then
           position_index = position_index + #mascot_actors
         end
+        local a = index - position_index
+        local x,y = math.cos(a), math.sin(a)
         if position_index == 0 then
-          value:xy(scx*0.6, scy) -- Active mascot
+          choiceSelected[index]:set(x*(scx*0.6))
+          value:xy(choiceSelected[index].eased, scy) -- Active mascot
         elseif position_index < #mascot_actors / 2 then
-          value:xy(scx*0.3, scy) -- Mascots before the active
+          choiceSelected[index]:set(x*(scx*0.6))
+          value:xy(choiceSelected[index].eased, scy) -- Mascots before the active
         else
-          value:xy(scx*0.9, scy) -- Mascots after the active
+          choiceSelected[index]:set(x*(scx*0.6))
+          value:xy(choiceSelected[index].eased, scy) -- Mascots after the active
         end
         value:Draw()
       end
     end)
-    
+
   end)
 }
