@@ -155,7 +155,7 @@ local optionsTable = {
     },
     {
       type = 'lua',
-      optionRow = options.option.settingChoice('Theme Mascot','mascot',getFolderContents('Graphics/Mascots/')) --TODO: remove file extensions
+      optionRow = options.option.settingChoice('Theme Mascot','mascot',mascotList()) --TODO: remove file extensions
     },
     {
       type = 'lua',

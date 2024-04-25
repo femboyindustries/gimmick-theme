@@ -456,15 +456,23 @@ end
 
 ---Gets Contents of a Folder within the theme
 ---@param path string
+---@param clean_extensions? boolean
 ---@return table
-function getFolderContents(path)
+function getFolderContents(path,clean_extensions)
   --TODO: Make it not require an ending slash
   --Give the entire Theme folder if no arguments
   if not path then path = '' end
 
   local theme_path = THEME_FOLDER..'/'..THEME:GetCurThemeName()..'/'
 
-  return {GAMESTATE:GetFileStructure(theme_path..path)}
+  local files = {GAMESTATE:GetFileStructure(theme_path..path)}
+
+  if clean_extensions then
+    for index, value in ipairs(files) do
+      files[index] = string.betterfind(value,'^(.+)%.')
+    end
+  end
+  return files
 end
 
 ---@param ctx Context
@@ -498,7 +506,7 @@ function flexbox(ctx,conf,items)
   return af
 end
 
----This purely exists to reduce the returns to 1e
+---This purely exists to reduce the returns to 1
 ---@param s string
 ---@param pattern string
 ---@return string|nil
@@ -507,29 +515,41 @@ string.betterfind = function(s,pattern)
   return result
 end
 
----@param name string
----@param extensions boolean?
----Get the Filepath to a Mascot
-function getMascotPath(name,extensions)
-  if not extensions then extensions = false end
 
-  local folder = getFolderContents(MASCOT_FOLDER)
-  local basenames = {}
+---@param name string Name of the mascot
+function getMascotPaths(name)
+  local mascots = require('Graphics.Mascots.index')
 
-  if extensions then
-    basenames = folder
-  else
-    for index, value in ipairs(folder) do
-      basenames[index] = string.betterfind(value,'^(.+)%.')
-    end
-    print('Available mascots: '..pretty(folder))
-  end
-  
-  result = search(basenames,name)
-
-  if result then
-    return MASCOT_FOLDER..folder[result]
-  else
+  -- Only proceed if the mascot name exists in the index
+  if not mascots[name] then
+    print("Mascot not found in index: ", name)
     return nil
   end
+
+  local bgs = getFolderContents(MASCOT_FOLDER .. MASCOT_SUBFOLDERS['backgrounds'], true)
+  local chars = getFolderContents(MASCOT_FOLDER .. MASCOT_SUBFOLDERS['characters'], true)
+
+  local found_bg = search(bgs, mascots[name]['background'])
+  local found_char = search(chars, mascots[name]['character'])
+
+  -- Ensure both background and character are found
+  if not found_bg or not found_char then
+    print("Missing files for the mascot.")
+    return nil
+  end
+
+  --look at me jill im doing the table.concat!!!
+  local bgPath = table.concat({MASCOT_FOLDER, MASCOT_SUBFOLDERS['backgrounds'], bgs[found_bg]}, "")
+  local charPath = table.concat({MASCOT_FOLDER, MASCOT_SUBFOLDERS['characters'], chars[found_char]}, "")
+
+  return {
+      background = bgPath,
+      character = charPath
+  }
 end
+
+
+function mascotList()
+  return keys(require('Graphics.Mascots.index'))
+end
+

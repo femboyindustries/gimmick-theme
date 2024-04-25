@@ -9,10 +9,10 @@ end
 
 local active = {}
 local mascot_paths = {}
-local mascots = getFolderContents('Graphics/Mascots/')
+local mascots = mascotList()
 
 for _, mascot in ipairs(mascots) do
-  mascot_paths[#mascot_paths+1] = getMascotPath(mascot,true)
+  mascot_paths[#mascot_paths+1] = getMascotPaths(mascot)
   active[#active+1] = false 
 end
 
@@ -77,7 +77,7 @@ return {
   underlay = gimmick.ActorScreen(function(self,ctx)
     local mascot_actors = {}
     for index, value in ipairs(mascots) do
-      local actor = ctx:Sprite(mascot_paths[index])
+      local actor = ctx:Sprite(mascot_paths[index]['character'])
       actor:scaletofit(0,0,sw*0.5,sh*0.5)
       actor:xy(scx*0.6,scy)
       table.insert(mascot_actors,actor)

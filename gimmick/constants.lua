@@ -47,3 +47,4 @@ end
 THEME_FOLDER = 'Themes'
 
 MASCOT_FOLDER = 'Graphics/Mascots/'
+MASCOT_SUBFOLDERS = {backgrounds = 'backgrounds/', characters = 'characters/'}

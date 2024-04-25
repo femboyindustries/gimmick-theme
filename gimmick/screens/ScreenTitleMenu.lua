@@ -56,7 +56,7 @@ return {
 
 
     if save.data.settings.mascot_enabled then
-      char = ctx:Sprite('Graphics/Mascots/'..save.data.settings.mascot)
+      char = ctx:Sprite(getMascotPaths(save.data.settings.mascot)['character'])
       char:zoom(sw*0.0006)
       char:xy(SCREEN_WIDTH*0.83,scy)
     end
