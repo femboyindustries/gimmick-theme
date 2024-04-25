@@ -164,6 +164,16 @@ local optionsTable = {
   },
 }
 
+event.on('press', function(pn, btn)
+  -- hacky workaround to esc being broken
+  if SCREENMAN:GetTopScreen():GetName() == 'ScreenOptionsMenu' and optionsStack:top() and btn == 'Back' then
+    print('Popping stack forcefully: ' .. optionsStack:pop())
+    if not optionsStack:top() then
+      SCREENMAN:SetNewScreen('ScreenTitleMenu')
+    end
+  end
+end)
+
 return {
   overlay = gimmick.ActorScreen(function(self, ctx)
     local opts = optionsStack:top()

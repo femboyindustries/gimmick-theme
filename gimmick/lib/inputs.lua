@@ -94,13 +94,13 @@ function M.update()
   for pn in pairs(M.inputs) do
     for button in pairs(M.inputs[pn]) do
       -- now pressed, wasn't before -> press
-      if not oldInputs[button] then
+      if not oldInputs[pn][button] then
         event.call('press', pn, button)
       end
     end
     for button in pairs(oldInputs[pn]) do
       -- was pressed, now isn't -> release
-      if not M.inputs[button] then
+      if not M.inputs[pn][button] then
         event.call('release', pn, button)
       end
     end

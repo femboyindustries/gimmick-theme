@@ -132,7 +132,7 @@ return {
         local mapParse, _, pn, keyName, keySecondary = string.find(meta, 'Controller (%d+) (.-) %- %((.-) secondary%)')
         if not mapParse then
           -- try without secondary
-          mapParse, _, pn, keyName = string.find(meta, 'Controller (%d+) (.-)')
+          mapParse, _, pn, keyName = string.find(meta, 'Controller (%d+) (.+)')
           if mapParse then
             local commentParse, _, newKeyName, comment = string.find(keyName, '(.-) %- (.-)')
             if commentParse then
