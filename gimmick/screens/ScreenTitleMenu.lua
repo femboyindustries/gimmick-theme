@@ -1,4 +1,5 @@
 local easable = require 'gimmick.lib.easable'
+local mascots = require 'gimmick.mascots'
 
 local function getChoicePos(i)
   return scx - 80 - i * 10, scy + i * 40
@@ -56,7 +57,7 @@ return {
 
 
     if save.data.settings.mascot_enabled then
-      char = ctx:Sprite(getMascotPaths(save.data.settings.mascot)['character'])
+      char = ctx:Sprite(mascots.getPaths(save.data.settings.mascot)['character'])
       char:zoom(sw*0.0006)
       char:xy(SCREEN_WIDTH*0.83,scy)
     end

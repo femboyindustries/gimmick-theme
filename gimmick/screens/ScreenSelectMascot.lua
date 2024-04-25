@@ -1,18 +1,16 @@
 local easable = require 'gimmick.lib.easable'
+local mascots = require 'gimmick.mascots'
 
 local function getChoicePos(i)
   return scx - 80 - i * 10, scy + i * 40
 end
 
-
-
-
 local active = {}
-local mascot_paths = {}
-local mascots = mascotList()
+local mascotPaths = {}
+local mascotNames = mascots.getMascots()
 
-for _, mascot in ipairs(mascots) do
-  mascot_paths[#mascot_paths+1] = getMascotPaths(mascot)
+for _, mascot in ipairs(mascotNames) do
+  mascotPaths[#mascotPaths+1] = mascots.getPaths(mascot)
   active[#active+1] = false 
 end
 
@@ -27,11 +25,9 @@ local active_metatable = {
 setmetatable(active,active_metatable)
 
 local choiceSelected = {}
-for i = 1, #mascots do
+for i = 1, #mascotNames do
   choiceSelected[i] = easable(0, 28)
 end
-
-
 
 return {
   PrevScreen="ScreenTitleMenu",
@@ -78,14 +74,13 @@ return {
     local mascot_actors = {}
     local background_actors = {}
 
-
-    for index, value in ipairs(mascots) do
-      local actor = ctx:Sprite(mascot_paths[index]['character'])
+    for index, value in ipairs(mascotNames) do
+      local actor = ctx:Sprite(mascotPaths[index]['character'])
       actor:scaletofit(0,0,sw*0.5,sh*0.5)
       actor:xy(scx*0.6,scy)
       table.insert(mascot_actors,actor)
 
-      local background = ctx:Sprite(mascot_paths[index]['background'])
+      local background = ctx:Sprite(mascotPaths[index]['background'])
       background:scaletocover(0,0,sw,sh)
 
       table.insert(background_actors,background)

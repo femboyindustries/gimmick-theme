@@ -1,5 +1,6 @@
 local options = require 'gimmick.options'
 local stack   = require 'gimmick.stack'
+local mascots = require 'gimmick.mascots'
 
 local optionsStack = stack.new()
 local stackLocked = true
@@ -155,7 +156,7 @@ local optionsTable = {
     },
     {
       type = 'lua',
-      optionRow = options.option.settingChoice('Theme Mascot','mascot',mascotList()) --TODO: remove file extensions
+      optionRow = options.option.settingChoice('Theme Mascot','mascot', mascots.getMascots())
     },
     {
       type = 'lua',
