@@ -613,7 +613,7 @@ function GameState:GetNumSidesJoined() end
 ---
 --- @param path string The path to match
 ---
---- @return multiple
+--- @return string ...
 function GameState:GetFileStructure(path) end
 
 --- Returns whether the given player is the winner

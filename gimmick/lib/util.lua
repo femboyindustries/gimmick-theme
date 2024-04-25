@@ -463,15 +463,19 @@ function getFolderContents(path,clean_extensions)
   --Give the entire Theme folder if no arguments
   if not path then path = '' end
 
-  local theme_path = THEME_FOLDER..'/'..THEME:GetCurThemeName()..'/'
+  local files = {}
 
-  local files = {GAMESTATE:GetFileStructure(theme_path..path)}
-
-  if clean_extensions then
-    for index, value in ipairs(files) do
-      files[index] = string.betterfind(value,'^(.+)%.')
+  for base in string.gfind(gimmick.package.search, '[^;]+') do
+    local paths = {GAMESTATE:GetFileStructure(base .. path)}
+    for _, v in ipairs(paths) do
+      if clean_extensions then
+        local clean = string.betterfind(v, '^(.+)%.')
+        if clean then v = clean end
+      end
+      table.insert(files, v)
     end
   end
+
   return files
 end
 
@@ -511,14 +515,14 @@ end
 ---@param pattern string
 ---@return string|nil
 string.betterfind = function(s,pattern)
-  _,_,result = string.find(s,pattern)
+  local _,_,result = string.find(s,pattern)
   return result
 end
 
 
 ---@param name string Name of the mascot
 function getMascotPaths(name)
-  local mascots = require('Graphics.Mascots.index')
+  local mascots = require('Mascots')
 
   -- Only proceed if the mascot name exists in the index
   if not mascots[name] then
@@ -550,6 +554,6 @@ end
 
 
 function mascotList()
-  return keys(require('Graphics.Mascots.index'))
+  return keys(require('Mascots'))
 end
 

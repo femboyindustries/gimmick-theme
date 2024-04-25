@@ -69,11 +69,11 @@ end
 
 local folder = '/' .. THEME:GetCurThemeName() .. '/'
 local addFolder = string.lower(PREFSMAN:GetPreference('AdditionalFolders'))
-local add = './themes' .. folder .. ';' .. string.gsub(addFolder, ',', '/themes' .. folder .. ';') .. '/themes' .. folder
 
 -- adapted from mirin template
 
 gimmick.package = {
+  search = './themes' .. folder .. ';' .. string.gsub(addFolder, ',', '/themes' .. folder .. ';') .. '/themes' .. folder,
   path = '?.lua;?/init.lua',
   preload = {},
   loaded = {},
@@ -86,7 +86,7 @@ gimmick.package = {
       local errors = {}
       -- get the filename
       local filename = string.gsub(modname, '%.', '/')
-      for prefix in string.gfind(add, '[^;]+') do
+      for prefix in string.gfind(gimmick.package.search, '[^;]+') do
         for path in string.gfind(gimmick.package.path, '[^;]+') do
           -- get the file path
           local filepath = prefix .. string.gsub(path, '%?', filename)
