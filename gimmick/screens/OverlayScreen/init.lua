@@ -33,7 +33,10 @@ local function init(self, ctx)
       SCREEN_CENTER_X = screenWidth / 2
       SCREEN_RIGHT = screenWidth
 
-      SCREENMAN:GetTopScreen():basezoomx(screenWidth / actualScreenWidth)
+      local topScreen = SCREENMAN:GetTopScreen()
+      if topScreen then
+        topScreen:basezoomx(screenWidth / actualScreenWidth)
+      end
     end
 
     dw, dh = DISPLAY:GetWindowWidth(), DISPLAY:GetWindowHeight()
