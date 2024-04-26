@@ -35,5 +35,9 @@ end
 function M.getMascots()
   return keys(mascots)
 end
+---@param name string
+function M.getDescription(name)
+  return mascots[name]['description']
+end
 
 return M
