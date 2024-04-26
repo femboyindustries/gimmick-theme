@@ -17,4 +17,17 @@ return {
     background = 'tate',
     character = 'tate',
   },
+  jolly = {
+    background = 'white',
+    character = 'jollysivie'
+  },
+  rya = {
+    background = 'white',
+    character = 'rya'
+  },
+  osaka = {
+    background = 'tate',
+    character = 'xjag5b1r4orc1'
+  }
+
 }
