@@ -93,7 +93,8 @@ local optionsTable = {
     },
     { type = 'conf', pref = 'Windowed' },
     { type = 'conf', pref = 'AspectRatio' },
-    { type = 'conf', pref = 'DisplayResolution' }, --why was this commented out
+    --{ type = 'conf', pref = 'DisplayResolution' }, --why was this commented out
+    -- because it forcefully sets your resolution upon exiting to different values than you had when going in
     { type = 'conf', pref = 'DisplayColor' },
     { type = 'conf', pref = 'TextureColor' },
     { type = 'conf', pref = 'MovieColor' },
