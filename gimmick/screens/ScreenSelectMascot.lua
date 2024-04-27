@@ -74,6 +74,10 @@ return {
 
         local description = bmt:get(mascots.getDescription(mascotNames[selected]))
         local name = bmt:get(mascotNames[selected])
+        local disclaimer = bmt:get('Press Enter to save your selection!')
+
+        disclaimer:zoom(0.7)
+        disclaimer:xy(scx,scy*0.2)
 
         name:zoom(1)
         name:xy(scx * 0.8, sh * 0.9)
@@ -91,6 +95,7 @@ return {
             background_actors[selected]:Draw()
             darken:Draw()
 
+            
             description:settext(mascots.getDescription(mascotNames[selected]))
             name:settext(mascotNames[selected])
 
@@ -109,6 +114,7 @@ return {
                 mascot:z((y * (sh * 0.3)))
                 mascot:Draw()
             end
+            disclaimer:Draw()
             description:Draw()
             name:Draw()
         end)

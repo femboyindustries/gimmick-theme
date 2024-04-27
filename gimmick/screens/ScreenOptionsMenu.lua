@@ -167,11 +167,7 @@ local optionsTable = {
     },
     {
       type = 'lua',
-      optionRow = options.option.settingChoice('Theme Mascot','mascot', mascots.getMascots())
-    },
-    {
-      type = 'lua',
-      optionRow = arbitraryScreen('ScreenSelectMascot', 'Entire VOLATILE mode'),
+      optionRow = arbitraryScreen('ScreenSelectMascot', 'Select Mascot'),
     }, 
     {
       type = 'lua',
