@@ -1,5 +1,6 @@
 local easable = require 'gimmick.lib.easable'
 local mascots = require 'gimmick.mascots'
+local TextPool = require 'gimmick.textpool'
 
 local function getChoicePos(i)
   return scx - 80 - i * 10, scy + i * 40
@@ -28,6 +29,11 @@ return {
     bmt:xy(scx*1.5,scy*0.5)
     bmt:zoom(0.3)
 
+    local bmt = TextPool.new(ctx, FONTS.sans_serif, nil, function(actor)
+      actor:xy(scx*1.5,scy*0.5)
+      actor:zoom(0.3)
+    end)
+
     for index, value in ipairs(mascotNames) do
       local actor = ctx:Sprite(mascotPaths[index]['character'])
       actor:scaletofit(0,0,sw*0.5,sh*0.5)
@@ -44,6 +50,12 @@ return {
  
     end
 
+    local description = bmt:get(mascots.getDescription(mascotNames[selected]))
+    local name = bmt:get(mascotNames[selected])
+
+    name:zoom(1)
+    name:xy(scx*0.8,sh*0.9)
+
     local cursor = easable(1,28)
 
     --check if button was the pressed olast frame, if not dont update the pressed status
@@ -57,6 +69,8 @@ return {
           active_i = active_i + 1
           cursor:set(active_i)
           lastMenuRightPress = currentTime
+          description:settext(mascots.getDescription(mascotNames[selected]))
+          name:settext(mascotNames[selected])
         end
       elseif button == 'MenuLeft' then
         local currentTime = os.clock()
@@ -68,6 +82,8 @@ return {
       active_i = active_i - 1
           cursor:set(active_i)
           lastMenuRightPress = currentTime
+          description:settext(mascots.getDescription(mascotNames[selected]))
+          name:settext(mascotNames[selected])
         end
       end
     end)
@@ -78,13 +94,14 @@ return {
     darken:diffuse(0,0,0,0.2)
     darken:stretchto(0,0,sw,sh)
 
+    
+
     local oldt = 0
     local angle_step = (2 * math.pi) / #mascot_actors
     self:SetDrawFunction(function()
       background_actors[selected]:Draw()
       darken:Draw()
-
-
+      
 
       local newt = os.clock()
       local dt = newt - oldt
@@ -104,10 +121,10 @@ return {
         mascot:x((x*(sw*0.3))+scx*0.8)
         mascot:z((y*(sh*0.3)))
         mascot:Draw()
-        bmt:settext(mascots.getDescription(mascotNames[selected]))
-        bmt:Draw()
+        
       end
-
+      description:Draw()
+      name:Draw()
     end)
 
   end)
