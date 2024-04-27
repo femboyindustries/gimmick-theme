@@ -38,10 +38,6 @@ local choices = {
     command = 'stopmusic;screen,ScreenMayf'
   },
   {
-    name = 'TEMP - Choose Mascot',
-    command = 'stopmusic;screen,ScreenSelectMascot'
-  },
-  {
     name = 'Exit',
     command = 'stopmusic;screen,ScreenExit'
   }
