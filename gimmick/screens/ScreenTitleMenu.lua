@@ -1,9 +1,24 @@
 local easable = require 'gimmick.lib.easable'
 local mascots = require 'gimmick.mascots'
+require 'gimmick.lib.vector2D'
 
 local function getChoicePos(i)
   return scx - 80 - i * 10, scy + i * 40
 end
+
+local particles = {}
+
+function spawnParticle()
+  table.insert(particles, {
+    pos = vector(math.random(0,sw), 0),
+    vel = vector(math.random()*50-25, math.random()*60-30),
+  })
+end
+
+local GRAVITY = 10
+local FRICTION = 0.99
+
+local spawnT = 0
 
 local choices = {
   {
@@ -59,13 +74,14 @@ return {
     if save.data.settings.mascot_enabled then
       char = ctx:Sprite(mascots.getPaths(save.data.settings.mascot)['character'])
       if save.data.settings.mascot == 'jolly' then
-        char:vibrate()
-        char:effectmagnitude(1,1,1)
+        --char:vibrate()
+        --char:effectmagnitude(1,1,1)
         char:zoom(sw*0.0006)
       else
         char:scaletofit(scx*1.3,scy*0.1,sw*0.95,sh*0.9)
+        char:xy(SCREEN_WIDTH*0.83,scy)
       end
-      char:xy(SCREEN_WIDTH*0.83,scy)
+      
     end
 
     local oldt = os.clock()
@@ -124,6 +140,26 @@ return {
 
         grad:Draw()
         if save.data.settings.mascot_enabled then
+          if save.data.settings.mascot == 'jolly' then
+            --lol
+            spawnT = spawnT - dt
+            if spawnT < 0 then
+              spawnParticle()
+              spawnT = spawnT + 1/30
+            end
+            
+            for i = #particles, 1, -1 do
+              local p = particles[i]
+              p.pos = p.pos + p.vel * dt
+              p.vel = p.vel + vector(0, GRAVITY) * dt
+              p.vel = p.vel * math.pow(FRICTION, dt)
+              char:xy(p.pos:unpack())
+              char:Draw()
+              if p.pos.y > sh then
+                table.remove(particles, i)
+              end
+            end
+          end
           char:Draw()
         end
       end

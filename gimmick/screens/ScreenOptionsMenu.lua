@@ -25,6 +25,16 @@ local function screenButton(screen, name, value)
   end)
 end
 
+---@param screen string
+---@param name string
+---@param value string?
+---Like screenButton but can go to any screen
+local function arbitraryScreen(screen, name, value)
+  return options.option.button(name, value or name, function()
+    delayedSetScreen(screen)
+  end)
+end
+
 ---@type table<string, Option[]>
 local optionsTable = {
   root = {
@@ -159,6 +169,10 @@ local optionsTable = {
       type = 'lua',
       optionRow = options.option.settingChoice('Theme Mascot','mascot', mascots.getMascots())
     },
+    {
+      type = 'lua',
+      optionRow = arbitraryScreen('ScreenSelectMascot', 'Entire VOLATILE mode'),
+    }, 
     {
       type = 'lua',
       optionRow = options.option.settingToggle('Enable Blur', 'do_blur'),
