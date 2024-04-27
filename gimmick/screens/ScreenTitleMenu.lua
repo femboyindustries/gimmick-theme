@@ -58,7 +58,13 @@ return {
 
     if save.data.settings.mascot_enabled then
       char = ctx:Sprite(mascots.getPaths(save.data.settings.mascot)['character'])
-      char:zoom(sw*0.0006)
+      if save.data.settings.mascot == 'jolly' then
+        char:vibrate()
+        char:effectmagnitude(1,1,1)
+        char:zoom(sw*0.0006)
+      else
+        char:scaletofit(scx*1.3,scy*0.1,sw*0.95,sh*0.9)
+      end
       char:xy(SCREEN_WIDTH*0.83,scy)
     end
 

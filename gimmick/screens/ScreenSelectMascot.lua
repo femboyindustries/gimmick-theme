@@ -1,131 +1,139 @@
 local easable = require 'gimmick.lib.easable'
 local mascots = require 'gimmick.mascots'
 local TextPool = require 'gimmick.textpool'
+local save = require 'gimmick.save'
 
-local function getChoicePos(i)
-  return scx - 80 - i * 10, scy + i * 40
-end
 
-local active_i = 1 -- Default to the first element
+
+local active_i = 1
 local selected = 1
+
+
 local mascotPaths = {}
 local mascotNames = mascots.getMascots()
-
 for _, mascot in ipairs(mascotNames) do
-  mascotPaths[#mascotPaths+1] = mascots.getPaths(mascot)
+  mascotPaths[#mascotPaths + 1] = mascots.getPaths(mascot)
 end
 
 
 return {
-  PrevScreen="ScreenTitleMenu",
+  PrevScreen = "ScreenTitleMenu",
   Init = function(self)
   end,
 
-  overlay = gimmick.ActorScreen(function(self,ctx)
+  overlay = gimmick.ActorScreen(function(self, ctx)
     local mascot_actors = {}
     local background_actors = {}
 
-    local bmt = ctx:BitmapText(FONTS.sans_serif,'What the meow')
-    bmt:xy(scx*1.5,scy*0.5)
-    bmt:zoom(0.3)
 
     local bmt = TextPool.new(ctx, FONTS.sans_serif, nil, function(actor)
-      actor:xy(scx*1.5,scy*0.5)
+      actor:xy(scx * 1.5, scy * 0.5)
       actor:zoom(0.3)
     end)
 
     for index, value in ipairs(mascotNames) do
       local actor = ctx:Sprite(mascotPaths[index]['character'])
-      actor:scaletofit(0,0,sw*0.5,sh*0.5)
-      actor:xy(scx*0.6,scy)
+      actor:scaletofit(0, 0, sw * 0.5, sh * 0.5)
+      actor:xy(scx * 0.6, scy)
       actor:ztest(1)
       actor:zbuffer(1)
-      table.insert(mascot_actors,actor)
+
+      table.insert(mascot_actors, actor)
 
       local background = ctx:Sprite(mascotPaths[index]['background'])
-      background:scaletocover(0,0,sw,sh)
-      
-
-      table.insert(background_actors,background)
- 
+      background:scaletocover(0, 0, sw, sh)
+      table.insert(background_actors, background)
     end
 
     local description = bmt:get(mascots.getDescription(mascotNames[selected]))
     local name = bmt:get(mascotNames[selected])
 
     name:zoom(1)
-    name:xy(scx*0.8,sh*0.9)
+    name:xy(scx * 0.8, sh * 0.9)
 
-    local cursor = easable(1,28)
+    local cursor = easable(1, 28)
 
-    --check if button was the pressed olast frame, if not dont update the pressed status
+    --🍄 the input detection will hopefully get replaced at some point
     local lastMenuRightPress = 0
-    local menuRightCooldown = 0.1 -- Cooldown in seconds
+    local menuRightCooldown = 0.05
     event.on('press', function(pn, button)
-      if button == 'MenuRight' then
-        local currentTime = os.clock()
-        if currentTime - lastMenuRightPress > menuRightCooldown then
-          selected = (selected % #mascotNames) + 1 
-          active_i = active_i + 1
-          cursor:set(active_i)
-          lastMenuRightPress = currentTime
-          description:settext(mascots.getDescription(mascotNames[selected]))
-          name:settext(mascotNames[selected])
+      if SCREENMAN:GetTopScreen():GetName() == 'ScreenSelectMascot' then
+        if button == 'MenuRight' then
+          local currentTime = os.clock()
+          if currentTime - lastMenuRightPress > menuRightCooldown then
+            ---------actual mascot stuff---------
+            selected = (selected % #mascotNames) + 1 --selected can "wrap" around the mascotName table
+            active_i = active_i + 1                --used in the drawfunction to determine the angle on the sin/cos circle
+
+            -------------------------------------
+            lastMenuRightPress = currentTime
+          end
+        elseif button == 'MenuLeft' then
+          local currentTime = os.clock()
+          if currentTime - lastMenuRightPress > menuRightCooldown then
+            ---------actual mascot stuff---------
+            selected = selected - 1
+            if selected < 1 then    -- checks if it goes below 1 and wraps around to the last index
+              selected = #mascotNames --wrap around
+            end
+
+            active_i = active_i - 1
+            -------------------------------------
+            lastMenuRightPress = currentTime
+          end
+        elseif button == 'Start' then
+          print('gay people tommorow 10am')
+          save.data.settings.mascot = mascotNames[selected]
+          save.save()
         end
-      elseif button == 'MenuLeft' then
-        local currentTime = os.clock()
-        if currentTime - lastMenuRightPress > menuRightCooldown then
-          selected = selected - 1
-      if selected < 1 then  -- checks if it goes below 1 and wraps around to the last index
-        selected = #mascotNames
-      end
-      active_i = active_i - 1
-          cursor:set(active_i)
-          lastMenuRightPress = currentTime
-          description:settext(mascots.getDescription(mascotNames[selected]))
-          name:settext(mascotNames[selected])
-        end
+
+        cursor:set(active_i)                                             --ease to our new angle
+        description:settext(mascots.getDescription(mascotNames[selected])) --set description to the new mascots description
+        name:settext(mascotNames[selected])                              --do the same for the name
       end
     end)
 
-    self:fov(60)
+
+    self:fov(70)
 
     local darken = ctx:Quad()
-    darken:diffuse(0,0,0,0.2)
-    darken:stretchto(0,0,sw,sh)
+    darken:diffuse(0, 0, 0, 0.2)
+    darken:stretchto(0, 0, sw, sh)
 
-    
+
 
     local oldt = 0
     local angle_step = (2 * math.pi) / #mascot_actors
     self:SetDrawFunction(function()
+      --background
       background_actors[selected]:Draw()
       darken:Draw()
-      
+
 
       local newt = os.clock()
       local dt = newt - oldt
       oldt = newt --t thands for thog
       cursor:update(dt)
 
-      local offset = math.pi/2 - ((selected - active_i) * angle_step)
+      --🍄 i dont like this part
+      local offset = math.pi / 2 -
+      ((selected - active_i) * angle_step)                            --calculate the angle offset for the current mascot
       for i, mascot in ipairs(mascot_actors) do
-        local a = ((i - cursor.eased) * angle_step)+offset
-        a = a % ((2 * math.pi))
+        local a = ((i - cursor.eased) * angle_step) + offset          --calculate the angle for the mascot's current position
+        a = a % ((2 * math.pi))                                       --ensure the angle wraps correctly
         local x, y = math.cos(a), math.sin(a)
         if selected ~= i then
-          mascot:diffusealpha(0.2)
+          mascot:diffusealpha(0.2) --if its not selected get transparent
         else
           mascot:diffusealpha(1)
         end
-        mascot:x((x*(sw*0.3))+scx*0.8)
-        mascot:z((y*(sh*0.3)))
+
+        mascot:x((x * (sw * 0.3)) + scx * 0.8)
+        mascot:z((y * (sh * 0.3)))
         mascot:Draw()
-        
       end
       description:Draw()
       name:Draw()
     end)
-
   end)
 }
