@@ -9,6 +9,7 @@ M.data = {
     mascot = 'default',
     prevent_stretching = true,
     do_blur = true,
+    show_imap = false
   },
 }
 

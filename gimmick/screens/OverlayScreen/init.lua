@@ -6,6 +6,7 @@
 
 local consoleModule = require 'gimmick.screens.OverlayScreen.console'
 local saveModule = require 'gimmick.screens.OverlayScreen.save'
+local imapModule = require 'gimmick.screens.OverlayScreen.imap'
 
 -- !!!!: actors built by `init` MUST remain deterministic.
 -- in other words, make sure the actors initialized never change conditionally
@@ -15,6 +16,7 @@ local saveModule = require 'gimmick.screens.OverlayScreen.save'
 local function init(self, ctx)
   local drawConsole = consoleModule.init(self, ctx)
   local drawSave = saveModule.init(self, ctx)
+  local drawImap = imapModule.init(self, ctx)
 
   local lastdw, lastdh = dw, dh
 
@@ -56,6 +58,7 @@ local function init(self, ctx)
 
     drawConsole(dt)
     drawSave(dt)
+    drawImap(dt)
   end)
 end
 

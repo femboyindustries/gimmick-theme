@@ -173,6 +173,10 @@ local optionsTable = {
       type = 'lua',
       optionRow = options.option.settingToggle('Enable Blur', 'do_blur'),
     },
+    {
+      type = 'lua',
+      optionRow = options.option.settingToggle('Show imap alerts', 'show_imap'),
+    },
   },
 }
 
