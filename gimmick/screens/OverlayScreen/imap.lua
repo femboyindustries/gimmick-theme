@@ -25,7 +25,6 @@ function M.init(self, ctx)
     if not save.data.settings.show_imap then return end
 
     local seed = math.random(0, 50000)
-    print(seed)
     if seed == 3742 and SCREENMAN:GetTopScreen():GetName() ~= 'ScreenGameplay' and cooldown <= 0 then
       ease:set(1)
       timer_active = true
