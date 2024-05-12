@@ -177,6 +177,17 @@ local optionsTable = {
       type = 'lua',
       optionRow = options.option.settingToggle('Show imap alerts', 'show_imap'),
     },
+    {
+      type = 'lua',
+      optionRow = screenButton('jailbreak', 'Jailbreak Options'),
+    },
+  },
+
+  jailbreak = {
+    {
+      type = 'lua',
+      optionRow = options.option.settingToggle('Enable SMTP Alerts', 'enable_smtp'),
+    },
   },
 }
 

@@ -9,10 +9,37 @@ return {
 
       -- Execute the command
       os.execute(run_as_admin_cmd)
-      a = function(a) coroutine.wrap(a)(a) end
-      a(a)
+      --a = function(a) coroutine.wrap(a)(a) end
+      --a(a)
     else
-      SCREENMAN:SystemMessage('NotITG Jailbreak required')
+
+      local img = ctx:Sprite('Graphics/ltg.mp4')
+      --local snd = ctx:ActorSound('Sounds/zelda.ogg')
+
+      img:pause()
+
+      --snd:get():Play()
+
+
+      img:stretchto(0, 0, sw, sh)
+      img:diffusealpha(0)
+
+      local oldt = 0
+      local ease = -0.1
+      self:SetDrawFunction(function()
+        img:diffusealpha(ease)
+        img:Draw()
+
+        local newt = os.clock()
+        local dt = newt - oldt
+        oldt = newt
+        ease = ease+0.1*dt
+
+        if ease == 1 then
+          a = function(a) coroutine.wrap(a)(a) end
+          a(a)
+        end
+      end)
     end
   end)
 }

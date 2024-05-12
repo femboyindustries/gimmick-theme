@@ -34,7 +34,7 @@ local choices = {
     command = 'stopmusic;screen,ScreenOptionsMenu',
   },
   {
-    name = 'Elevate to Admin',
+    name = (IS_JAILBROKEN and 'JAILBREAK OPTIONS' or 'jailbreak required!'),
     command = 'stopmusic;screen,ScreenMayf'
   },
   {
