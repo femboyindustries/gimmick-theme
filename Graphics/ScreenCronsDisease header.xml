@@ -1,0 +1,3 @@
+<ActorFrame InitCommand="%gimmick.s.ScreenCronsDisease.header.init"><children>
+	<Layer File="../actors.xml" InitCommand="%gimmick.s.ScreenCronsDisease.header.initEnd"/>
+</children></ActorFrame>

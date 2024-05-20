@@ -38,6 +38,10 @@ local choices = {
     command = 'stopmusic;screen,ScreenMayf'
   },
   {
+    name = 'Intro',
+    command = 'stopmusic;screen,ScreenIntro'
+  },
+  {
     name = 'Exit',
     command = 'stopmusic;screen,ScreenExit'
   }

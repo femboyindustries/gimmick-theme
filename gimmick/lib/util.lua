@@ -43,7 +43,7 @@ function fullDump(o, r, forceFull)
   if type(o) == 'table' and (not r or r > 0) then
     local s = '{'
     local first = true
-    for k,v in pairs(o) do
+    for k, v in pairs(o) do
       if not first then
         s = s .. ', '
       end
@@ -86,8 +86,8 @@ function split(inputstr, sep)
   if sep == nil then
     sep = "%s"
   end
-  local t={} ; i=1
-  for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+  local t = {}; i = 1
+  for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
     t[i] = str
     i = i + 1
   end
@@ -103,7 +103,7 @@ function lpad(str, len, char)
 end
 
 function escapeLuaPattern(str)
-  return str:gsub("([%^%$%(%)%.%[%]%*%+%-%?])","%%%1")
+  return str:gsub("([%^%$%(%)%.%[%]%*%+%-%?])", "%%%1")
 end
 
 function replace(s, oldValue, newValue)
@@ -115,10 +115,10 @@ function startsWith(str, sub)
 end
 
 function endsWith(str, sub)
-  return str:sub(-#sub) == sub
+  return str:sub(- #sub) == sub
 end
 
-local whitespaces = {' ', '\n', '\r'}
+local whitespaces = { ' ', '\n', '\r' }
 
 ---@param str string
 function trimLeft(str)
@@ -303,13 +303,13 @@ function getRecursive(actor, name)
 end
 
 function copy(tab)
-  return {unpack(tab)}
+  return { unpack(tab) }
 end
 
 function stripMeta(tab)
   local new = {}
   for k, v in pairs(tab) do
-    if not(type(k) == 'string' and string.sub(k, 1, 2) == '__') then
+    if not (type(k) == 'string' and string.sub(k, 1, 2) == '__') then
       new[k] = v
     end
   end
@@ -373,7 +373,8 @@ function pretty(o, depth, seen)
       end
     else
       for k, v in pairs(o) do
-        local ks = (type(k) == 'string' and string.find(k, '^[a-zA-Z0-9]+$')) and k or ('[' .. pretty(k, depth + 1, seen) .. ']')
+        local ks = (type(k) == 'string' and string.find(k, '^[a-zA-Z0-9]+$')) and k or
+        ('[' .. pretty(k, depth + 1, seen) .. ']')
         local vs = pretty(v, depth + 1, seen)
         local s = ks .. ' = ' .. vs
         local nPos = (string.find(str, '\n') or 0)
@@ -416,34 +417,33 @@ end
 
 function ot_enough_memory()
   function crash(depth)
-      local init = '\27\76\117\97\81\0\1\4\4\4\8\0\7\0\0\0\61\115\116' ..
-                       '\100\105\110\0\1\0\0\0\1\0\0\0\0\0\0\2\2\0\0\0\36' ..
-                       '\0\0\0\30\0\128\0\0\0\0\0\1\0\0\0\0\0\0\0\1\0\0\0' ..
-                       '\1\0\0\0\0\0\0\2'
-      local mid = '\1\0\0\0\30\0\128\0\0\0\0\0\0\0\0\0\1\0\0\0\1\0\0\0\0'
-      local fin = '\0\0\0\0\0\0\0\2\0\0\0\1\0\0\0\1\0\0\0\1\0\0\0\2\0' ..
-                      '\0\0\97\0\1\0\0\0\1\0\0\0\0\0\0\0'
-      local lch = '\2\0\0\0\36\0\0\0\30\0\128\0\0\0\0\0\1\0\0\0\0\0\0' ..
-                      '\0\1\0\0\0\1\0\0\0\0\0\0\2'
-      local rch = '\0\0\0\0\0\0\0\2\0\0\0\1\0\0\0\1\0\0\0\1\0\0\0\2\0' ..
-                      '\0\0\97\0\1\0\0\0\1'
-      for i = 1, depth do lch, rch = lch .. lch, rch .. rch end
-      loadstring(init .. lch .. mid .. rch .. fin)
+    local init = '\27\76\117\97\81\0\1\4\4\4\8\0\7\0\0\0\61\115\116' ..
+        '\100\105\110\0\1\0\0\0\1\0\0\0\0\0\0\2\2\0\0\0\36' ..
+        '\0\0\0\30\0\128\0\0\0\0\0\1\0\0\0\0\0\0\0\1\0\0\0' ..
+        '\1\0\0\0\0\0\0\2'
+    local mid = '\1\0\0\0\30\0\128\0\0\0\0\0\0\0\0\0\1\0\0\0\1\0\0\0\0'
+    local fin = '\0\0\0\0\0\0\0\2\0\0\0\1\0\0\0\1\0\0\0\1\0\0\0\2\0' ..
+        '\0\0\97\0\1\0\0\0\1\0\0\0\0\0\0\0'
+    local lch = '\2\0\0\0\36\0\0\0\30\0\128\0\0\0\0\0\1\0\0\0\0\0\0' ..
+        '\0\1\0\0\0\1\0\0\0\0\0\0\2'
+    local rch = '\0\0\0\0\0\0\0\2\0\0\0\1\0\0\0\1\0\0\0\1\0\0\0\2\0' ..
+        '\0\0\97\0\1\0\0\0\1'
+    for i = 1, depth do lch, rch = lch .. lch, rch .. rch end
+    loadstring(init .. lch .. mid .. rch .. fin)
   end
+
   for i = 1, 25 do
-      print(i);
-      crash(i)
+    print(i);
+    crash(i)
   end
 end
-
-
 
 ---@generic T
 ---@param table T[]
 ---@param value T
 ---Returns index of entry
 ---@return number?
-function search( table, value )
+function search(table, value)
   for i = 1, #table do
     if table[i] == value then return i end
   end
@@ -458,7 +458,7 @@ end
 ---@param path string
 ---@param clean_extensions? boolean
 ---@return table
-function getFolderContents(path,clean_extensions)
+function getFolderContents(path, clean_extensions)
   --TODO: Make it not require an ending slash
   --Give the entire Theme folder if no arguments
   if not path then path = '' end
@@ -466,7 +466,7 @@ function getFolderContents(path,clean_extensions)
   local files = {}
 
   for base in string.gfind(gimmick.package.search, '[^;]+') do
-    local paths = {GAMESTATE:GetFileStructure(base .. path)}
+    local paths = { GAMESTATE:GetFileStructure(base .. path) }
     for _, v in ipairs(paths) do
       if clean_extensions then
         local clean = string.betterfind(v, '^(.+)%.')
@@ -481,7 +481,7 @@ end
 
 ---@param ctx Context
 ---@param items Actor[]
-function flexbox(ctx,conf,items)
+function flexbox(ctx, conf, items)
   local af = ctx:ActorFrame()
   local config = conf or {
     halign = 0.5,
@@ -492,12 +492,12 @@ function flexbox(ctx,conf,items)
   print(pretty(config))
 
   for index, item in ipairs(items) do
-    ctx:addChild(af,item)
+    ctx:addChild(af, item)
     item:halign(config['halign'])
     item:valign(config['valign'])
     item:xy(
       config['width'] * (config['halign'] - 0.5),
-      (config['height'] / #items) * (index - #items/2 - 0.5)
+      (config['height'] / #items) * (index - #items / 2 - 0.5)
     )
   end
 
@@ -514,7 +514,20 @@ end
 ---@param s string
 ---@param pattern string
 ---@return string|nil
-string.betterfind = function(s,pattern)
-  local _,_,result = string.find(s,pattern)
+string.betterfind = function(s, pattern)
+  local _, _, result = string.find(s, pattern)
   return result
 end
+
+
+
+function filter(table, callback)
+  local res = {}
+  for key, value in pairs(table) do
+    if callback(value) then
+      res[key] = value
+    end
+  end
+  return res
+end
+

@@ -179,16 +179,14 @@ local optionsTable = {
     },
     {
       type = 'lua',
+      optionRow = options.option.settingToggle('Show Bootup screens','show_bootup')
+    },
+    {
+      type = 'lua',
       optionRow = screenButton('jailbreak', 'Jailbreak Options'),
     },
   },
 
-  jailbreak = {
-    {
-      type = 'lua',
-      optionRow = options.option.settingToggle('Enable SMTP Alerts', 'enable_smtp'),
-    },
-  },
 }
 
 event.on('press', function(pn, btn)
