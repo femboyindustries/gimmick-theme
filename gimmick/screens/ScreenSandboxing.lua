@@ -6,10 +6,12 @@ return {
     
     local bar1 = bar:new(ctx)
 
-    --local af = bar:new()
-    bar:set(4)
-    bar1:sleep(2)
-    bar:sub(0.2)
+    bar1:addcommand('init', function()
+      bar:set(4)
+      bar1:sleep(2)
+      bar:sub(0.2)
+    end)
+
     self:SetDrawFunction(function()
       bar1:Draw()
     end)
