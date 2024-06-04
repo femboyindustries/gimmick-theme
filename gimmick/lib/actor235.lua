@@ -526,22 +526,22 @@ local function actorFileArg(type, useType)
 end
 
 -- Defines a Quad actor.
----@type fun(): Quad
+---@type fun(ctx: Context): Quad
 Context.Quad = actor0Arg('Quad')
 -- Defines an ActorProxy actor.
----@type fun(): ActorProxy
+---@type fun(ctx: Context): ActorProxy
 Context.ActorProxy = actor0Arg('ActorProxy')
 -- Defines a Polygon actor.
----@type fun(): Polygon
+---@type fun(ctx: Context): Polygon
 Context.Polygon = actor0Arg('Polygon')
 -- Defines an ActorFrameTexture actor.
----@type fun(): ActorFrameTexture
+---@type fun(ctx: Context): ActorFrameTexture
 Context.ActorFrameTexture = actor0Arg('ActorFrameTexture')
 -- Defines a Model actor.
----@type fun(file: string): Model
+---@type fun(ctx: Context, file: string): Model
 Context.Model = actorFileArg('Model', false)
 -- Defines an ActorSound actor.
----@type fun(file: string): ActorSound
+---@type fun(ctx: Context, file: string): ActorSound
 Context.ActorSound = actorFileArg('ActorSound', true)
 
 local function isShaderCode(str)
