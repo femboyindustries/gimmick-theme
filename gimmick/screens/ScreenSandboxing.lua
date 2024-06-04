@@ -7,8 +7,10 @@ return {
     local bar1 = bar:new(ctx)
 
     --local af = bar:new()
+    bar:set(4)
+    bar1:sleep(2)
+    bar:sub(0.2)
     self:SetDrawFunction(function()
-      bar:add(0.0001)
       bar1:Draw()
     end)
   end),
