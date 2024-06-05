@@ -12,27 +12,27 @@ local judge_eyes = {
     height = 12,
     inner_padding = 2.5,
   },
-  subbar={
+  subbar = {
     actor = nil,
-    eased = easable(0,15),
+    eased = easable(0, 4),
     x = 0,
     width = 0
   },
   bars = {},
-  barlevel = 1,
+  barlevel = 0,
   barcolors = {
-    {1.0, 0.0, 0.0}, -- Red
-  {1.0, 0.5, 0.0}, -- Orange
-  {1.0, 1.0, 0.0}, -- Yellow
-  {0.5, 1.0, 0.0}, -- Lime green
-  {0.0, 1.0, 0.0}, -- Green
-  {0.0, 1.0, 0.5}, -- Teal
-  {0.0, 1.0, 1.0}, -- Cyan
-  {0.0, 0.5, 1.0}, -- Sky blue
-  {0.0, 0.0, 1.0}, -- Blue
-  {0.5, 0.0, 1.0}, -- Indigo
-  {1.0, 0.0, 1.0}, -- Violet
-  {1.0, 0.0, 0.5}, -- Magenta
+    { 1.0, 0.0, 0.0 }, -- Red
+    { 1.0, 0.5, 0.0 }, -- Orange
+    { 1.0, 1.0, 0.0 }, -- Yellow
+    { 0.5, 1.0, 0.0 }, -- Lime green
+    { 0.0, 1.0, 0.0 }, -- Green
+    { 0.0, 1.0, 0.5 }, -- Teal
+    { 0.0, 1.0, 1.0 }, -- Cyan
+    { 0.0, 0.5, 1.0 }, -- Sky blue
+    { 0.0, 0.0, 1.0 }, -- Blue
+    { 0.5, 0.0, 1.0 }, -- Indigo
+    { 1.0, 0.0, 1.0 }, -- Violet
+    { 1.0, 0.0, 0.5 }, -- Magenta
   },
   actorframe = nil
 }
@@ -64,15 +64,15 @@ function judge_eyes:init(context, options)
 
   self.subbar.actor = ctx:Quad()
   self.subbar.actor:halign(0)
-    self.subbar.actor:xy(0 - (options.width * 0.5 - options.inner_padding), 0)
-    self.subbar.actor:SetWidth((options.width - (options.inner_padding * 2)) * 2)
-    self.subbar.actor:SetHeight(options.height - options.inner_padding)
-    self.subbar.actor:skewx(-options.skew)
-    local colors = self:getcolor(i)
-    self.subbar.actor:diffuse(1,1,1,1)
-    ctx:addChild(bar,self.subbar.actor)
+  self.subbar.actor:xy(0 - (options.width * 0.5 - options.inner_padding), scy * 0.1)
+  self.subbar.actor:SetWidth((options.width - (options.inner_padding * 2)) * 2)
+  self.subbar.actor:SetHeight(options.height - options.inner_padding)
+  self.subbar.actor:skewx(-options.skew)
+  local colors = self:getcolor(i)
+  self.subbar.actor:diffuse(1, 1, 1, 1)
+  ctx:addChild(bar, self.subbar.actor)
 
-  for i = 1, 5, 1 do
+  for i = 1, 2, 1 do
     local inner = ctx:Quad()
     local amount = (i <= self:getBarAmount() and self:getBarLevel() or 1)
     inner:halign(0)
@@ -81,7 +81,7 @@ function judge_eyes:init(context, options)
     inner:SetHeight(options.height - options.inner_padding)
     inner:skewx(-options.skew)
     local colors = self:getcolor(i)
-    inner:diffuse(colors[1],colors[2],colors[3],1)
+    inner:diffuse(colors[1], colors[2], colors[3], 1)
     table.insert(self.bars, inner)
     ctx:addChild(bar, inner)
   end
@@ -116,7 +116,6 @@ function judge_eyes:set_options(options)
   for k, v in pairs(options) do
     self.options[k] = v
   end
-  print(self.options)
 end
 
 ---Gets what the top most Bar Amount is
@@ -128,10 +127,15 @@ end
 ---Gets How many bars there are
 ---@return float
 function judge_eyes:getBarAmount()
-  return math.floor(self.barlevel)
+  return math.floor(self.barlevel) + 1
 end
 
+local oldt = os.clock()
 function judge_eyes:updateSettings()
+  local newt = os.clock()
+  local dt = newt - oldt
+  oldt = newt
+
   outline:SetWidth(self.options.width + self.options.inner_padding)
   outline:SetHeight(self.options.height + self.options.inner_padding)
   outline:skewx(-self.options.skew)
@@ -139,25 +143,30 @@ function judge_eyes:updateSettings()
   inner_bg:SetHeight(self.options.height)
   inner_bg:skewx(-self.options.skew)
   inner_bg:diffuse(0, 0, 0.05, 1)
+  
   for index, value in ipairs(self.bars) do
     value:hidden(1)
   end
+  
   for i = 1, self:getBarAmount(), 1 do
     local inner = self.bars[i]
     inner:hidden(0)
     local amount = (i < self:getBarAmount() and 1 or self:getBarLevel())
-    --print('GETBARAMOUNT: '..self:getBarAmount(),': '..#self.bars,pretty(self:getcolor(i)))
     inner:xy(0 - (self.options.width * 0.5 - self.options.inner_padding), 0)
     inner:SetWidth((self.options.width - (self.options.inner_padding * 2)) * amount)
     inner:SetHeight(self.options.height - self.options.inner_padding)
     inner:skewx(-self.options.skew)
     local colors = self:getcolor(i)
-    inner:diffuse(colors[1],colors[2],colors[3],1)
+    inner:diffuse(colors[1], colors[2], colors[3], 1)
   end
 
-  print(self.subbar.actor)
-  self.subbar.x = -(self.options.width * 0.5 - self.options.inner_padding) + self.bars[1]:GetWidth()
-
+  print(self.subbar.actor:GetWidth(),self.subbar.actor:GetX(),self.subbar.width)
+  -- Update subbar position and width
+  self.subbar.x = -(self.options.width * 0.5 - self.options.inner_padding) + self.bars[self:getBarAmount()]:GetWidth()
+  self.subbar.width = (self.options.width - (self.options.inner_padding * 2)) * 1
+  self.subbar.eased:update(dt)
+  self.subbar.actor:x(self.subbar.x)
+  self.subbar.actor:SetWidth(self.subbar.eased.eased)
 end
 
 
@@ -169,19 +178,17 @@ end
 
 function judge_eyes:sub(input)
   self.barlevel = self.barlevel - input
-  self.subbar.width = clamp(input,0,1)
-  self.subbar.eased:set(self.subbar.width)
-  self:updateSettings()
+  local a = clamp(input, 0, (self.options.width - (self.options.inner_padding*2) ))
+  self.subbar.eased:reset(a)
+  self.subbar.eased:set(0)
 end
 
 function judge_eyes:add(input)
   self.barlevel = self.barlevel + input
-  self:updateSettings()
 end
 
 function judge_eyes:set(input)
   self.barlevel = input
-  self:updateSettings()
 end
 
 return judge_eyes
