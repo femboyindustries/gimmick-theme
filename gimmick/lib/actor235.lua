@@ -52,7 +52,12 @@ function Proxy.call(proxy, key, _, ...)
     error('actor235: attempting to call method on unresolved proxy', 2)
   end
   local actor = proxy.__proxy.raw
-  actor[key](actor, unpack(arg))
+  -- normally you'd be concerned with return values here, but there's not really
+  -- anything to return here _to_
+  local res, err = pcall(actor[key], actor, unpack(arg))
+  if not res then
+    error('error calling ' .. key .. ': ' .. err, 2)
+  end
 end
 
 local methodCache = setmetatable({}, {__mode = 'v'})
@@ -111,7 +116,7 @@ function Proxy.resolve(proxy, actor)
       end)
       if not success then
         error(
-          'actor235: error while initializing \'' .. proxy.__proxy.name .. '\' on ' .. v[3].short_src .. ':' .. v[3].currentline .. ':\n' ..
+          'actor235: error while initializing \'' .. proxy.__proxy.name .. '\' on ' .. v.debug.short_src .. ':' .. v.debug.currentline .. ':\n' ..
           result
         )
       end

@@ -8,6 +8,8 @@ varying vec4 color;
 
 // 1 means a solid circle, 0.5 means there's a gap between the middle and the pie as large as the pie
 uniform float width;
+// pushes the outer perimeter of the circle further towards the middle
+uniform float radiusOffset;
 // 0.0 = nothing, 1.0 = full circle
 uniform float fill;
 
@@ -26,7 +28,7 @@ void main() {
   // mix between the two based on which side of the spiral we're on
   // unsure if this is the best way to do this
   float spiral = mix(angle1, angle2, floor(uvDot90) + 1.0);
-  float dist = length(uv);
+  float dist = length(uv) + radiusOffset;
   
   float bri = 1.0;
   if (dist > 1.0) bri = 0.0;

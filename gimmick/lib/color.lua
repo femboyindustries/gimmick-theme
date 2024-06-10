@@ -221,7 +221,7 @@ function colmeta:__index(i)
 end
 
 local function typ(a)
-  return (type(a) == 'table' and a.r and a.g and a.b and a.a) and 'color' or type(a)
+  return ((type(a) == 'table' and a.r and a.g and a.b and a.a) and 'color') or ((type(a) == 'table' and a.l and a.a and a.b) and 'oklab') or type(a)
 end
 
 local function genericop(a, b, f, name)
@@ -288,13 +288,120 @@ function shsv(h, s, v, a)
   return hsv(h * h * (3 - 2 * h), s, v, a)
 end
 
+local function hexToRGB(hex)
+  hex = string.gsub(hex, '#', '')
+  if string.len(hex) == 3 then
+    return (tonumber('0x' .. string.sub(hex, 1, 1)) * 17) / 255, (tonumber('0x' .. string.sub(hex, 2, 2)) * 17) / 255, (tonumber('0x' .. string.sub(hex, 3, 3)) * 17) / 255
+  else
+    return tonumber('0x' .. string.sub(hex, 1, 2)) / 255, tonumber('0x' .. string.sub(hex, 3, 4)) / 255, tonumber('0x' .. string.sub(hex, 5, 6)) / 255
+  end
+end
+
 ---@param hex string
 ---@return color
 function hex(hex)
-  hex = string.gsub(hex, '#', '')
-  if string.len(hex) == 3 then
-    return rgb((tonumber('0x' .. string.sub(hex, 1, 1)) * 17) / 255, (tonumber('0x' .. string.sub(hex, 2, 2)) * 17) / 255, (tonumber('0x' .. string.sub(hex, 3, 3)) * 17) / 255)
-  else
-    return rgb(tonumber('0x' .. string.sub(hex, 1, 2)) / 255, tonumber('0x' .. string.sub(hex, 3, 4)) / 255, tonumber('0x' .. string.sub(hex, 5, 6)) / 255)
+  return rgb(hexToRGB(hex))
+end
+
+-- something quite similar to the color class, but with OKLAB and specific
+-- color manipulation functions
+-- https://bottosson.github.io/posts/oklab/
+
+local function srgbToOklab(r, g, b)
+  local l = 0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b;
+	local m = 0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b;
+	local s = 0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b;
+
+  local l_ = math.sqrt(l);
+  local m_ = math.sqrt(m);
+  local s_ = math.sqrt(s);
+
+  return
+    0.2104542553 * l_ + 0.7936177850 * m_ - 0.0040720468 * s_,
+    1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_,
+    0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_
+end
+
+local function oklabToSrgb(L, a, b)
+  local l_ = L + 0.3963377774 * a + 0.2158037573 * b;
+  local m_ = L - 0.1055613458 * a - 0.0638541728 * b;
+  local s_ = L - 0.0894841775 * a - 1.2914855480 * b;
+
+  local l = l_*l_*l_;
+  local m = m_*m_*m_;
+  local s = s_*s_*s_;
+
+  return
+     4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+    -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+    -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
+end
+
+---@class oklab
+---@field l number
+---@field a number
+---@field b number
+---@field alpha number
+oklab = {}
+
+oklab.__index = oklab
+
+local function genericoplab(a, b, f, name)
+  local typea = typ(a)
+  local typeb = typ(b)
+  if typea == 'number' then
+    return oklab.new(f(b.l, a), f(b.a, a), f(b.b, a), b.alpha)
+  elseif typeb == 'number' then
+    return oklab.new(f(a.l, b), f(a.a, b), f(a.b, b), a.alpha)
+  elseif typea == 'oklab' and typeb == 'oklab' then
+    return oklab.new(f(a.l, b.l), f(a.a, b.a), f(a.b, b.b), f(a.alpha, b.alpha))
   end
+  error('cant apply ' .. name .. ' to ' .. typea .. ' and ' .. typeb, 3)
+end
+
+function oklab.__add(a, b)
+  return genericoplab(a, b, function(a, b) return a + b end, 'add')
+end
+function oklab.__sub(a, b)
+  return genericoplab(a, b, function(a, b) return a - b end, 'sub')
+end
+function oklab.__mul(a, b)
+  return genericoplab(a, b, function(a, b) return a * b end, 'mul')
+end
+function oklab.__div(a, b)
+  return genericoplab(a, b, function(a, b) return a / b end, 'div')
+end
+
+function oklab.__eq(a, b)
+  return (typ(a) == 'color' and typ(b) == 'color') and (a.r == b.r and a.g == b.g and a.b == b.b and a.a == b.a)
+end
+
+function oklab:unpack()
+  -- no tonemapping for now. lol
+  local r, g, b = oklabToSrgb(self.l, self.a, self.b)
+  return r, g, b, self.alpha
+end
+
+---@param r number
+---@param g number
+---@param b number
+---@param alpha? number
+---@return oklab
+function oklab.fromRGB(r, g, b, alpha)
+  local l, a_, b_ = srgbToOklab(r, g, b)
+  return setmetatable({l = l, a = a_, b = b_, alpha = alpha or 1}, oklab)
+end
+
+---@param hex string
+function oklab.fromHex(hex)
+  return oklab.fromRGB(hexToRGB(hex))
+end
+
+---@param color color
+function oklab.fromColor(color)
+  return oklab.fromRGB(color.r, color.g, color.b, color.a)
+end
+
+function oklab.new(l, a, b, alpha)
+  return setmetatable({l = l, a = a, b = b, alpha = alpha or 1}, oklab)
 end
