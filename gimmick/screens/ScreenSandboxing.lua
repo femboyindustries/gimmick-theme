@@ -19,14 +19,13 @@ return {
 
       
       if bar:getBarLevel() < 0.1 then
-        bar:set(1.7)
       end
       bar1:Draw()
 
       if timer < 0.1 then
         timer = 2 
-        bar:set(1.7)
-        bar:sub(math.random())
+        bar:set(1.5)
+        bar:sub(0.8)
       end
       timer = timer -dt
     end)

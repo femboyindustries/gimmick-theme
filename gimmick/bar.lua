@@ -4,6 +4,7 @@ local easable = require 'gimmick.lib.easable'
 local ctx = nil
 local outline = nil
 local inner_bg = nil
+local inner_width = nil
 
 local judge_eyes = {
   options = {
@@ -14,7 +15,7 @@ local judge_eyes = {
   },
   subbar = {
     actor = nil,
-    eased = easable(0, 4),
+    eased = easable(0, 1),
     x = 0,
     width = 0
   },
@@ -143,11 +144,11 @@ function judge_eyes:updateSettings()
   inner_bg:SetHeight(self.options.height)
   inner_bg:skewx(-self.options.skew)
   inner_bg:diffuse(0, 0, 0.05, 1)
-  
+
   for index, value in ipairs(self.bars) do
     value:hidden(1)
   end
-  
+
   for i = 1, self:getBarAmount(), 1 do
     local inner = self.bars[i]
     inner:hidden(0)
@@ -160,7 +161,7 @@ function judge_eyes:updateSettings()
     inner:diffuse(colors[1], colors[2], colors[3], 1)
   end
 
-  print(self.subbar.actor:GetWidth(),self.subbar.actor:GetX(),self.subbar.width)
+  --print(self.subbar.actor:GetWidth(),self.subbar.actor:GetX(),self.subbar.width)
   -- Update subbar position and width
   self.subbar.x = -(self.options.width * 0.5 - self.options.inner_padding) + self.bars[self:getBarAmount()]:GetWidth()
   self.subbar.width = (self.options.width - (self.options.inner_padding * 2)) * 1
@@ -169,7 +170,6 @@ function judge_eyes:updateSettings()
   self.subbar.actor:SetWidth(self.subbar.eased.eased)
 end
 
-
 function judge_eyes:getcolor(num)
   if not num then num = 11037 end
   local amount = #self.barcolors
@@ -177,10 +177,72 @@ function judge_eyes:getcolor(num)
 end
 
 function judge_eyes:sub(input)
-  self.barlevel = self.barlevel - input
-  local a = clamp(input, 0, (self.options.width - (self.options.inner_padding*2) ))
-  self.subbar.eased:reset(a)
-  self.subbar.eased:set(0)
+  print('===============================')
+  print('Removing ' .. input)
+
+  local inner_width = (self.options.width - (self.options.inner_padding * 2))
+  print('Inner width: ' .. inner_width)
+
+  -- Get the bar amount and log it
+  local bar_amount = self:getBarLevel()
+  print('Initial bar amount: ' .. bar_amount)
+
+  -- Calculate the remaining balls and log it
+  local remainder = bar_amount - input
+  print('Remaining balls: ' .. remainder)
+
+  -- Check for underflow and adjust accordingly
+  if remainder < 0 then
+    -- Calculate the remaining amount to remove after moving to the lower bar
+    local remaining_input = input - bar_amount
+    print('Remaining input after underflow: ' .. remaining_input)
+
+    -- Calculate the sub_width for the remaining input
+    local sub_width = inner_width * remaining_input
+    print('Sub width after underflow: ' .. sub_width)
+
+    -- Calculate the max value for clamping for the lower bar
+    local max_value = inner_width
+    print('Max value for clamping after underflow: ' .. max_value)
+
+    -- Apply the clamp function
+    local a = clamp(sub_width, 0, max_value)
+    print('Clamped value after underflow: ' .. a)
+
+    -- Reset and set the eased value
+    self.subbar.eased:reset(a)
+    print('Subbar eased reset to: ' .. a)
+
+    self.subbar.eased:set(0)
+    print('Subbar eased set to 0')
+  else
+    -- Normal case without underflow
+    self.barlevel = self.barlevel - input
+    print('Updated bar level: ' .. self.barlevel)
+
+    -- Calculate the sub_width
+    local sub_width = inner_width * input
+    print('Sub width: ' .. sub_width)
+
+    -- Calculate the max value for clamping
+    local max_value = inner_width * (remainder % 1)
+    print('Max value for clamping: ' .. max_value)
+
+    -- Apply the clamp function
+    local a = clamp(sub_width, 0, max_value)
+    print('Clamped value: ' .. a)
+
+    -- Reset and set the eased value
+    self.subbar.eased:reset(a)
+    print('Subbar eased reset to: ' .. a)
+
+    self.subbar.eased:set(0)
+    print('Subbar eased set to 0')
+  end
+
+  print('===============================')
+  print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+  print('===============================')
 end
 
 function judge_eyes:add(input)
@@ -188,6 +250,7 @@ function judge_eyes:add(input)
 end
 
 function judge_eyes:set(input)
+  print('Setting to ' .. input)
   self.barlevel = input
 end
 
