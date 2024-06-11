@@ -4,6 +4,8 @@ local easable = require 'gimmick.lib.easable'
 -- must be an ODD number such that we can determine the middle easily
 local WHEEL_ITEMS = 17
 
+local WHEEL_ITEM_HEIGHT = 30
+
 -- todo: should be moved somewhere else?
 local DIFFICULTIES = {
   [COURSE_DIFFICULTY_BEGINNER] = {
@@ -45,9 +47,8 @@ return {
   MusicWheel = {
     -- mostly all just testing
 
-    NumWheelItems = function()
-      return WHEEL_ITEMS
-    end,
+    NumWheelItems = function() return WHEEL_ITEMS       end,
+    ItemSpacingY =  function() return WHEEL_ITEM_HEIGHT end,
 
     --RouletteOn = function(self) addActor(self) end,
     --SectionOn = function(self) addActor(self) end,
