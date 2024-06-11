@@ -236,20 +236,6 @@ function judge_eyes:sub(input)
 
   -- Clamp the sub_width within the allowed range
   local a = clamp(sub_width, 0, max_value)
-  
-  -- Logging for debugging
-  print('=== Debug Info ===')
-  print('Input:', input)
-  print('Bar Level:', self.barlevel)
-  print('Bar Amount:', bar_amount)
-  print('Bar Level Fraction:', bar_level)
-  print('Remainder:', remainder)
-  print('Inner Width:', inner_width)
-  print('Sub Width:', sub_width)
-  print('Max Value:', max_value)
-  print('Clamped Width:', a)
-  print('===================')
-
   -- Reset and set the eased value
   self.subbar.eased:reset(a)
   self.subbar.eased:set(0)
