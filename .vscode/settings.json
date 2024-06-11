@@ -5,5 +5,8 @@
     "discard-returns",
     "deprecated",
     "trailing-space"
+  ],
+  "editor.rulers": [
+    80
   ]
 }
