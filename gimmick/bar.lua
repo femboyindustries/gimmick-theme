@@ -15,7 +15,7 @@ local judge_eyes = {
   },
   subbar = {
     actor = nil,
-    eased = easable(0, 1),
+    eased = easable(0, 12),
     x = 0,
     width = 0
   },
@@ -37,6 +37,20 @@ local judge_eyes = {
   },
   actorframe = nil
 }
+
+local function clamping_tbl()
+  return {
+      __newindex = function(table, key, value)
+          if key == "width" and value < 0 then
+            print('FUCK YOU')
+              value = 0
+          end
+          rawset(table, key, value)
+      end
+  }
+end
+
+setmetatable(judge_eyes.subbar,clamping_tbl())
 
 function judge_eyes:init(context, options)
   ---@type Context
@@ -65,15 +79,15 @@ function judge_eyes:init(context, options)
 
   self.subbar.actor = ctx:Quad()
   self.subbar.actor:halign(0)
-  self.subbar.actor:xy(0 - (options.width * 0.5 - options.inner_padding), scy * 0.1)
+  self.subbar.actor:xy(0 - (options.width * 0.5 - options.inner_padding), 0)
   self.subbar.actor:SetWidth((options.width - (options.inner_padding * 2)) * 2)
   self.subbar.actor:SetHeight(options.height - options.inner_padding)
   self.subbar.actor:skewx(-options.skew)
-  local colors = self:getcolor(i)
-  self.subbar.actor:diffuse(1, 1, 1, 1)
+  local colors = self:getcolor(38)
+  self.subbar.actor:diffuse(colors[1]*0.8, colors[2]*0.8, colors[3]*0.8, 1)
   ctx:addChild(bar, self.subbar.actor)
 
-  for i = 1, 2, 1 do
+  for i = 1, 10, 1 do
     local inner = ctx:Quad()
     local amount = (i <= self:getBarAmount() and self:getBarLevel() or 1)
     inner:halign(0)
@@ -119,17 +133,18 @@ function judge_eyes:set_options(options)
   end
 end
 
----Gets what the top most Bar Amount is
----@return int
+---Gets what the top most Bar Level is
+---@return float
 function judge_eyes:getBarLevel()
   return self.barlevel % 1
 end
 
 ---Gets How many bars there are
----@return float
+---@return int
 function judge_eyes:getBarAmount()
-  return math.floor(self.barlevel) + 1
+  return math.floor(self.barlevel)
 end
+
 
 local oldt = os.clock()
 function judge_eyes:updateSettings()
@@ -150,15 +165,16 @@ function judge_eyes:updateSettings()
   end
 
   for i = 1, self:getBarAmount(), 1 do
-    local inner = self.bars[i]
-    inner:hidden(0)
-    local amount = (i < self:getBarAmount() and 1 or self:getBarLevel())
-    inner:xy(0 - (self.options.width * 0.5 - self.options.inner_padding), 0)
-    inner:SetWidth((self.options.width - (self.options.inner_padding * 2)) * amount)
-    inner:SetHeight(self.options.height - self.options.inner_padding)
-    inner:skewx(-self.options.skew)
-    local colors = self:getcolor(i)
-    inner:diffuse(colors[1], colors[2], colors[3], 1)
+      local inner = self.bars[i]
+      inner:hidden(0)
+      local amount = (i < self:getBarAmount() and 1 or self:getBarLevel())
+      inner:xy(0 - (self.options.width * 0.5 - self.options.inner_padding), 0)
+      inner:SetWidth((self.options.width - (self.options.inner_padding * 2)) * amount)
+      inner:SetHeight(self.options.height - self.options.inner_padding)
+      inner:skewx(-self.options.skew)
+      local colors = self:getcolor(i)
+      inner:diffuse(colors[1], colors[2], colors[3], 1)
+
   end
 
   --print(self.subbar.actor:GetWidth(),self.subbar.actor:GetX(),self.subbar.width)
@@ -167,7 +183,12 @@ function judge_eyes:updateSettings()
   self.subbar.width = (self.options.width - (self.options.inner_padding * 2)) * 1
   self.subbar.eased:update(dt)
   self.subbar.actor:x(self.subbar.x)
-  self.subbar.actor:SetWidth(self.subbar.eased.eased)
+  if self.subbar.eased.eased < 0.1 then
+    self.subbar.actor:SetWidth(0)
+  else
+    self.subbar.actor:SetWidth(self.subbar.eased.eased)
+  end
+  
 end
 
 function judge_eyes:getcolor(num)
@@ -176,77 +197,78 @@ function judge_eyes:getcolor(num)
   return self.barcolors[(num >= amount and amount or num)]
 end
 
+function judge_eyes:inbounds(input)
+  return self:getBarAmount() <= 1 and self:getBarLevel() - input < 0 and self:getBarLevel() - input <= 10
+end
 function judge_eyes:sub(input)
-  print('===============================')
-  print('Removing ' .. input)
-
-  local inner_width = (self.options.width - (self.options.inner_padding * 2))
-  print('Inner width: ' .. inner_width)
-
-  -- Get the bar amount and log it
-  local bar_amount = self:getBarLevel()
-  print('Initial bar amount: ' .. bar_amount)
-
-  -- Calculate the remaining balls and log it
-  local remainder = bar_amount - input
-  print('Remaining balls: ' .. remainder)
-
-  -- Check for underflow and adjust accordingly
-  if remainder < 0 then
-    -- Calculate the remaining amount to remove after moving to the lower bar
-    local remaining_input = input - bar_amount
-    print('Remaining input after underflow: ' .. remaining_input)
-
-    -- Calculate the sub_width for the remaining input
-    local sub_width = inner_width * remaining_input
-    print('Sub width after underflow: ' .. sub_width)
-
-    -- Calculate the max value for clamping for the lower bar
-    local max_value = inner_width
-    print('Max value for clamping after underflow: ' .. max_value)
-
-    -- Apply the clamp function
-    local a = clamp(sub_width, 0, max_value)
-    print('Clamped value after underflow: ' .. a)
-
-    -- Reset and set the eased value
-    self.subbar.eased:reset(a)
-    print('Subbar eased reset to: ' .. a)
-
-    self.subbar.eased:set(0)
-    print('Subbar eased set to 0')
-  else
-    -- Normal case without underflow
-    self.barlevel = self.barlevel - input
-    print('Updated bar level: ' .. self.barlevel)
-
-    -- Calculate the sub_width
-    local sub_width = inner_width * input
-    print('Sub width: ' .. sub_width)
-
-    -- Calculate the max value for clamping
-    local max_value = inner_width * (remainder % 1)
-    print('Max value for clamping: ' .. max_value)
-
-    -- Apply the clamp function
-    local a = clamp(sub_width, 0, max_value)
-    print('Clamped value: ' .. a)
-
-    -- Reset and set the eased value
-    self.subbar.eased:reset(a)
-    print('Subbar eased reset to: ' .. a)
-
-    self.subbar.eased:set(0)
-    print('Subbar eased set to 0')
+  -- Ensure our bar does not go into the negatives
+  if self:inbounds(input) then
+    input = self:getBarLevel()
   end
 
-  print('===============================')
-  print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-  print('===============================')
+  local inner_width = (self.options.width - (self.options.inner_padding * 2))
+  local bar_amount = self:getBarAmount()
+  local bar_level = self:getBarLevel()
+  local remainder = bar_level - input
+
+  -- Ensure remainder is not negative
+  if remainder < 0 then
+    remainder = 0
+  end
+
+  -- Check for very small differences and adjust accordingly
+  if math.abs(remainder) < 0.001 then
+    remainder = 0
+  end
+
+  -- Calculate the sub_width
+  local sub_width = inner_width * input
+  local max_value = inner_width * remainder
+
+  -- Ensure max_value is not zero to avoid disappearing subbar
+  if max_value < 0.1 then
+    max_value = 0
+  end
+
+  -- Clamp the sub_width within the allowed range
+  local a = clamp(sub_width, 0, max_value)
+  
+  -- Logging for debugging
+  print('=== Debug Info ===')
+  print('Input:', input)
+  print('Bar Level:', self.barlevel)
+  print('Bar Amount:', bar_amount)
+  print('Bar Level Fraction:', bar_level)
+  print('Remainder:', remainder)
+  print('Inner Width:', inner_width)
+  print('Sub Width:', sub_width)
+  print('Max Value:', max_value)
+  print('Clamped Width:', a)
+  print('===================')
+
+  -- Reset and set the eased value
+  self.subbar.eased:reset(a)
+  self.subbar.eased:set(0)
+
+  -- Update the bar level
+  self.barlevel = self.barlevel - input
+  if self.barlevel < 0 then
+    self.barlevel = 0
+  end
+
+  print('Updated Bar Level:', self.barlevel)
 end
 
+
+
+
+
 function judge_eyes:add(input)
-  self.barlevel = self.barlevel + input
+  if input < 0 then
+    self:sub(-input)
+  else
+    self.barlevel = self.barlevel + input
+  end
 end
 
 function judge_eyes:set(input)

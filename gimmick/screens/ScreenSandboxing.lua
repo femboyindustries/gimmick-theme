@@ -1,5 +1,5 @@
 bar = require 'gimmick.bar'
-
+local a = true
 return {
   Init = function(self) Trace('theme.com') end,
   overlay = gimmick.ActorScreen(function(self, ctx)
@@ -7,25 +7,26 @@ return {
 
     bar1:addcommand('init', function()
       --bar:sub(0.2)
+      bar:set(4)
     end)
-    bar:set(1.9)
-    bar:set(1.1)
+    bar:set(2.4)
     local oldt = os.clock()
     local timer = 2
+    
     self:SetDrawFunction(function()
       local newt = os.clock()
       local dt = newt - oldt
       oldt = newt
 
-      
+            
       if bar:getBarLevel() < 0.1 then
       end
       bar1:Draw()
 
       if timer < 0.1 then
         timer = 2 
-        bar:set(1.5)
-        bar:sub(0.8)
+        
+        bar:sub(0.2)
       end
       timer = timer -dt
     end)
