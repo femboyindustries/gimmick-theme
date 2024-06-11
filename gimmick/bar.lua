@@ -179,7 +179,11 @@ function judge_eyes:updateSettings()
 
   --print(self.subbar.actor:GetWidth(),self.subbar.actor:GetX(),self.subbar.width)
   -- Update subbar position and width
-  self.subbar.x = -(self.options.width * 0.5 - self.options.inner_padding) + self.bars[self:getBarAmount()]:GetWidth()
+  self.subbar.x = -(self.options.width * 0.5 - self.options.inner_padding)
+  -- if we switch bars we still want the subbar at the old location
+  if math.abs(self:getBarLevel()-1) > 0.001 then
+    self.subbar.x = self.subbar.x + self.bars[self:getBarAmount()]:GetWidth()
+  end
   self.subbar.width = (self.options.width - (self.options.inner_padding * 2)) * 1
   self.subbar.eased:update(dt)
   self.subbar.actor:x(self.subbar.x)
@@ -223,7 +227,7 @@ function judge_eyes:sub(input)
 
   -- Calculate the sub_width
   local sub_width = inner_width * input
-  local max_value = inner_width * remainder
+  local max_value = inner_width * (1 - remainder)
 
   -- Ensure max_value is not zero to avoid disappearing subbar
   if max_value < 0.1 then
