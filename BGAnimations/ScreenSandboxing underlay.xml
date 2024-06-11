@@ -1,0 +1,3 @@
+<ActorFrame InitCommand="%gimmick.s.ScreenSandboxing.underlay.init"><children>
+	<Layer File="../actors.xml" InitCommand="%gimmick.s.ScreenSandboxing.underlay.initEnd"/>
+</children></ActorFrame>
