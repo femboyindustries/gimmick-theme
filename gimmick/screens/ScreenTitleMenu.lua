@@ -34,8 +34,8 @@ local choices = {
     command = 'stopmusic;screen,ScreenOptionsMenu',
   },
   {
-    name = (IS_JAILBROKEN and 'JAILBREAK OPTIONS' or 'jailbreak required!'),
-    command = 'stopmusic;screen,ScreenMayf'
+    name = 'ScreenSandboxing',
+    command = 'stopmusic;screen,ScreenSandboxing'
   },
   {
     name = 'Intro',

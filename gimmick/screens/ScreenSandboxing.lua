@@ -12,23 +12,27 @@ return {
     bar:set(2.4)
     local oldt = os.clock()
     local timer = 2
-    
+
     self:SetDrawFunction(function()
       local newt = os.clock()
       local dt = newt - oldt
       oldt = newt
 
-            
+
       if bar:getBarLevel() < 0.1 then
       end
       bar1:Draw()
 
-      if timer < 0.1 then
-        timer = 2 
-        
-        bar:sub(0.2)
+      if timer < 1.5 and timer > 1.45 then
+        bar:set(1.5)
       end
-      timer = timer -dt
+
+      if timer < 0.1 then
+        timer = 2
+
+        bar:sub(math.random(-1,1))
+      end
+      timer = timer - dt
     end)
   end),
   underlay = gimmick.ActorScreen(function(self, ctx)

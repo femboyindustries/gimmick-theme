@@ -51,8 +51,8 @@ return {
   MusicWheel = {
     -- mostly all just testing
 
-    NumWheelItems = function() return WHEEL_ITEMS       end,
-    ItemSpacingY =  function() return WHEEL_ITEM_HEIGHT end,
+    NumWheelItems = function() return WHEEL_ITEMS end,
+    ItemSpacingY = function() return WHEEL_ITEM_HEIGHT end,
 
     --RouletteOn = function(self) addActor(self) end,
     --SectionOn = function(self) addActor(self) end,
@@ -217,7 +217,7 @@ return {
         difficulty = nil
         if song then
           for i, step in ipairs(song:GetAllSteps()) do
-            steps[i] = {step:GetDifficulty() + diffOffset, step}
+            steps[i] = { step:GetDifficulty() + diffOffset, step }
             if step:GetDifficulty() == DIFFICULTY_EDIT then
               -- there's no better way to keep track of multiple edits than this
               diffOffset = diffOffset + 1
@@ -254,7 +254,7 @@ return {
       for _, stepSet in ipairs(steps) do
         renderSteps[stepSet[1]] = stepSet[2]
       end
-      
+
       for diffI = 0, (countKeys(renderSteps) - 1) do
         local step = renderSteps[diffI]
         local diff = DIFFICULTIES[diffI] or DIFFICULTIES[COURSE_DIFFICULTY_EDIT]
