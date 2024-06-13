@@ -79,6 +79,7 @@ function TextPool:free()
   -- pool is exhausted, look for lowest
   for actor, use in pairs(self.usage) do
     if use == self.lowest then
+      self.texts[actor:GetText()] = nil
       self.lowest = self.lowest + 1
       self.usage[actor] = self.i
       self.i = self.i + 1

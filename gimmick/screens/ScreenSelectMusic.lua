@@ -5,6 +5,7 @@ local TextPool = require 'gimmick.textpool'
 -- must be an ODD number such that we can determine the middle easily
 local WHEEL_ITEMS = 17
 
+local WHEEL_ITEM_WIDTH = 280
 local WHEEL_ITEM_HEIGHT = 30
 
 -- todo: should be moved somewhere else?
@@ -63,8 +64,7 @@ return {
     On = function(wheel)
       print('/!\\ ALERTA !!!!! everything fine')
 
-      -- currently just copying whatever simply love does
-      wheel:x(scx + (sw * 160 / 640 + 24))
+      wheel:x(sw - 46 - WHEEL_ITEM_WIDTH/2)
       wheel:y(scy + 4)
       -- resetting these; unsure why simply love stretches them
       wheel:zoomx(1)
@@ -77,6 +77,7 @@ return {
       On = function(item)
         print('/!\\ ALERTA !!!!! VIRUSE !!!!!! ON YOUR COMPUTER /!\\')
         item:SetDrawFunction(itemDrawFunc)
+        glog = item
       end
     },
   },
@@ -133,7 +134,7 @@ return {
     local time = 0
 
     local test = ctx:Sprite('Graphics/_missing.png')
-    local itemText = TextPool.new(ctx, FONTS.sans_serif)
+    local itemText = TextPool.new(ctx, FONTS.sans_serif, WHEEL_ITEMS * 3, function(a) a:shadowlength(0) end)
 
     itemDrawFunc = function(self)
       --[[
@@ -166,20 +167,40 @@ return {
       local courseName = self(12) --[[@as BitmapText]]
       local sortName = self(12) --[[@as BitmapText]]
 
-      test:xywh(0, 0, 240, WHEEL_ITEM_HEIGHT)
+      test:xywh(0, 0, WHEEL_ITEM_WIDTH, WHEEL_ITEM_HEIGHT)
       test:diffuse(0.3, 0.3, 0.3, 1)
       test:Draw()
 
       if not groupName:GetHidden() then
         local t = itemText:get(groupName:GetText())
+        t:xy(0, 0)
         t:zoom(0.4)
         t:Draw()
-      end
+      elseif not songName:GetHidden() and not songName(1):GetHidden() then
+        local title = songName(1)
+        local subtitle = songName(2)
+        local artist = songName(3)
 
-      songName:Draw()
-      roulette:Draw()
-      courseName:Draw()
-      sortName:Draw()
+        local titleText = itemText:get(title:GetText())
+        titleText:xy(0, 0)
+        titleText:zoom(0.4)
+
+        if not subtitle:GetHidden() and subtitle:GetText() ~= '' then
+          titleText:xy(0, -5)
+          titleText:Draw()
+          local subtitleText = itemText:get(subtitle:GetText())
+          subtitleText:xy(0, 5)
+          subtitleText:zoom(0.25)
+          subtitleText:Draw()
+        else
+          titleText:Draw()
+        end
+      else
+        -- todo: implement the rest, abstract it
+        roulette:Draw()
+        courseName:Draw()
+        sortName:Draw()
+      end
     end
 
     self:SetDrawFunction(function()
