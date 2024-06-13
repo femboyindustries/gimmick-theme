@@ -1,5 +1,6 @@
 local actor235 = require 'gimmick.lib.actor235'
 local easable = require 'gimmick.lib.easable'
+local TextPool = require 'gimmick.textpool'
 
 -- must be an ODD number such that we can determine the middle easily
 local WHEEL_ITEMS = 17
@@ -40,6 +41,8 @@ local DIFFICULTIES = {
   }
 }
 
+local itemDrawFunc
+
 return {
   Init = function(self)
     wheelActors = {}
@@ -58,6 +61,8 @@ return {
 
     ---@param wheel Actor
     On = function(wheel)
+      print('/!\\ ALERTA !!!!! everything fine')
+
       -- currently just copying whatever simply love does
       wheel:x(scx + (sw * 160 / 640 + 24))
       wheel:y(scy + 4)
@@ -66,7 +71,14 @@ return {
       wheel:zoomy(1)
       --wheel:zoomx(0.86 * ((sw / sh) / (4/3)))
       --wheel:zoomy(0.96)
-    end
+    end,
+
+    Item = {
+      On = function(item)
+        print('/!\\ ALERTA !!!!! VIRUSE !!!!!! ON YOUR COMPUTER /!\\')
+        item:SetDrawFunction(itemDrawFunc)
+      end
+    },
   },
   Banner = {
     ---@param bn FadingBanner
@@ -119,6 +131,56 @@ return {
     local difficulty = nil
 
     local time = 0
+
+    local test = ctx:Sprite('Graphics/_missing.png')
+    local itemText = TextPool.new(ctx, FONTS.sans_serif)
+
+    itemDrawFunc = function(self)
+      --[[
+        ActorFrame[MusicWheelItem]: { 
+          Sprite[],                        m_sprBar
+          BitmapText[]: "",                m_text (?)
+          Sprite[],                        m_sprSongBar
+          Sprite[],                        m_sprSectionBar
+          Sprite[],                        m_sprExpandedBar
+          Sprite[],                        m_sprModeBar
+          Sprite[],                        m_sprSortBar
+          Sprite[],                        m_WheelNotifyIcon
+          ActorFrame[]: {                  m_TextBanner (song name)
+            BitmapText[Title]: "Alien",
+            BitmapText[Subtitle]: "",
+            BitmapText[Artist]: "BAKUBAKU DOKIN"
+          },
+          BitmapText[]: "1 - wips",        m_textSection (group name)
+          BitmapText[]: "",                m_textRoulette
+          BitmapText[CourseName]: "",      m_textCourse
+          BitmapText[Sort]: "",            m_textSort
+          Sprite[GradeP0Sprite],           m_GradeDisplay[0]
+          Sprite[GradeP1Sprite]            m_GradeDisplay[1]
+        }
+      ]]
+
+      local songName = self(9) --[[@as ActorFrame]]
+      local groupName = self(10) --[[@as BitmapText]]
+      local roulette = self(11) --[[@as BitmapText]]
+      local courseName = self(12) --[[@as BitmapText]]
+      local sortName = self(12) --[[@as BitmapText]]
+
+      test:xywh(0, 0, 240, WHEEL_ITEM_HEIGHT)
+      test:diffuse(0.3, 0.3, 0.3, 1)
+      test:Draw()
+
+      if not groupName:GetHidden() then
+        local t = itemText:get(groupName:GetText())
+        t:zoom(0.4)
+        t:Draw()
+      end
+
+      songName:Draw()
+      roulette:Draw()
+      courseName:Draw()
+      sortName:Draw()
+    end
 
     self:SetDrawFunction(function()
       local newTime = os.clock()
