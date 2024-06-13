@@ -55,6 +55,26 @@ return {
     --SongNameOn = function(self) addActor(self) end,
     --CourseNameOn = function(self) addActor(self) end,
     --SortOn = function(self) addActor(self) end,
+
+    ---@param wheel Actor
+    On = function(wheel)
+      -- currently just copying whatever simply love does
+      wheel:x(scx + (sw * 160 / 640 + 24))
+      wheel:y(scy + 4)
+      -- resetting these; unsure why simply love stretches them
+      wheel:zoomx(1)
+      wheel:zoomy(1)
+      --wheel:zoomx(0.86 * ((sw / sh) / (4/3)))
+      --wheel:zoomy(0.96)
+    end
+  },
+  Banner = {
+    ---@param bn FadingBanner
+    On = function(bn)
+      bn:ztest(0)
+      --bn:effectclock('bgm')
+      --bn:wag()
+    end
   },
   overlay = gimmick.ActorScreen(function(self, ctx)
     local text = ctx:BitmapText(FONTS.sans_serif)
