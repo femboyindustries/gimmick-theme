@@ -71,7 +71,7 @@ return {
     logo:addcommand('Init', function(s) s:SetShader(actorgen.Proxy.getRaw(gradShader)) end)
 
 
-    if save.data.settings.mascot_enabled then
+    if save.data.settings.mascot_enabled and save.data.settings.mascot ~=nil then
       char = ctx:Sprite(mascots.getPaths(save.data.settings.mascot)['character'])
       if save.data.settings.mascot == 'jolly' then
         --char:vibrate()
