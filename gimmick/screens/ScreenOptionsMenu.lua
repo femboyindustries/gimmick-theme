@@ -183,6 +183,10 @@ local optionsTable = {
     },
     {
       type = 'lua',
+      optionRow = options.option.settingChoice('Bootup Screen duration', 'bootup_duration', {"7","20","30","60","999999"}),
+    },
+    {
+      type = 'lua',
       optionRow = screenButton('jailbreak', 'Jailbreak Options'),
     },
   },

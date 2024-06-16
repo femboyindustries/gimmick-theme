@@ -10,7 +10,8 @@ M.data = {
     prevent_stretching = true,
     do_blur = true,
     show_imap = false,
-    show_bootup = false
+    show_bootup = false,
+    bootup_duration = "7",
   },
 }
 

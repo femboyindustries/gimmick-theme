@@ -118,7 +118,7 @@ return {
 
         -- Select sounds and calculate total length
         for _, sound in ipairs(sounds) do
-          if total_length + sound.length < 20 then
+          if total_length + sound.length < tonumber(save.data.settings.bootup_duration) then
             table.insert(selected_sounds, sound)
             total_length = total_length + sound.length
           end
