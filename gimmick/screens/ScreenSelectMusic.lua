@@ -103,7 +103,7 @@ return {
     local folds = {}
 
     local meterEase = easable(0)
-    local meterColor = easable(oklab.fromColor(DIFFICULTIES[DIFFICULTY_BEGINNER].color))
+    local meterColor = easable(DIFFICULTIES[DIFFICULTY_BEGINNER].color)
 
     local FOLD_BORDER = 6
     local FOLD_GAP = 6
@@ -301,7 +301,7 @@ return {
         local meter = selected:GetMeter() or 0
 
         meterEase:set(meter)
-        meterColor:set(oklab.fromColor(diff.color))
+        meterColor:set(diff.color)
 
         local fill = meterEase.eased / 20
 
