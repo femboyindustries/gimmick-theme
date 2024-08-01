@@ -133,8 +133,9 @@ return {
 
     local time = 0
 
-    local test = ctx:Sprite('Graphics/_missing.png')
-    local itemText = TextPool.new(ctx, FONTS.sans_serif, WHEEL_ITEMS * 3, function(a) a:shadowlength(0) end)
+    --local test = ctx:Sprite('Graphics/_missing.png')
+    local wheelQuad = ctx:Quad()
+    local itemText = TextPool.new(ctx, FONTS.sans_serif, WHEEL_ITEMS * 3, function(a) a:shadowlength(0) a:align(0, 0.5) end)
 
     itemDrawFunc = function(self)
       --[[
@@ -165,15 +166,23 @@ return {
       local groupName = self(10) --[[@as BitmapText]]
       local roulette = self(11) --[[@as BitmapText]]
       local courseName = self(12) --[[@as BitmapText]]
-      local sortName = self(12) --[[@as BitmapText]]
+      local sortName = self(13) --[[@as BitmapText]]
+      local gradeDisplay0 = self(14)
+      local gradeDisplay1 = self(15)
 
-      test:xywh(0, 0, WHEEL_ITEM_WIDTH, WHEEL_ITEM_HEIGHT)
-      test:diffuse(0.3, 0.3, 0.3, 1)
-      test:Draw()
+      wheelQuad:xywh(0, 0, WHEEL_ITEM_WIDTH, WHEEL_ITEM_HEIGHT)
+      wheelQuad:diffuse(0.2, 0.2, 0.2, 1)
+      wheelQuad:Draw()
+      wheelQuad:xywh(0, WHEEL_ITEM_HEIGHT/4, WHEEL_ITEM_WIDTH, WHEEL_ITEM_HEIGHT/2)
+      wheelQuad:diffuse(0.15, 0.15, 0.15, 1)
+      wheelQuad:Draw()
+      wheelQuad:xywh(0, -WHEEL_ITEM_HEIGHT/2 + 1, WHEEL_ITEM_WIDTH, 2)
+      wheelQuad:diffuse(0, 0, 0, 1)
+      wheelQuad:Draw()
 
       if not groupName:GetHidden() then
         local t = itemText:get(groupName:GetText())
-        t:xy(0, 0)
+        t:xy(-WHEEL_ITEM_WIDTH/2 + 5, 0)
         t:zoom(0.4)
         t:Draw()
       elseif not songName:GetHidden() and not songName(1):GetHidden() then
@@ -182,14 +191,14 @@ return {
         local artist = songName(3)
 
         local titleText = itemText:get(title:GetText())
-        titleText:xy(0, 0)
+        titleText:xy(-WHEEL_ITEM_WIDTH/2 + 25, 0)
         titleText:zoom(0.4)
 
         if not subtitle:GetHidden() and subtitle:GetText() ~= '' then
-          titleText:xy(0, -5)
+          titleText:xy(-WHEEL_ITEM_WIDTH/2 + 25, -5)
           titleText:Draw()
           local subtitleText = itemText:get(subtitle:GetText())
-          subtitleText:xy(0, 5)
+          subtitleText:xy(-WHEEL_ITEM_WIDTH/2 + 25, 5)
           subtitleText:zoom(0.25)
           subtitleText:Draw()
         else
@@ -200,6 +209,8 @@ return {
         roulette:Draw()
         courseName:Draw()
         sortName:Draw()
+        gradeDisplay0:Draw()
+        gradeDisplay1:Draw()
       end
     end
 
