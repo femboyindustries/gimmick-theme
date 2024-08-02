@@ -10,32 +10,32 @@ local WHEEL_ITEM_HEIGHT = 30
 
 -- todo: should be moved somewhere else?
 local DIFFICULTIES = {
-  [COURSE_DIFFICULTY_BEGINNER] = {
+  [DIFFICULTY_BEGINNER] = {
     name = 'Easy',
     color = hex('#3FFFE4'),
     text = rgb(0, 0, 0),
   },
-  [COURSE_DIFFICULTY_EASY] = {
+  [DIFFICULTY_EASY] = {
     name = 'Normal',
     color = hex('#54FFAB'),
     text = rgb(0, 0, 0),
   },
-  [COURSE_DIFFICULTY_REGULAR] = {
+  [DIFFICULTY_MEDIUM] = {
     name = 'Hard',
     color = hex('#FFEC75'),
     text = rgb(0, 0, 0),
   },
-  [COURSE_DIFFICULTY_DIFFICULT] = {
+  [DIFFICULTY_HARD] = {
     name = 'Harder',
     color = hex('#FF6651'),
     text = rgb(0, 0, 0),
   },
-  [COURSE_DIFFICULTY_CHALLENGE] = {
+  [DIFFICULTY_CHALLENGE] = {
     name = 'Insane',
     color = hex('#6A54FF'),
     text = rgb(0, 0, 0),
   },
-  [COURSE_DIFFICULTY_EDIT] = {
+  [DIFFICULTY_EDIT] = {
     name = 'Demon',
     color = hex('B4B7BA'),
     text = rgb(0, 0, 0),
@@ -365,7 +365,7 @@ return {
 
       for diffI = 0, (countKeys(renderSteps) - 1) do
         local step = renderSteps[diffI]
-        local diff = DIFFICULTIES[diffI] or DIFFICULTIES[COURSE_DIFFICULTY_EDIT]
+        local diff = DIFFICULTIES[diffI] or DIFFICULTIES[DIFFICULTY_EASY]
 
         folds[diffI] = folds[diffI] or easable(0)
         local w = folds[diffI]
@@ -405,7 +405,7 @@ return {
       end
 
       if selected then
-        local diff = DIFFICULTIES[selected:GetDifficulty()] or DIFFICULTIES[COURSE_DIFFICULTY_EDIT]
+        local diff = DIFFICULTIES[selected:GetDifficulty()] or DIFFICULTIES[DIFFICULTY_EDIT]
         local meter = selected:GetMeter() or 0
 
         meterEase:set(meter)
