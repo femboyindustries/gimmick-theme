@@ -1,6 +1,7 @@
 local actor235 = require 'gimmick.lib.actor235'
 local easable = require 'gimmick.lib.easable'
 local TextPool = require 'gimmick.textpool'
+local bar = require 'gimmick.bar'
 
 -- must be an ODD number such that we can determine the middle easily
 local WHEEL_ITEMS = 17
@@ -90,6 +91,8 @@ return {
     end
   },
   overlay = gimmick.ActorScreen(function(self, ctx)
+    local bar_af = bar:new(ctx)
+    bar_af:xy(scx*0.5,scy*1.5)
     local text = ctx:BitmapText(FONTS.sans_serif)
     local rating = ctx:BitmapText(FONTS.sans_serif)
     rating:shadowlength(0)
@@ -342,6 +345,10 @@ return {
       end
       diffEase:update(dt * 8)
 
+      if selected then
+        bar:set(selected:GetMeter()*0.1)
+      end      
+
       local x = 96
       fold:SetHeight(20)
       fold:skewx(-0.2)
@@ -461,6 +468,8 @@ return {
       local barHeight = 32
       quad:xywh(sw - 30, scy, barHeight, sh)
       quad:Draw()
+
+      bar_af:Draw()
 
       local textWidth = diffRepText:GetWidth() * diffRepText:GetZoomX()
       local startY = -((os.clock() * 16 + diffEase.eased * 32) % textWidth)

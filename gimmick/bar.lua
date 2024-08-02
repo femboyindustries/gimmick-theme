@@ -6,12 +6,13 @@ local outline = nil
 local inner_bg = nil
 local inner_width = nil
 
+---@class Bar
 local judge_eyes = {
   options = {
-    skew = 0.4,
-    width = 400,
-    height = 12,
-    inner_padding = 2.5,
+    skew = 0.4, --how skewed it should be
+    width = 400, --width of bar
+    height = 12, --height of bar
+    inner_padding = 2.5, --how much padding between the outline and actual moving bar
   },
   subbar = {
     actor = nil,
@@ -57,6 +58,9 @@ end
 
 setmetatable(judge_eyes.subbar, clamping_tbl())
 
+---@param context Context
+---@param options? {skew: number, width: number, height: number, inner_padding: number}
+---@return Bar
 function judge_eyes:init(context, options)
   ---@type Context
   ctx = context -- Initialize the global ctx
@@ -125,13 +129,17 @@ function judge_eyes:init(context, options)
   return self
 end
 
+---Create a new Bar instance
+---@param context Context
+---@param options? {skew: number, width: number, height: number, inner_padding: number}
 ---@return ActorFrame
 function judge_eyes:new(context, options)
   self:init(context, options)
   return self.actorframe
 end
 
----@param options table
+---Set the options of the Bar
+---@param options {skew: number, width: number, height: number, inner_padding: number}
 function judge_eyes:set_options(options)
   for k, v in pairs(options) do
     self.options[k] = v
@@ -147,7 +155,7 @@ end
 ---Gets How many bars there are
 ---@return int
 function judge_eyes:getBarAmount()
-  return math.floor(self.barlevel)
+  return math.floor(self.barlevel)+1
 end
 
 local oldt = os.clock()
@@ -185,6 +193,7 @@ function judge_eyes:updateSettings()
   self.subbar.x = -(self.options.width * 0.5 - self.options.inner_padding)
   -- if we switch bars we still want the subbar at the old location
   if math.abs(self:getBarLevel() - 1) > 0.001 then
+    print('kill yourself',self:getBarAmount())
     self.subbar.x = self.subbar.x + self.bars[self:getBarAmount()]:GetWidth()
   end
   self.subbar.width = (self.options.width - (self.options.inner_padding * 2)) * 1
@@ -197,16 +206,23 @@ function judge_eyes:updateSettings()
   end
 end
 
+---@param num number
+---@return {red: number, green: number, blue: number}
 function judge_eyes:getcolor(num)
   if not num then num = 11037 end
   local amount = #self.barcolors
   return self.barcolors[(num >= amount and amount or num)]
 end
 
+---@param input number
+---@return boolean
 function judge_eyes:inbounds(input)
   return self:getBarAmount() <= 1 and self:getBarLevel() - input < 0 and self:getBarLevel() - input <= 10
 end
 
+---Make the Bar smaller
+---@param input number
+---@return void
 function judge_eyes:sub(input)
   -- Ensure our bar does not go into the negatives
   if self:inbounds(input) then
@@ -265,6 +281,8 @@ function judge_eyes:sub(input)
   print('Updated Bar Level:', self.barlevel)
 end
 
+---Add to the Bar without an animation
+---@param input number
 function judge_eyes:add(input)
   if input < 0 then
     self:sub(-input)
@@ -275,7 +293,12 @@ function judge_eyes:add(input)
   end
 end
 
+---Set the bar to an amount without animation
+---@param input number
 function judge_eyes:set(input)
+  if input > 10 then
+    input = 9.999999
+  end
   print('Setting to ' .. input)
   self.baramountold = self:getBarAmount()
   self.barlevelold = self.barlevel

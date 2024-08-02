@@ -24,13 +24,17 @@ return {
       bar1:Draw()
 
       if timer < 1.5 and timer > 1.45 then
-        bar:set(2.1)
+        --bar:set(2.1)
       end
 
       if timer < 0.1 then
         timer = 2
+        if math.random() < 0.5 then
+          bar:sub(math.random())
+        else
+          bar:add(math.random())
+        end
 
-        bar:sub(0.3)
       end
       timer = timer - dt
     end)
