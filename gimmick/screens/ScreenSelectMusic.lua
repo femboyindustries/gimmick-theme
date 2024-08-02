@@ -130,15 +130,24 @@ return {
     ---@type {[1]: number, [2]: Steps}[]
     local steps = {}
     local difficulty = nil
+    local lastDifficulty = DIFFICULTY_CHALLENGE
+
+    local allSongs = SONGMAN:GetAllSongs()
+    ---@type table<string, Song>
+    local songLookup = {}
+    setmetatable(songLookup, { __mode = 'v' })
 
     local time = 0
 
     --local test = ctx:Sprite('Graphics/_missing.png')
     local wheelQuad = ctx:Quad()
     local itemText = TextPool.new(ctx, FONTS.sans_serif, WHEEL_ITEMS * 3, function(a) a:shadowlength(0) a:align(0, 0.5) end)
+    local meterText = TextPool.new(ctx, FONTS.sans_serif, WHEEL_ITEMS, function(a) a:shadowlength(0) a:align(0.5, 0.5) end)
 
     local itemI = 0
     local itemEases = {}
+
+    local METER_WIDTH = 30
 
     itemDrawFunc = function(self)
       --[[
@@ -183,7 +192,7 @@ return {
         itemEases[index] = easable(0, 16)
       end
       itemEases[index]:set(selected and 1 or 0)
-      local offX = itemEases[index].eased * -15
+      local offX = itemEases[index].eased * -20
 
       local width = WHEEL_ITEM_WIDTH - offX
       local quadX = -WHEEL_ITEM_WIDTH/2 + width/2
@@ -201,7 +210,7 @@ return {
 
       if not groupName:GetHidden() then
         local t = itemText:get(groupName:GetText())
-        t:xy(-WHEEL_ITEM_WIDTH/2 + 5 + offX, 0)
+        t:xy(-WHEEL_ITEM_WIDTH/2 + 5 + offX, 2)
         t:zoom(0.4)
         t:Draw()
       elseif not songName:GetHidden() and not songName(1):GetHidden() then
@@ -209,16 +218,78 @@ return {
         local subtitle = songName(2)
         local artist = songName(3)
 
-        local titleText = itemText:get(title:GetText())
-        titleText:xy(-WHEEL_ITEM_WIDTH/2 + 25 + offX, 0)
+        local titleT = title:GetText()
+        local subtitleT = (not subtitle:GetHidden()) and subtitle:GetText() or ''
+        local artistT = artist:GetText()
+
+        local cacheKey = table.concat({titleT, subtitleT, artistT}, '')
+        if not songLookup[cacheKey] then
+          for _, song in ipairs(allSongs) do
+            -- this sucks
+            -- https://github.com/openitg/openitg/blob/f2c129fe65c65e4a9b3a691ff35e7717b4e8de51/src/Song.cpp#L1413
+            -- if ShowNativeLanguage is on, then titleC == titleCT
+            -- todo: warn the user, try and tell them to turn it off?
+            -- it's turned on by default on a regular nitg setup
+
+            local titleC = song:GetDisplayMainTitle()
+            local titleCT = song:GetTranslitMainTitle()
+
+            local artistC = song:GetDisplayArtist()
+            local artistCT = song:GetTranslitArtist()
+
+            local subtitleC = song:GetDisplaySubTitle()
+            local subtitleCT = song:GetTranslitSubTitle()
+
+            if
+              (titleC == titleT or titleCT == titleT) and
+              (artistC == artistT or artistCT == artistT) and
+              (subtitleC == subtitleT or subtitleCT == subtitleT)
+            then
+              songLookup[cacheKey] = song
+              break
+            end
+          end
+        end
+
+        local song = songLookup[cacheKey]
+
+        if song then
+          local curStep
+          local steps = song:GetAllSteps()
+          for _, step in ipairs(steps) do
+            if step:GetDifficulty() == lastDifficulty then
+              curStep = step
+              break
+            end
+          end
+          curStep = curStep or steps[1]
+          local diff = DIFFICULTIES[curStep:GetDifficulty()]
+
+          wheelQuad:xywh(-WHEEL_ITEM_WIDTH/2 + METER_WIDTH/2 + offX, 0, METER_WIDTH, WHEEL_ITEM_HEIGHT)
+          wheelQuad:diffuse(diff.color:unpack())
+          wheelQuad:Draw()
+          wheelQuad:xywh(-WHEEL_ITEM_WIDTH/2 + METER_WIDTH/2 + offX, WHEEL_ITEM_HEIGHT/4, METER_WIDTH, WHEEL_ITEM_HEIGHT/2)
+          wheelQuad:diffuse((diff.color * 0.85):unpack())
+          wheelQuad:Draw()
+
+          local meterT = meterText:get(tostring(curStep:GetMeter()))
+
+          meterT:xy(-WHEEL_ITEM_WIDTH/2 + METER_WIDTH/2 + offX, 0)
+          meterT:diffuse(diff.text:unpack())
+          meterT:zoom(0.45)
+          meterT:Draw()
+        end
+
+        local titleText = itemText:get(titleT)
+        titleText:xy(-WHEEL_ITEM_WIDTH/2 + METER_WIDTH + 6 + offX, 2)
         titleText:zoom(0.4)
 
-        if not subtitle:GetHidden() and subtitle:GetText() ~= '' then
-          titleText:xy(-WHEEL_ITEM_WIDTH/2 + 25 + offX, -5)
+        if not subtitle:GetHidden() and subtitleT ~= '' then
+          titleText:xy(-WHEEL_ITEM_WIDTH/2 + METER_WIDTH + 6 + offX, -5 + 2)
           titleText:Draw()
-          local subtitleText = itemText:get(subtitle:GetText())
-          subtitleText:xy(-WHEEL_ITEM_WIDTH/2 + 25 + offX, 5)
-          subtitleText:zoom(0.25)
+          local subtitleText = itemText:get(subtitleT)
+          subtitleText:xy(-WHEEL_ITEM_WIDTH/2 + METER_WIDTH + 6 + offX, 5 + 2)
+          subtitleText:zoom(0.22)
           subtitleText:Draw()
         else
           titleText:Draw()
@@ -266,6 +337,7 @@ return {
 
       if selected and difficulty ~= selected:GetDifficulty() then
         difficulty = selected:GetDifficulty()
+        lastDifficulty = difficulty
         diffEase.eased = -1
       end
       diffEase:update(dt * 8)
