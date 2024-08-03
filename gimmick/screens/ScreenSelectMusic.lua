@@ -6,7 +6,7 @@ local bar = require 'gimmick.bar'
 -- must be an ODD number such that we can determine the middle easily
 local WHEEL_ITEMS = 17
 
-local WHEEL_ITEM_WIDTH = 280
+local WHEEL_ITEM_WIDTH = 300
 local WHEEL_ITEM_HEIGHT = 30
 
 -- todo: should be moved somewhere else?
@@ -65,7 +65,7 @@ return {
     On = function(wheel)
       print('/!\\ ALERTA !!!!! everything fine')
 
-      wheel:x(sw - 46 - WHEEL_ITEM_WIDTH/2)
+      wheel:x(sw - 32 - WHEEL_ITEM_WIDTH/2)
       wheel:y(scy + 4)
       -- resetting these; unsure why simply love stretches them
       wheel:zoomx(1)
@@ -146,6 +146,7 @@ return {
     local wheelQuad = ctx:Quad()
     local itemText = TextPool.new(ctx, FONTS.sans_serif, WHEEL_ITEMS * 3, function(a) a:shadowlength(0) a:align(0, 0.5) end)
     local meterText = TextPool.new(ctx, FONTS.sans_serif, WHEEL_ITEMS, function(a) a:shadowlength(0) a:align(0.5, 0.5) end)
+    local grad = ctx:Sprite('Graphics/grad.png')
 
     local itemI = 0
     local itemEases = {}
@@ -186,8 +187,8 @@ return {
       local roulette = self(11) --[[@as BitmapText]]
       local courseName = self(12) --[[@as BitmapText]]
       local sortName = self(13) --[[@as BitmapText]]
-      local gradeDisplay0 = self(14)
-      local gradeDisplay1 = self(15)
+      local gradeDisplay0 = self(14) --[[@as Sprite]]
+      local gradeDisplay1 = self(15) --[[@as Sprite]]
 
       local index = table.concat({songName(1):GetText(), groupName:GetText()}, '')
 
@@ -210,6 +211,19 @@ return {
       wheelQuad:xywh(quadX + offX, -WHEEL_ITEM_HEIGHT/2 + 1, width, 2)
       wheelQuad:diffuse(0, 0, 0, 1)
       wheelQuad:Draw()
+
+      if itemEases[index].eased > 0.1 then
+        local glow = math.sqrt(itemEases[index].eased)
+        local beat = (GAMESTATE:GetSongBeat() % 1)
+        local bri = 0.3 - 0.1 * beat
+
+        grad:diffuse(1, 1, 1, glow * bri)
+        grad:blend('add')
+        grad:xywh(quadX + offX, -WHEEL_ITEM_HEIGHT/2 - 6, width, 12)
+        grad:Draw()
+        grad:xywh(quadX + offX, WHEEL_ITEM_HEIGHT/2 + 6, width, -12)
+        grad:Draw()
+      end
 
       if not groupName:GetHidden() then
         local t = itemText:get(groupName:GetText())
@@ -466,7 +480,7 @@ return {
       end
 
       local barHeight = 32
-      quad:xywh(sw - 30, scy, barHeight, sh)
+      quad:xywh(sw - 16, scy, barHeight, sh)
       quad:Draw()
 
       bar_af:Draw()
@@ -474,7 +488,7 @@ return {
       local textWidth = diffRepText:GetWidth() * diffRepText:GetZoomX()
       local startY = -((os.clock() * 16 + diffEase.eased * 32) % textWidth)
       for y = startY, sh, textWidth do
-        diffRepText:xy(sw - 30, y)
+        diffRepText:xy(sw - 16, y)
         diffRepText:Draw()
       end
     end)
