@@ -37,39 +37,12 @@ local judgements = {
 return {
   Init = function(self) Trace('theme.com') end,
   overlay = gimmick.ActorScreen(function(self, ctx)
-  end),
-  underlay = gimmick.ActorScreen(function(self, ctx)
-    if AWESOME then
-      local awesome = ctx:Sprite('Graphics/awesome.png')
-      awesome:xy(scx, scy)
-      awesome:zoom(0.5)
-
-      local oldT = os.clock()
-      local t = 0
-
-      self:SetDrawFunction(function()
-        local newT = os.clock()
-        local dt = newT - oldT
-        oldT = newT
-        t = t + dt
-
-        awesome:diffusealpha(clamp(t - 3, 0, 1))
-        awesome:Draw()
-
-        if t > 5 then
-          GAMESTATE:Crash('it would be so awesome')
-        end
-      end)
-
-      return
-    end
-
     local pool = TextPool.new(ctx, FONTS.sans_serif, nil, function(actor)
       actor:zoom(0.5)
       actor:align(0, 0.5)
     end)
 
-    local winner = ctx:Sprite('Graphics/winner.png')
+
 
     local pn = 0
     local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(pn)
@@ -111,13 +84,13 @@ return {
     local score = decimal .. '.' .. fractional
 
     self:SetDrawFunction(function()
-      local text = pool:get(score)
+      local full_score = pool:get(score)
 
-      text:zoom(0.6)
-      text:xy(15, 30)
-      text:Draw()
+      full_score:zoom(1)
+      full_score:xy(15, 30)
+      full_score:Draw()
 
-      text:zoom(0.5)
+      full_score:zoom(0.5)
 
       for i, field in ipairs(fields) do
         local y = 60 + 30 * i
@@ -144,11 +117,40 @@ return {
           text:Draw()
         end
       end
-
-      winner:xy(scx, scy)
-      winner:scaletofit(scx - 100, scy - 100, scx + 100, scy + 100)
-      winner:Draw()
     end)
+  end),
+  underlay = gimmick.ActorScreen(function(self, ctx)
+    if AWESOME then
+      local awesome = ctx:Sprite('Graphics/awesome.png')
+      awesome:xy(scx, scy)
+      awesome:zoom(0.5)
+
+      local oldT = os.clock()
+      local t = 0
+
+      self:SetDrawFunction(function()
+        local newT = os.clock()
+        local dt = newT - oldT
+        oldT = newT
+        t = t + dt
+
+        awesome:diffusealpha(clamp(t - 3, 0, 1))
+        awesome:Draw()
+
+        if t > 5 then
+          GAMESTATE:Crash('it would be so awesome')
+        end
+      end)
+
+      return
+    else
+      local winner = ctx:Sprite('Graphics/winner.png')
+      self:SetDrawFunction(function()
+        winner:xy(scx, scy)
+        winner:scaletofit(scx - 100, scy - 100, scx + 100, scy + 100)
+        winner:Draw()
+      end)
+    end
   end),
   header = gimmick.ActorScreen(function(self, ctx)
   end),
