@@ -1,4 +1,5 @@
 local TextPool = require 'gimmick.textpool'
+local barlib = require 'gimmick.bar'
 local AWESOME = false
 
 local judgements = {
@@ -42,7 +43,11 @@ return {
       actor:align(0, 0.5)
     end)
 
+    local bar = barlib.new(ctx)
+    local bar_af = bar.actorframe
 
+    bar:set(0.4)
+    
 
     local pn = 0
     local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(pn)
@@ -85,9 +90,12 @@ return {
 
     self:SetDrawFunction(function()
       local full_score = pool:get(score)
-
+      if bar_af then
+        bar_af:Draw()
+      end
+      full_score:halign(0.5)
       full_score:zoom(1)
-      full_score:xy(15, 30)
+      full_score:xy(scx, scy * 1.3)
       full_score:Draw()
 
       full_score:zoom(0.5)
@@ -145,10 +153,15 @@ return {
       return
     else
       local winner = ctx:Sprite('Graphics/winner.png')
+      local bg = ctx:Sprite('Mascots/backgrounds/jimble.jpg')
+      bg:stretchto(0, 0, sw, sh)
+
       self:SetDrawFunction(function()
         winner:xy(scx, scy)
         winner:scaletofit(scx - 100, scy - 100, scx + 100, scy + 100)
         winner:Draw()
+
+        bg:Draw()
       end)
     end
   end),

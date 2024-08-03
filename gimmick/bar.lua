@@ -41,6 +41,8 @@ local judge_eyes = {
   actorframe = nil
 }
 
+judge_eyes.__index = judge_eyes
+
 --clamp the bar amount between 0 and 10 to avoid errors
 local function clamping_tbl()
   return {
@@ -62,7 +64,6 @@ setmetatable(judge_eyes.subbar, clamping_tbl())
 ---@param options? {skew: number, width: number, height: number, inner_padding: number}
 ---@return Bar
 function judge_eyes:init(context, options)
-  ---@type Context
   ctx = context -- Initialize the global ctx
   if options then
     self:set_options(options)
@@ -113,7 +114,6 @@ function judge_eyes:init(context, options)
   ctx:addChild(bar, outline)
   ctx:addChild(bar, inner_bg)
 
-
   bar:xy(scx, scy)
   bar:SetDrawFunction(function()
     self:updateSettings()
@@ -132,10 +132,10 @@ end
 ---Create a new Bar instance
 ---@param context Context
 ---@param options? {skew: number, width: number, height: number, inner_padding: number}
----@return ActorFrame
-function judge_eyes:new(context, options)
-  self:init(context, options)
-  return self.actorframe
+---@return Bar
+function judge_eyes.new(context, options)
+  local instance = setmetatable({}, judge_eyes)
+  return instance:init(context, options)
 end
 
 ---Set the options of the Bar
@@ -155,7 +155,7 @@ end
 ---Gets How many bars there are
 ---@return int
 function judge_eyes:getBarAmount()
-  return math.floor(self.barlevel)+1
+  return math.floor(self.barlevel) + 1
 end
 
 local oldt = os.clock()
@@ -188,10 +188,7 @@ function judge_eyes:updateSettings()
     inner:diffuse(colors[1], colors[2], colors[3], 1)
   end
 
-  --print(self.subbar.actor:GetWidth(),self.subbar.actor:GetX(),self.subbar.width)
-  -- Update subbar position and width
   self.subbar.x = -(self.options.width * 0.5 - self.options.inner_padding)
-  -- if we switch bars we still want the subbar at the old location
   if math.abs(self:getBarLevel() - 1) > 0.001 then
     self.subbar.x = self.subbar.x + self.bars[self:getBarAmount()]:GetWidth()
   end
@@ -223,7 +220,6 @@ end
 ---@param input number
 ---@return void
 function judge_eyes:sub(input)
-  -- Ensure our bar does not go into the negatives
   if self:inbounds(input) then
     input = self:getBarLevel()
   end
@@ -236,41 +232,31 @@ function judge_eyes:sub(input)
   local bar_level = self:getBarLevel()
   local remainder = bar_level - input
 
-  -- Ensure remainder is not negative
   if remainder < 0 then
     remainder = 0
   end
 
-  -- Check for very small differences and adjust accordingly
   if math.abs(remainder) < 0.001 then
     remainder = 0
   end
 
-  -- Calculate the sub_width
   local sub_width = inner_width * input
   local max_value = inner_width * (1 - remainder)
 
-  -- Ensure max_value is not zero to avoid disappearing subbar
   if max_value < 0.1 then
     max_value = 0
   end
 
   local a
-  --we went down a bar level
   if self.baramountold > math.floor(self.barlevel - input) then
-    a = clamp(sub_width, 0, inner_width*(1-((self.barlevel-input)%1)))
+    a = clamp(sub_width, 0, inner_width * (1 - ((self.barlevel - input) % 1)))
   else
     a = clamp(sub_width, 0, max_value)
   end
 
-
-  -- Clamp the sub_width within the allowed range
-  
-  -- Reset and set the eased value
   self.subbar.eased:reset(a)
   self.subbar.eased:set(0)
 
-  -- Update the bar level
   self.barlevel = self.barlevel - input
   if self.barlevel < 0 then
     self.barlevel = 0
