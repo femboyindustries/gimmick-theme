@@ -487,7 +487,7 @@ return {
 
       local textWidth = diffRepText:GetWidth() * diffRepText:GetZoomX()
       local startY = -((os.clock() * 16 + diffEase.eased * 32) % textWidth)
-      for y = startY, sh, textWidth do
+      for y = startY, sh + textWidth, textWidth do
         diffRepText:xy(sw - 16, y)
         diffRepText:Draw()
       end
