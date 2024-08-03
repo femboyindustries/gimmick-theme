@@ -193,7 +193,6 @@ function judge_eyes:updateSettings()
   self.subbar.x = -(self.options.width * 0.5 - self.options.inner_padding)
   -- if we switch bars we still want the subbar at the old location
   if math.abs(self:getBarLevel() - 1) > 0.001 then
-    print('kill yourself',self:getBarAmount())
     self.subbar.x = self.subbar.x + self.bars[self:getBarAmount()]:GetWidth()
   end
   self.subbar.width = (self.options.width - (self.options.inner_padding * 2)) * 1
@@ -259,7 +258,6 @@ function judge_eyes:sub(input)
   local a
   --we went down a bar level
   if self.baramountold > math.floor(self.barlevel - input) then
-    print(inner_width,1-((self.barlevel-input)%1),inner_width*(1-((self.barlevel-input)%1)))
     a = clamp(sub_width, 0, inner_width*(1-((self.barlevel-input)%1)))
   else
     a = clamp(sub_width, 0, max_value)
@@ -299,7 +297,6 @@ function judge_eyes:set(input)
   if input > 10 then
     input = 9.999999
   end
-  print('Setting to ' .. input)
   self.baramountold = self:getBarAmount()
   self.barlevelold = self.barlevel
   self.barlevel = input
