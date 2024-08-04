@@ -1,45 +1,10 @@
 ---@diagnostic disable: undefined-field, need-check-nil
 local easable = require 'gimmick.lib.easable'
 
-local ctx = nil
-local outline = nil
-local inner_bg = nil
-local inner_width = nil
+-- if you put another local here i think i will do something to you mayflower
 
 ---@class Bar
-local judge_eyes = {
-  options = {
-    skew = 0.4, --how skewed it should be
-    width = 400, --width of bar
-    height = 12, --height of bar
-    inner_padding = 2.5, --how much padding between the outline and actual moving bar
-  },
-  subbar = {
-    actor = nil,
-    eased = easable(0, 12),
-    x = 0,
-    width = 0
-  },
-  bars = {},
-  baramountold = 0,
-  barlevelold = 0,
-  barlevel = 0,
-  barcolors = {
-    { 1.0, 0.0, 0.0 }, -- Red
-    { 1.0, 0.5, 0.0 }, -- Orange
-    { 1.0, 1.0, 0.0 }, -- Yellow
-    { 0.5, 1.0, 0.0 }, -- Lime green
-    { 0.0, 1.0, 0.0 }, -- Green
-    { 0.0, 1.0, 0.5 }, -- Teal
-    { 0.0, 1.0, 1.0 }, -- Cyan
-    { 0.0, 0.5, 1.0 }, -- Sky blue
-    { 0.0, 0.0, 1.0 }, -- Blue
-    { 0.5, 0.0, 1.0 }, -- Indigo
-    { 1.0, 0.0, 1.0 }, -- Violet
-    { 1.0, 0.0, 0.5 }, -- Magenta
-  },
-  actorframe = nil
-}
+local judge_eyes = {}
 
 judge_eyes.__index = judge_eyes
 
@@ -58,13 +23,10 @@ local function clamping_tbl()
   }
 end
 
-setmetatable(judge_eyes.subbar, clamping_tbl())
-
----@param context Context
+---@param ctx Context
 ---@param options? {skew: number, width: number, height: number, inner_padding: number}
 ---@return Bar
-function judge_eyes:init(context, options)
-  ctx = context -- Initialize the global ctx
+function judge_eyes:init(ctx, options)
   if options then
     self:set_options(options)
   end
@@ -73,19 +35,19 @@ function judge_eyes:init(context, options)
 
   local bar = ctx:ActorFrame()
 
-  outline = ctx:Quad()
-  outline:xy(0, 0)
-  outline:SetWidth(options.width + options.inner_padding)
-  outline:SetHeight(options.height + options.inner_padding)
-  outline:skewx(-options.skew)
-  outline:diffuse(1, 1, 1, 0.8)
+  self.outline = ctx:Quad()
+  self.outline:xy(0, 0)
+  self.outline:SetWidth(options.width + options.inner_padding)
+  self.outline:SetHeight(options.height + options.inner_padding)
+  self.outline:skewx(-options.skew)
+  self.outline:diffuse(1, 1, 1, 0.8)
 
-  inner_bg = ctx:Quad()
-  inner_bg:xy(0, 0)
-  inner_bg:SetWidth(options.width)
-  inner_bg:SetHeight(options.height)
-  inner_bg:skewx(-options.skew)
-  inner_bg:diffuse(0, 0, 0.05, 1)
+  self.inner_bg = ctx:Quad()
+  self.inner_bg:xy(0, 0)
+  self.inner_bg:SetWidth(options.width)
+  self.inner_bg:SetHeight(options.height)
+  self.inner_bg:skewx(-options.skew)
+  self.inner_bg:diffuse(0, 0, 0.05, 1)
 
   self.subbar.actor = ctx:Quad()
   self.subbar.actor:halign(0)
@@ -111,14 +73,14 @@ function judge_eyes:init(context, options)
     ctx:addChild(bar, inner)
   end
 
-  ctx:addChild(bar, outline)
-  ctx:addChild(bar, inner_bg)
+  ctx:addChild(bar, self.outline)
+  ctx:addChild(bar, self.inner_bg)
 
   bar:xy(scx, scy)
   bar:SetDrawFunction(function()
     self:updateSettings()
-    outline:Draw()
-    inner_bg:Draw()
+    self.outline:Draw()
+    self.inner_bg:Draw()
     for _, inner in ipairs(self.bars) do
       inner:Draw()
     end
@@ -134,7 +96,38 @@ end
 ---@param options? {skew: number, width: number, height: number, inner_padding: number}
 ---@return Bar
 function judge_eyes.new(context, options)
-  local instance = setmetatable({}, judge_eyes)
+  local instance = setmetatable({
+    options = {
+      skew = 0.4, --how skewed it should be
+      width = 400, --width of bar
+      height = 12, --height of bar
+      inner_padding = 2.5, --how much padding between the outline and actual moving bar
+    },
+    subbar = {
+      eased = easable(0, 12),
+      x = 0,
+      width = 0
+    },
+    bars = {},
+    baramountold = 0,
+    barlevelold = 0,
+    barlevel = 0,
+    barcolors = {
+      { 1.0, 0.0, 0.0 }, -- Red
+      { 1.0, 0.5, 0.0 }, -- Orange
+      { 1.0, 1.0, 0.0 }, -- Yellow
+      { 0.5, 1.0, 0.0 }, -- Lime green
+      { 0.0, 1.0, 0.0 }, -- Green
+      { 0.0, 1.0, 0.5 }, -- Teal
+      { 0.0, 1.0, 1.0 }, -- Cyan
+      { 0.0, 0.5, 1.0 }, -- Sky blue
+      { 0.0, 0.0, 1.0 }, -- Blue
+      { 0.5, 0.0, 1.0 }, -- Indigo
+      { 1.0, 0.0, 1.0 }, -- Violet
+      { 1.0, 0.0, 0.5 }, -- Magenta
+    },
+  }, judge_eyes)
+  setmetatable(instance.subbar, clamping_tbl())
   return instance:init(context, options)
 end
 
@@ -164,13 +157,13 @@ function judge_eyes:updateSettings()
   local dt = newt - oldt
   oldt = newt
 
-  outline:SetWidth(self.options.width + self.options.inner_padding)
-  outline:SetHeight(self.options.height + self.options.inner_padding)
-  outline:skewx(-self.options.skew)
-  inner_bg:SetWidth(self.options.width)
-  inner_bg:SetHeight(self.options.height)
-  inner_bg:skewx(-self.options.skew)
-  inner_bg:diffuse(0, 0, 0.05, 1)
+  self.outline:SetWidth(self.options.width + self.options.inner_padding)
+  self.outline:SetHeight(self.options.height + self.options.inner_padding)
+  self.outline:skewx(-self.options.skew)
+  self.inner_bg:SetWidth(self.options.width)
+  self.inner_bg:SetHeight(self.options.height)
+  self.inner_bg:skewx(-self.options.skew)
+  self.inner_bg:diffuse(0, 0, 0.05, 1)
 
   for index, value in ipairs(self.bars) do
     value:hidden(1)
