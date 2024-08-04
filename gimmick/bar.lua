@@ -77,8 +77,8 @@ function judge_eyes:init(ctx, options)
   ctx:addChild(bar, self.inner_bg)
 
   bar:xy(scx, scy)
-  bar:SetDrawFunction(function()
-    self:updateSettings()
+  setDrawFunctionWithDT(bar, function(dt)
+    self:updateSettings(dt)
     self.outline:Draw()
     self.inner_bg:Draw()
     for _, inner in ipairs(self.bars) do
@@ -151,12 +151,8 @@ function judge_eyes:getBarAmount()
   return math.floor(self.barlevel) + 1
 end
 
-local oldt = os.clock()
-function judge_eyes:updateSettings()
-  local newt = os.clock()
-  local dt = newt - oldt
-  oldt = newt
-
+---@param dt number
+function judge_eyes:updateSettings(dt)
   self.outline:SetWidth(self.options.width + self.options.inner_padding)
   self.outline:SetHeight(self.options.height + self.options.inner_padding)
   self.outline:skewx(-self.options.skew)
