@@ -62,6 +62,7 @@ end
 ---@param initFunc fun(self: ActorFrame, ctx: Context): nil
 function gimmick.ActorScreen(initFunc)
   return {
+    ---@param self ActorFrame
     init = function(self)
       self:removecommand('Init')
 
@@ -71,6 +72,7 @@ function gimmick.ActorScreen(initFunc)
 
       actorgen.ready(ctx)
     end,
+    ---@param self ActorFrame
     initEnd = function(self)
       self:removecommand('Init')
       actorgen.finalize()

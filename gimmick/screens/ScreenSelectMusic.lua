@@ -141,6 +141,14 @@ return {
     ---@type table<string, Song>
     local songLookup = {}
     setmetatable(songLookup, { __mode = 'v' })
+    local groupLookup = {}
+
+    for _, song in ipairs(allSongs) do
+      local dir = song:GetSongDir()
+      local _, _, groupPath, songPath = string.find(dir, '/([^/]+)/([^/]+)/$')
+      groupLookup[groupPath] = groupLookup[groupPath] or {}
+      table.insert(groupLookup[groupPath], song)
+    end
 
     --local test = ctx:Sprite('Graphics/_missing.png')
     local wheelQuad = ctx:Quad()
@@ -234,10 +242,39 @@ return {
       end
 
       if not groupName:GetHidden() then
+        local margin = 30
+        local pad = 5
+
         local t = itemText:get(groupName:GetText())
-        t:xy(-WHEEL_ITEM_WIDTH / 2 + 5 + offX, 2)
+        local w = t:GetWidth() * 0.4
+        t:xy(margin + -w/2 + offX, 2)
         t:zoom(0.4)
+        t:diffuse(0.8, 0.8, 0.8, 1)
         t:Draw()
+
+        --local leftBar = (WHEEL_ITEM_WIDTH/2 - w/2 - pad) - pad
+        --local rightBar = (width - w/2 - pad)
+
+        --wheelQuad:diffuse(0.8, 0.8, 0.8, 0.7)
+        --wheelQuad:xywh(margin + -w/2 - pad - leftBar/2 + offX, 0, leftBar, 1)
+        --wheelQuad:Draw()
+        --wheelQuad:xywh(margin + w/2 + pad + rightBar/2 + offX, 0, rightBar, 1)
+        --wheelQuad:Draw()
+        t:diffuse(1, 1, 1, 1)
+
+        local songsInGroup = groupLookup[groupName:GetText()]
+        if songsInGroup then
+          local meterT = meterText:get(tostring(#songsInGroup))
+
+          wheelQuad:xywh(-WHEEL_ITEM_WIDTH / 2 + margin / 2 + offX, 0, margin, WHEEL_ITEM_HEIGHT)
+          wheelQuad:diffuse(0, 0, 0, 0.3)
+          wheelQuad:Draw()
+
+          meterT:xy(-WHEEL_ITEM_WIDTH / 2 + margin / 2 + offX, 0)
+          meterT:diffuse(0.6, 0.6, 0.6, 1)
+          meterT:zoom(0.45)
+          meterT:Draw()
+        end
       elseif not songName:GetHidden() and not songName(1):GetHidden() then
         local title = songName(1)
         local subtitle = songName(2)
