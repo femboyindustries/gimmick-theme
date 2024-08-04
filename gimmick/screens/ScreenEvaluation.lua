@@ -157,11 +157,11 @@ return {
       bg:stretchto(0, 0, sw, sh)
 
       self:SetDrawFunction(function()
+        bg:Draw()
+
         winner:xy(scx, scy)
         winner:scaletofit(scx - 100, scy - 100, scx + 100, scy + 100)
         winner:Draw()
-
-        bg:Draw()
       end)
     end
   end),
