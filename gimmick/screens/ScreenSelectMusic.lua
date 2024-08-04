@@ -86,6 +86,8 @@ return {
     ---@param bn FadingBanner
     On = function(bn)
       bn:ztest(0)
+      -- this is only vaguely better than magic numbers
+      bn:xy((48 + 96 + 240)/2, 135)
       --bn:effectclock('bgm')
       --bn:wag()
     end
@@ -217,32 +219,27 @@ return {
       local width = WHEEL_ITEM_WIDTH - offX
       local quadX = -WHEEL_ITEM_WIDTH / 2 + width / 2
 
+      local frontCol, shadeCol = rgb(0.2, 0.2, 0.2), rgb(0.15, 0.15, 0.15)
+      if not groupName:GetHidden() then
+        frontCol, shadeCol = rgb(0.27, 0.27, 0.27), rgb(0.22, 0.22, 0.22)
+      end
+
       wheelQuad:xywh(quadX + offX, 0, width, WHEEL_ITEM_HEIGHT)
-      wheelQuad:diffuse(0.2, 0.2, 0.2, 1)
+      wheelQuad:diffuse(frontCol:unpack())
       wheelQuad:Draw()
       wheelQuad:xywh(quadX + offX, WHEEL_ITEM_HEIGHT / 4, width, WHEEL_ITEM_HEIGHT / 2)
-      wheelQuad:diffuse(0.15, 0.15, 0.15, 1)
+      wheelQuad:diffuse(shadeCol:unpack())
       wheelQuad:Draw()
 
       wheelQuad:xywh(quadX + offX, -WHEEL_ITEM_HEIGHT / 2 + 1, width, 2)
       wheelQuad:diffuse(0, 0, 0, 1)
       wheelQuad:Draw()
 
-      if itemEases[index].eased > 0.1 then
-        local glow = math.sqrt(itemEases[index].eased)
-        local beat = (GAMESTATE:GetSongBeat() % 1)
-        local bri = 0.3 - 0.1 * beat
-
-        grad:diffuse(1, 1, 1, glow * bri)
-        grad:blend('add')
-        grad:xywh(quadX + offX, -WHEEL_ITEM_HEIGHT / 2 - 6, width, 12)
-        grad:Draw()
-        grad:xywh(quadX + offX, WHEEL_ITEM_HEIGHT / 2 + 6, width, -12)
-        grad:Draw()
-      end
-
       if not groupName:GetHidden() then
+        local songsInGroup = groupLookup[groupName:GetText()]
+
         local margin = 30
+        if not songsInGroup then margin = 0 end
         local pad = 5
 
         local t = itemText:get(groupName:GetText())
@@ -262,15 +259,17 @@ return {
         --wheelQuad:Draw()
         t:diffuse(1, 1, 1, 1)
 
-        local songsInGroup = groupLookup[groupName:GetText()]
         if songsInGroup then
           local meterT = meterText:get(tostring(#songsInGroup))
 
-          wheelQuad:xywh(-WHEEL_ITEM_WIDTH / 2 + margin / 2 + offX, 0, margin, WHEEL_ITEM_HEIGHT)
-          wheelQuad:diffuse(0, 0, 0, 0.3)
+          wheelQuad:xywh(-WHEEL_ITEM_WIDTH / 2 + margin / 2 + offX, 2/2, margin, WHEEL_ITEM_HEIGHT-2)
+          wheelQuad:diffuse(0.2, 0.2, 0.2, 1)
+          wheelQuad:Draw()
+          wheelQuad:xywh(-WHEEL_ITEM_WIDTH / 2 + margin / 2 + offX, WHEEL_ITEM_HEIGHT / 4, margin, WHEEL_ITEM_HEIGHT / 2)
+          wheelQuad:diffuse(0.15, 0.15, 0.15, 1)
           wheelQuad:Draw()
 
-          meterT:xy(-WHEEL_ITEM_WIDTH / 2 + margin / 2 + offX, 0)
+          meterT:xy(-WHEEL_ITEM_WIDTH / 2 + margin / 2 + offX, 2)
           meterT:diffuse(0.6, 0.6, 0.6, 1)
           meterT:zoom(0.45)
           meterT:Draw()
@@ -327,7 +326,7 @@ return {
           curStep = curStep or steps[1]
           local diff = DIFFICULTIES[curStep:GetDifficulty()]
 
-          wheelQuad:xywh(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH / 2 + offX, 0, METER_WIDTH, WHEEL_ITEM_HEIGHT)
+          wheelQuad:xywh(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH / 2 + offX, 2/2, METER_WIDTH, WHEEL_ITEM_HEIGHT-2)
           wheelQuad:diffuse(diff.color:unpack())
           wheelQuad:Draw()
           wheelQuad:xywh(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH / 2 + offX, WHEEL_ITEM_HEIGHT / 4, METER_WIDTH,
@@ -337,7 +336,7 @@ return {
 
           local meterT = meterText:get(tostring(curStep:GetMeter()))
 
-          meterT:xy(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH / 2 + offX, 0)
+          meterT:xy(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH / 2 + offX, 2)
           meterT:diffuse(diff.text:unpack())
           meterT:zoom(0.45)
           meterT:Draw()
@@ -357,12 +356,55 @@ return {
         else
           titleText:Draw()
         end
+      elseif not sortName:GetHidden() then
+        local sortType = sortName:GetText()
+
+        local t = itemText:get(sortType)
+        local w = t:GetWidth() * 0.4
+        t:xy(-w/2 + offX, 2)
+        t:zoom(0.4)
+        t:diffuse(1, 1, 1, 1)
+        t:Draw()
+      elseif not roulette:GetHidden() then
+        wheelQuad:xywh(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH / 2 + offX, 2/2, METER_WIDTH, WHEEL_ITEM_HEIGHT-2)
+        wheelQuad:diffuse(1, 1, 1, 1)
+        wheelQuad:Draw()
+        wheelQuad:xywh(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH / 2 + offX, WHEEL_ITEM_HEIGHT / 4, METER_WIDTH,
+          WHEEL_ITEM_HEIGHT / 2)
+        wheelQuad:diffuse(0.85, 0.85, 0.85, 1)
+        wheelQuad:Draw()
+
+        local meterT = meterText:get('?')
+
+        meterT:xy(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH / 2 + offX, 2)
+        meterT:diffuse(0, 0, 0, 1)
+        meterT:zoom(0.45)
+        meterT:Draw()
+
+        local titleText = itemText:get('Random')
+        titleText:xy(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH + 6 + offX, 2)
+        titleText:zoom(0.4)
+        titleText:diffuse(shsv((os.clock() * 0.4) % 1, 0.5, 1):unpack())
+        titleText:Draw()
+        titleText:diffuse(1, 1, 1, 1)
       else
-        -- todo: implement the rest, abstract it
-        roulette:Draw()
+        -- todo: lol course mode
         courseName:Draw()
-        sortName:Draw()
       end
+
+      if itemEases[index].eased > 0.1 then
+        local glow = math.sqrt(itemEases[index].eased)
+        local beat = (GAMESTATE:GetSongBeat() % 1)
+        local bri = 0.3 - 0.1 * beat
+
+        grad:diffuse(1, 1, 1, glow * bri)
+        grad:blend('add')
+        grad:xywh(quadX + offX, -WHEEL_ITEM_HEIGHT / 2 - 6, width, 12)
+        grad:Draw()
+        grad:xywh(quadX + offX, WHEEL_ITEM_HEIGHT / 2 + 6 + 2, width, -12)
+        grad:Draw()
+      end
+
       gradeDisplay0:Draw()
       gradeDisplay1:Draw()
     end
