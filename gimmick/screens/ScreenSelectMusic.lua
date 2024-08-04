@@ -142,8 +142,6 @@ return {
     local songLookup = {}
     setmetatable(songLookup, { __mode = 'v' })
 
-    local time = 0
-
     --local test = ctx:Sprite('Graphics/_missing.png')
     local wheelQuad = ctx:Quad()
     local itemText = TextPool.new(ctx, FONTS.sans_serif, WHEEL_ITEMS * 3,
@@ -332,11 +330,7 @@ return {
       gradeDisplay1:Draw()
     end
 
-    self:SetDrawFunction(function()
-      local newTime = os.clock()
-      local dt = newTime - time
-      time = newTime
-
+    setDrawFunctionWithDT(self, function(dt)
       for _, item in pairs(itemEases) do
         item:update(dt)
       end

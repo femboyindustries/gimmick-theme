@@ -133,13 +133,9 @@ return {
       awesome:xy(scx, scy)
       awesome:zoom(0.5)
 
-      local oldT = os.clock()
       local t = 0
 
-      self:SetDrawFunction(function()
-        local newT = os.clock()
-        local dt = newT - oldT
-        oldT = newT
+      setDrawFunctionWithDT(self, function(dt)
         t = t + dt
 
         awesome:diffusealpha(clamp(t - 3, 0, 1))

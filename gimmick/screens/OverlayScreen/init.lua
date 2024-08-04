@@ -49,13 +49,7 @@ local function init(self, ctx)
     end
   end)
 
-  local time = 0
-
-  self:SetDrawFunction(function()
-    local newTime = os.clock()
-    local dt = newTime - time
-    time = newTime
-
+  setDrawFunctionWithDT(self, function(dt)
     drawConsole(dt)
     drawSave(dt)
     drawImap(dt)

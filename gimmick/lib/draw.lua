@@ -61,3 +61,16 @@ function aftSpritePair(ctx, recreate)
 
   return tex, sprite
 end
+
+---@param actor ActorFrame
+---@param callback fun(dt: number): void
+function setDrawFunctionWithDT(actor, callback)
+  local lastT -- unset so the first tick is ignored
+  actor:SetDrawFunction(function()
+    lastT = lastT or os.clock()
+    local t = os.clock()
+    local dt = t - lastT
+    lastT = t
+    callback(dt)
+  end)
+end

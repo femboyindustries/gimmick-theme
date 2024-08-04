@@ -84,12 +84,7 @@ return {
       
     end
 
-    local oldt = os.clock()
-    self:SetDrawFunction(function()
-      local newt = os.clock()
-      local dt = newt - oldt
-      oldt = newt
-
+    setDrawFunctionWithDT(self, function(dt)
       --blank:xywh(scx, scy, BLUR_WIDTH - 60, sh)
       --blank:skewx((BLUR_SKEW + math.sin(os.clock() / 2) * 10) / (BLUR_WIDTH - 60))
       --blank:Draw()

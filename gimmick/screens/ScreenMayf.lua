@@ -26,13 +26,10 @@ return {
 
       local oldt = 0
       local ease = -0.1
-      self:SetDrawFunction(function()
+      setDrawFunctionWithDT(self, function(dt)
         img:diffusealpha(ease)
         img:Draw()
 
-        local newt = os.clock()
-        local dt = newt - oldt
-        oldt = newt
         ease = ease+0.1*dt
 
         if ease == 1 then

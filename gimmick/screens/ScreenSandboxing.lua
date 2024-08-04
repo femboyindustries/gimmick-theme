@@ -13,12 +13,7 @@ return {
     local oldt = os.clock()
     local timer = 2
 
-    self:SetDrawFunction(function()
-      local newt = os.clock()
-      local dt = newt - oldt
-      oldt = newt
-
-
+    setDrawFunctionWithDT(self, function(dt)
       if bar:getBarLevel() < 0.1 then
       end
       bar1:Draw()

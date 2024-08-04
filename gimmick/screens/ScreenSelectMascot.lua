@@ -87,36 +87,32 @@ return {
         darken:diffuse(0, 0, 0, 0.2)
         darken:stretchto(0, 0, sw, sh)
 
-        local oldt = 0
         local angle_step = (2 * math.pi) / #mascot_actors
 
-        self:SetDrawFunction(function()
-            -- Update background and darken effect
-            background_actors[selected]:Draw()
-            darken:Draw()
+        setDrawFunctionWithDT(self, function(dt)
+          -- Update background and darken effect
+          background_actors[selected]:Draw()
+          darken:Draw()
 
-            
-            description:settext(mascots.getDescription(mascotNames[selected]))
-            name:settext(mascotNames[selected])
+          
+          description:settext(mascots.getDescription(mascotNames[selected]))
+          name:settext(mascotNames[selected])
 
-            local newt = os.clock()
-            local dt = newt - oldt
-            oldt = newt
-            cursor:update(dt)
+          cursor:update(dt)
 
-            local offset = math.pi / 2 - ((selected - active_i) * angle_step)
-            for i, mascot in ipairs(mascot_actors) do
-                local a = ((i - cursor.eased) * angle_step) + offset
-                a = a % (2 * math.pi)
-                local x, y = math.cos(a), math.sin(a)
-                mascot:diffusealpha(selected ~= i and 0.2 or 1)
-                mascot:x((x * (sw * 0.3)) + scx * 0.8)
-                mascot:z((y * (sh * 0.3)))
-                mascot:Draw()
-            end
-            disclaimer:Draw()
-            description:Draw()
-            name:Draw()
+          local offset = math.pi / 2 - ((selected - active_i) * angle_step)
+          for i, mascot in ipairs(mascot_actors) do
+              local a = ((i - cursor.eased) * angle_step) + offset
+              a = a % (2 * math.pi)
+              local x, y = math.cos(a), math.sin(a)
+              mascot:diffusealpha(selected ~= i and 0.2 or 1)
+              mascot:x((x * (sw * 0.3)) + scx * 0.8)
+              mascot:z((y * (sh * 0.3)))
+              mascot:Draw()
+          end
+          disclaimer:Draw()
+          description:Draw()
+          name:Draw()
         end)
     end)
 }
