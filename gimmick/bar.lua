@@ -3,6 +3,7 @@ local easable = require 'gimmick.lib.easable'
 
 -- if you put another local here i think i will do something to you mayflower
 
+
 ---@class Bar
 local judge_eyes = {}
 
@@ -98,9 +99,9 @@ end
 function judge_eyes.new(context, options)
   local instance = setmetatable({
     options = {
-      skew = 0.4, --how skewed it should be
-      width = 400, --width of bar
-      height = 12, --height of bar
+      skew = 0.4,          --how skewed it should be
+      width = 400,         --width of bar
+      height = 12,         --height of bar
       inner_padding = 2.5, --how much padding between the outline and actual moving bar
     },
     subbar = {
@@ -113,18 +114,18 @@ function judge_eyes.new(context, options)
     barlevelold = 0,
     barlevel = 0,
     barcolors = {
-      { 1.0, 0.0, 0.0 }, -- Red
-      { 1.0, 0.5, 0.0 }, -- Orange
-      { 1.0, 1.0, 0.0 }, -- Yellow
-      { 0.5, 1.0, 0.0 }, -- Lime green
-      { 0.0, 1.0, 0.0 }, -- Green
-      { 0.0, 1.0, 0.5 }, -- Teal
-      { 0.0, 1.0, 1.0 }, -- Cyan
-      { 0.0, 0.5, 1.0 }, -- Sky blue
-      { 0.0, 0.0, 1.0 }, -- Blue
-      { 0.5, 0.0, 1.0 }, -- Indigo
-      { 1.0, 0.0, 1.0 }, -- Violet
-      { 1.0, 0.0, 0.5 }, -- Magenta
+      hex('#D16500'),
+      hex('#E7C043'),
+      hex('#8034DE'),
+      hex('#5BE9E9'),
+      hex('#BA8FE3'),
+      hex('#C1AC8B'),
+      hex('#3967E4'),
+      hex('#30A937'),
+      hex('#9959AA'),
+      hex('#BFA3C9'),
+      hex('#BE5AE8'),
+      hex('#DD0000'), --the color of the subbar
     },
   }, judge_eyes)
   setmetatable(instance.subbar, clamping_tbl())
@@ -167,19 +168,21 @@ function judge_eyes:updateSettings(dt)
 
   for i = 1, self:getBarAmount(), 1 do
     local inner = self.bars[i]
-    inner:hidden(0)
-    local amount = (i < self:getBarAmount() and 1 or self:getBarLevel())
-    inner:xy(0 - (self.options.width * 0.5 - self.options.inner_padding), 0)
-    inner:SetWidth((self.options.width - (self.options.inner_padding * 2)) * amount)
-    inner:SetHeight(self.options.height - self.options.inner_padding)
-    inner:skewx(-self.options.skew)
-    local colors = self:getcolor(i)
-    inner:diffuse(colors[1], colors[2], colors[3], 1)
+    if inner then
+      inner:hidden(0)
+      local amount = (i < self:getBarAmount() and 1 or self:getBarLevel())
+      inner:xy(0 - (self.options.width * 0.5 - self.options.inner_padding), 0)
+      inner:SetWidth((self.options.width - (self.options.inner_padding * 2)) * amount)
+      inner:SetHeight(self.options.height - self.options.inner_padding)
+      inner:skewx(-self.options.skew)
+      local colors = self:getcolor(i)
+      inner:diffuse(colors[1], colors[2], colors[3], 1)
+    end
   end
 
   self.subbar.x = -(self.options.width * 0.5 - self.options.inner_padding)
   if math.abs(self:getBarLevel() - 1) > 0.001 then
-    self.subbar.x = self.subbar.x + self.bars[self:getBarAmount()]:GetWidth()
+    self.subbar.x = self.subbar.x + (self.bars[self:getBarAmount()] or self.bars[#self.bars]):GetWidth()
   end
   self.subbar.width = (self.options.width - (self.options.inner_padding * 2)) * 1
   self.subbar.eased:update(dt)
@@ -189,6 +192,7 @@ function judge_eyes:updateSettings(dt)
   else
     self.subbar.actor:SetWidth(self.subbar.eased.eased)
   end
+
 end
 
 ---@param num number
@@ -264,6 +268,12 @@ function judge_eyes:add(input)
     self.barlevelold = self.barlevel
     self.barlevel = self.barlevel + input
   end
+
+  if self.barlevel >= 10 then
+    print('WARN: Bar will not go over 10')
+    self.barlevel = 9.999999
+  end
+
 end
 
 ---Set the bar to an amount without animation

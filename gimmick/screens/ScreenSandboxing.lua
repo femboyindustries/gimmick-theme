@@ -1,36 +1,25 @@
-bar = require 'gimmick.bar'
-local a = true
+barlib = require 'gimmick.bar'
+local easeable = require 'gimmick.lib.easable'
 return {
   Init = function(self) Trace('theme.com') end,
   overlay = gimmick.ActorScreen(function(self, ctx)
-    local bar1 = bar:new(ctx)
-
-    bar1:addcommand('init', function()
-      --bar:sub(0.2)
-      bar:set(4)
-    end)
-    bar:set(2.4)
+    local a = true
+    local bar = barlib.new(ctx)
+    local bar_af = bar.actorframe
+    local ease = easeable(0,0.5)    
+    ease:reset(0)
+    bar:set(0.1)
     local oldt = os.clock()
     local timer = 2
-
     setDrawFunctionWithDT(self, function(dt)
-      if bar:getBarLevel() < 0.1 then
+      bar_af:Draw()
+      ease:update(dt)
+      bar:set(ease.eased)
+      if a and timer < 0.1 then
+        ease:add(0.001)
+        --a = false
       end
-      bar1:Draw()
 
-      if timer < 1.5 and timer > 1.45 then
-        --bar:set(2.1)
-      end
-
-      if timer < 0.1 then
-        timer = 2
-        if math.random() < 0.5 then
-          bar:sub(math.random())
-        else
-          bar:add(math.random())
-        end
-
-      end
       timer = timer - dt
     end)
   end),

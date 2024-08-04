@@ -1,5 +1,5 @@
 local TextPool = require 'gimmick.textpool'
-local barlib = require 'gimmick.bar'
+local easable = require 'gimmick.lib.easable'
 local AWESOME = false
 
 local judgements = {
@@ -43,11 +43,9 @@ return {
       actor:align(0, 0.5)
     end)
 
-    local bar = barlib.new(ctx)
-    local bar_af = bar.actorframe
+    local ease = easable(0, 12)
 
-    bar:set(0.4)
-    
+
 
     local pn = 0
     local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(pn)
@@ -70,7 +68,8 @@ return {
       })
     end
 
-    table.insert(fields, {})
+    --table.insert(fields, {})
+    table.insert({},{}) --i felt bad removing the other one, please take this as a substitute
 
     table.insert(fields, {
       name = 'Holds',
@@ -88,43 +87,96 @@ return {
     local fractional = string.format('%02d', math.floor((perc % 1) * 100 + 0.5))
     local score = decimal .. '.' .. fractional
 
-    self:SetDrawFunction(function()
+    local lastT
+    ease:reset(0)
+    ease:set(score * 0.0999999999)
+
+
+    local inside_spacing = 10
+    local item_spacing = sw * 0.12
+    local judge_counts = ctx:ActorFrame()
+
+    for i, field in ipairs(fields) do
+      local af = ctx:ActorFrame()
+
+      local name = ctx:BitmapText(FONTS.sans_serif,field.name or '')
+      name:xy(0, inside_spacing * 0.5)
+      name:valign(0)
+      name:zoom(0.3)
+
+      local value = ctx:BitmapText(FONTS.sans_serif,field.value or '')
+      value:valign(1)
+      value:xy(0, -inside_spacing * 0.5)
+      value:zoom(0.8)
+
+      ctx:addChild(af, value)
+      ctx:addChild(af, name)
+
+      af:x((item_spacing * i) - (item_spacing * (#fields+1) * 0.5))
+      af:halign(0.5)
+
+      ctx:addChild(judge_counts, af)
+    end
+
+    judge_counts:xy(scx, scy*1.85)
+    judge_counts:halign(0.5)
+
+
+    setDrawFunctionWithDT(self, function(dt)
       local full_score = pool:get(score)
-      if bar_af then
-        bar_af:Draw()
-      end
       full_score:halign(0.5)
-      full_score:zoom(1)
+      full_score:zoom(1.5)
       full_score:xy(scx, scy * 1.3)
       full_score:Draw()
 
+      ease:update(dt)
+
+      judge_counts:Draw()
+      --[[
+        fields table
+        {
+          { value = "286", name = "Fantastic" },
+          { value = "89", name = "Excellent" },
+          { value = "45", name = "Great" },
+          { value = "2", name = "Decent" },
+          { value = "8", name = "Way Off" },
+          { value = "5", name = "Miss" }, {  },
+          { value = 14, total = 14, name = "Holds" },
+          { value = 0, total = 3, name = "Mines" }
+        }
+
+      ]]
       full_score:zoom(0.5)
+      --error("fart")
 
-      for i, field in ipairs(fields) do
-        local y = 60 + 30 * i
 
-        if field.name then
-          local text = pool:get(field.name)
-          text:xy(15, y)
-          text:Draw()
+      --[[
+        for i, field in ipairs(fields) do
+          local y = 60 + 30 * i
+
+          if field.name then
+            local text = pool:get(field.name)
+            text:xy(15, y)
+            text:Draw()
+          end
+
+          if field.value then
+            local text = pool:get(field.value)
+            text:xy(140, y)
+            text:Draw()
+          end
+
+          if field.total then
+            local text = pool:get('/')
+            text:xy(160, y)
+            text:Draw()
+
+            local text = pool:get(field.total)
+            text:xy(180, y)
+            text:Draw()
+          end
         end
-
-        if field.value then
-          local text = pool:get(field.value)
-          text:xy(140, y)
-          text:Draw()
-        end
-
-        if field.total then
-          local text = pool:get('/')
-          text:xy(160, y)
-          text:Draw()
-
-          local text = pool:get(field.total)
-          text:xy(180, y)
-          text:Draw()
-        end
-      end
+      ]]
     end)
   end),
   underlay = gimmick.ActorScreen(function(self, ctx)
@@ -155,8 +207,9 @@ return {
       self:SetDrawFunction(function()
         bg:Draw()
 
-        winner:xy(scx, scy)
         winner:scaletofit(scx - 100, scy - 100, scx + 100, scy + 100)
+        winner:xy(scx, scy * 0.6)
+
         winner:Draw()
       end)
     end
