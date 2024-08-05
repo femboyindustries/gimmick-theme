@@ -87,38 +87,37 @@ return {
     local fractional = string.format('%02d', math.floor((perc % 1) * 100 + 0.5))
     local score = decimal .. '.' .. fractional
 
-    local lastT
     ease:reset(0)
     ease:set(score * 0.0999999999)
 
 
     local inside_spacing = 10
-    local item_spacing = sw * 0.12
+    local item_spacing = sh * 0.08
     local judge_counts = ctx:ActorFrame()
 
     for i, field in ipairs(fields) do
       local af = ctx:ActorFrame()
 
       local name = ctx:BitmapText(FONTS.sans_serif,field.name or '')
-      name:xy(0, inside_spacing * 0.5)
-      name:valign(0)
-      name:zoom(0.3)
+      name:xy(inside_spacing * 0.5, 0)
+      name:halign(0)
+      name:zoom(0.5)
 
-      local value = ctx:BitmapText(FONTS.sans_serif,field.value or '')
-      value:valign(1)
-      value:xy(0, -inside_spacing * 0.5)
+      local value = ctx:BitmapText(FONTS.monospace,field.value or '')
+      value:halign(1)
+      value:xy(-inside_spacing * 0.5, 0)
       value:zoom(0.8)
 
       ctx:addChild(af, value)
       ctx:addChild(af, name)
 
-      af:x((item_spacing * i) - (item_spacing * (#fields+1) * 0.5))
+      af:y((item_spacing * i) - (item_spacing * (#fields+1) * 0.5))
       af:halign(0.5)
 
       ctx:addChild(judge_counts, af)
     end
 
-    judge_counts:xy(scx, scy*1.85)
+    judge_counts:xy(sw*0.8, scy)
     judge_counts:halign(0.5)
 
 
