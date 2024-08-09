@@ -1,5 +1,6 @@
 local easable = require 'gimmick.lib.easable'
 local actor235 = require 'gimmick.lib.actor235'
+local judge = require 'gimmick.lib.color'
 
 ---@class MeterWheel
 ---@field meter easable @ easable<number>
