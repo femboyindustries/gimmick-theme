@@ -55,7 +55,8 @@ function MusicWheel.MusicWheel()
       --wheel:zoomx(0.86 * ((sw / sh) / (4/3)))
       --wheel:zoomy(0.96)
 
-      MusicWheel.itemDrawFunc = nil -- to prevent accidental AVs
+      --MusicWheel.itemDrawFunc = nil -- to prevent accidental AVs
+      -- turns out this makes sorting break LOL
       defineItemI = 0
     end,
 
