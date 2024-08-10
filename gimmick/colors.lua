@@ -53,38 +53,3 @@ JUDGEMENTS = {
   [TNS_BOO] = hex('FA7A04'),
   [TNS_MISS] = hex('FA7A04')
 }
-
---[[
-local judgements = {
-  {
-    code = 'Marvelous',
-    score = 8, -- TNS_MARVELOUS
-    name = 'Fantastic',
-  },
-  {
-    code = 'Perfect',
-    score = 7, -- TNS_PERFECT
-    name = 'Excellent',
-  },
-  {
-    code = 'Great',
-    score = 6, -- TNS_GREAT
-    name = 'Great',
-  },
-  {
-    code = 'Good',
-    score = 5, -- TNS_GOOD
-    name = 'Decent',
-  },
-  {
-    code = 'Boo',
-    score = 4, -- TNS_BOO
-    name = 'Way Off',
-  },
-  {
-    code = 'Miss',
-    score = 3, -- TNS_MISS
-    name = 'Miss',
-  },
-}
-]]

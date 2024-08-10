@@ -37,20 +37,32 @@ local judgements = {
 
 return {
   Init = function(self) Trace('theme.com') end,
+
+  --Position the Banner LargeBannerOnCommand from metrics.ini gives us
+  Banner = {
+    ---@param bn Sprite
+    On = function(bn)
+      bn:ztest(0)
+      bn:xy(scx * 0.35, scy * 0.6)
+    end
+  },
+
   overlay = gimmick.ActorScreen(function(self, ctx)
+
     local pool = TextPool.new(ctx, FONTS.sans_serif, nil, function(actor)
       actor:zoom(0.5)
       actor:align(0, 0.5)
     end)
 
-    local ease = easable(0, 12)
 
-
+    --error(GAMESTATE:GetCurrentSong():GetBannerPath())
 
     local pn = 0
     local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(pn)
     local chart = stats:GetPossibleSteps()[1]:GetNoteData()
+    local song = GAMESTATE:GetCurrentSong()
 
+    --handle hold and mine counts
     local holdsN = 0
     local minesN = 0
     for _, n in ipairs(chart) do
@@ -69,7 +81,7 @@ return {
     end
 
     --table.insert(fields, {})
-    table.insert({},{}) --i felt bad removing the other one, please take this as a substitute
+    table.insert({}, {}) --i felt bad commenting out the line above, please take this as a substitute
 
     table.insert(fields, {
       name = 'Holds',
@@ -87,37 +99,39 @@ return {
     local fractional = string.format('%02d', math.floor((perc % 1) * 100 + 0.5))
     local score = decimal .. '.' .. fractional
 
-    ease:reset(0)
-    ease:set(score * 0.0999999999)
+    local title = song:GetDisplayMainTitle()
+    local subtitle = song:GetDisplaySubTitle()
 
 
     local inside_spacing = 10
     local item_spacing = sh * 0.08
+
+    --the ActorFrame that holds the judgements table
     local judge_counts = ctx:ActorFrame()
 
     for i, field in ipairs(fields) do
       local af = ctx:ActorFrame()
 
-      local name = ctx:BitmapText(FONTS.sans_serif,field.name or '')
+      local name = ctx:BitmapText(FONTS.sans_serif, field.name or '')
       name:xy(inside_spacing * 0.5, 0)
       name:halign(0)
       name:zoom(0.5)
 
-      local value = ctx:BitmapText(FONTS.monospace,field.value or '')
+      local value = ctx:BitmapText(FONTS.monospace, field.value or '')
       value:halign(1)
       value:xy(-inside_spacing * 0.5, 0)
-      value:zoom(0.8)
+      value:zoom(0.6)
 
       ctx:addChild(af, value)
       ctx:addChild(af, name)
 
-      af:y((item_spacing * i) - (item_spacing * (#fields+1) * 0.5))
+      af:y((item_spacing * i) - (item_spacing * (#fields + 1) * 0.5))
       af:halign(0.5)
 
       ctx:addChild(judge_counts, af)
     end
 
-    judge_counts:xy(sw*0.8, scy)
+    judge_counts:xy(sw * 0.8, scy)
     judge_counts:halign(0.5)
 
 
@@ -128,7 +142,20 @@ return {
       full_score:xy(scx, scy * 1.3)
       full_score:Draw()
 
-      ease:update(dt)
+      local titleActor = pool:get(title)
+      titleActor:xy(scx * 0.35, scy * 0.35)
+      titleActor:halign(0.5)
+      titleActor:valign(1)
+      titleActor:zoom(0.45)
+      titleActor:Draw()
+
+      local subtitleActor = pool:get(subtitle)
+      subtitleActor:xy(scx * 0.35, scy * 0.85)
+      subtitleActor:halign(0.5)
+      subtitleActor:valign(0)
+      subtitleActor:zoom(0.35)
+      subtitleActor:Draw()
+
 
       judge_counts:Draw()
       --[[
@@ -139,7 +166,7 @@ return {
           { value = "45", name = "Great" },
           { value = "2", name = "Decent" },
           { value = "8", name = "Way Off" },
-          { value = "5", name = "Miss" }, {  },
+          { value = "5", name = "Miss" },
           { value = 14, total = 14, name = "Holds" },
           { value = 0, total = 3, name = "Mines" }
         }
@@ -148,34 +175,6 @@ return {
       full_score:zoom(0.5)
       --error("fart")
 
-
-      --[[
-        for i, field in ipairs(fields) do
-          local y = 60 + 30 * i
-
-          if field.name then
-            local text = pool:get(field.name)
-            text:xy(15, y)
-            text:Draw()
-          end
-
-          if field.value then
-            local text = pool:get(field.value)
-            text:xy(140, y)
-            text:Draw()
-          end
-
-          if field.total then
-            local text = pool:get('/')
-            text:xy(160, y)
-            text:Draw()
-
-            local text = pool:get(field.total)
-            text:xy(180, y)
-            text:Draw()
-          end
-        end
-      ]]
     end)
   end),
   underlay = gimmick.ActorScreen(function(self, ctx)
