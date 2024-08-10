@@ -38,12 +38,15 @@ local judgements = {
 return {
   Init = function(self) Trace('theme.com') end,
 
+
   --Position the Banner LargeBannerOnCommand from metrics.ini gives us
-  Banner = {
+  Banner = {    
+    Width = 278,
+    Height = 109,
     ---@param bn Sprite
     On = function(bn)
       bn:ztest(0)
-      bn:xy(scx * 0.35, scy * 0.6)
+      bn:xy(scx*0.35,scy*0.6)
     end
   },
 
@@ -103,8 +106,8 @@ return {
     local subtitle = song:GetDisplaySubTitle()
 
 
-    local inside_spacing = 10
-    local item_spacing = sh * 0.08
+    local inside_spacing = 6
+    local item_spacing = sh * 0.06
 
     --the ActorFrame that holds the judgements table
     local judge_counts = ctx:ActorFrame()
@@ -115,12 +118,12 @@ return {
       local name = ctx:BitmapText(FONTS.sans_serif, field.name or '')
       name:xy(inside_spacing * 0.5, 0)
       name:halign(0)
-      name:zoom(0.5)
+      name:zoom(0.4)
 
       local value = ctx:BitmapText(FONTS.monospace, field.value or '')
       value:halign(1)
       value:xy(-inside_spacing * 0.5, 0)
-      value:zoom(0.6)
+      value:zoom(0.5)
 
       ctx:addChild(af, value)
       ctx:addChild(af, name)
@@ -131,7 +134,7 @@ return {
       ctx:addChild(judge_counts, af)
     end
 
-    judge_counts:xy(sw * 0.8, scy)
+    judge_counts:xy(sw * 0.85, scy*0.8)
     judge_counts:halign(0.5)
 
 
@@ -143,17 +146,19 @@ return {
       full_score:Draw()
 
       local titleActor = pool:get(title)
-      titleActor:xy(scx * 0.35, scy * 0.35)
+      titleActor:xy(scx * 0.35, scy * 0.9)
       titleActor:halign(0.5)
       titleActor:valign(1)
-      titleActor:zoom(0.45)
+      titleActor:maxwidth(278/0.4)
+      titleActor:zoom(0.4)
       titleActor:Draw()
 
       local subtitleActor = pool:get(subtitle)
-      subtitleActor:xy(scx * 0.35, scy * 0.85)
+      subtitleActor:xy(scx * 0.35, scy*0.96)
       subtitleActor:halign(0.5)
-      subtitleActor:valign(0)
-      subtitleActor:zoom(0.35)
+      subtitleActor:valign(1)
+      subtitleActor:maxwidth(278/0.25)
+      subtitleActor:zoom(0.25)
       subtitleActor:Draw()
 
 

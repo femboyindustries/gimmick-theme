@@ -20,6 +20,7 @@ return {
 
     local bar = barlib.new(ctx)
     local bar_af = bar.actorframe
+    local bar_ease = easable(0,24)
     bar_af:xy(scx * 0.5, scy * 1.5)
 
     local wheel = MeterWheel.new(ctx)
@@ -57,6 +58,7 @@ return {
 
     setDrawFunctionWithDT(self, function(dt)
       MusicWheel.update(dt)
+      bar_ease:update(dt)
 
       local newSong = GAMESTATE:GetCurrentSong()
       if newSong ~= song then
@@ -77,6 +79,7 @@ return {
       end
 
       local selected = GAMESTATE:GetCurrentSteps(0)
+      
 
       if selected and difficulty ~= selected:GetDifficulty() then
         difficulty = selected:GetDifficulty()
@@ -86,7 +89,11 @@ return {
       diffEase:update(dt * 8)
 
       if selected then
-        bar:set(selected:GetMeter() * 0.1)
+        bar_ease:set(selected:GetMeter() * 0.1)
+        bar:set(bar_ease.eased)
+      else
+        bar_ease:set(0)
+        bar:set(bar_ease.eased)
       end
 
       local x = 96
