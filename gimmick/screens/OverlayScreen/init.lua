@@ -7,14 +7,17 @@
 local consoleModule = require 'gimmick.screens.OverlayScreen.console'
 local saveModule = require 'gimmick.screens.OverlayScreen.save'
 local imapModule = require 'gimmick.screens.OverlayScreen.imap'
+local tick       = require 'gimmick.lib.tick'
+local Scope      = require 'gimmick.scope'
 
 -- !!!!: actors built by `init` MUST remain deterministic.
 -- in other words, make sure the actors initialized never change conditionally
 
 ---@param self ActorFrame
 ---@param ctx Context
-local function init(self, ctx)
-  local drawConsole = consoleModule.init(self, ctx)
+---@param scope Scope
+local function init(self, ctx, scope)
+  local drawConsole = consoleModule.init(self, ctx, scope)
   local drawSave = saveModule.init(self, ctx)
   local drawImap = imapModule.init(self, ctx)
 
@@ -50,6 +53,8 @@ local function init(self, ctx)
   end)
 
   setDrawFunctionWithDT(self, function(dt)
+    tick:update(dt)
+
     drawConsole(dt)
     drawSave(dt)
     drawImap(dt)
@@ -63,7 +68,7 @@ return {
 
       local ctx = actorgen.Context.new()
 
-      init(self, ctx)
+      init(self, ctx, Scope.new())
 
       actorgen.ready(ctx)
     end,
@@ -77,7 +82,28 @@ return {
 
       local ctx = actorgen.Context.new()
 
-      init(self, ctx)
+      local scope = Scope.new()
+
+      local lastT
+      self:addcommand('Update', function()
+        if not lastT then lastT = os.clock() end
+        local t = os.clock()
+        local dt = t - lastT
+        lastT = t
+        scope.tick:update(dt)
+      end)
+
+      self:luaeffect('Update')
+
+      self:removecommand('On')
+      self:addcommand('On', function()
+        scope:onCommand()
+      end)
+      self:addcommand('Off', function()
+        scope:offCommand()
+      end)
+
+      init(self, ctx, scope)
 
       actorgen.ready(ctx)
       -- force-evaluate the actors.xml

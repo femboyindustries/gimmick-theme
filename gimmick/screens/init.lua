@@ -1,5 +1,7 @@
 require 'gimmick.screens.common.init'
 
+local Scope = require 'gimmick.scope'
+
 ---@param choices { name: string, command: string }[]
 ---@param setupChoice? fun(self: ActorFrame, ctx: Context, i: number, name: string): nil
 gimmick.ChoiceProvider = function(choices, setupChoice)
@@ -59,7 +61,7 @@ gimmick.ChoiceProvider = function(choices, setupChoice)
 end
 
 
----@param initFunc fun(self: ActorFrame, ctx: Context): nil
+---@param initFunc fun(self: ActorFrame, ctx: Context, scope: Scope): nil
 function gimmick.ActorScreen(initFunc)
   return {
     ---@param self ActorFrame
@@ -67,8 +69,27 @@ function gimmick.ActorScreen(initFunc)
       self:removecommand('Init')
 
       local ctx = actorgen.Context.new()
+      local scope = Scope.new()
 
-      initFunc(self, ctx)
+      local lastT
+      self:addcommand('Update', function()
+        if not lastT then lastT = os.clock() end
+        local t = os.clock()
+        local dt = t - lastT
+        lastT = t
+        scope.tick:update(dt)
+      end)
+
+      self:luaeffect('Update')
+
+      self:addcommand('On', function()
+        scope:onCommand()
+      end)
+      self:addcommand('Off', function()
+        scope:offCommand()
+      end)
+
+      initFunc(self, ctx, scope)
 
       actorgen.ready(ctx)
     end,

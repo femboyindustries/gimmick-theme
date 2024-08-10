@@ -81,7 +81,8 @@ _G.print = function(...)
 end
 
 ---@param ctx Context
-function M.init(self, ctx)
+---@param scope Scope
+function M.init(self, ctx, scope)
   local zoom = 0.4
   local PADDING = 8
   local LEFT_PADDING = 16
@@ -98,6 +99,7 @@ function M.init(self, ctx)
 
   local scissor = ctx:Shader('Shaders/scissor.frag')
 
+  local consoleOpenAux = scope.tick:aux()
   
   local bitmapText = ctx:BitmapText(FONTS.monospace, '')
   bitmapText:xy(PADDING, PADDING)
@@ -137,6 +139,7 @@ function M.init(self, ctx)
     if key == '9' and (inputs.rawInputs[device]['left ctrl'] or inputs.rawInputs[device]['right ctrl']) and not (inputs.rawInputs[device]['left alt'] or inputs.rawInputs[device]['right alt']) then
       consoleOpen = not consoleOpen
       SCREENMAN:SetInputMode(consoleOpen and 1 or 0)
+      consoleOpenAux:ease(0, 0.3, consoleOpen and outQuad or inQuad, consoleOpen and 1 or 0)
       return
     end
 
@@ -190,18 +193,22 @@ function M.init(self, ctx)
 
   local blur = gimmick.common.blurMask(ctx, function()
     return function()
+      local yoff = (1 - consoleOpenAux.value) * -(HISTORY_HEIGHT + textHeight + PADDING*2)
+      
       quad:diffuse(1, 0.4, 0.6, 1)
-      quad:xywh(scx, HISTORY_HEIGHT/2, sw, HISTORY_HEIGHT)
+      quad:xywh(scx, HISTORY_HEIGHT/2 + yoff, sw, HISTORY_HEIGHT)
       quad:Draw()
 
       quad:diffuse(1, 0.3, 0.55, 1)
       local backHeight = textHeight + PADDING*2
-      quad:xywh(scx, HISTORY_HEIGHT + backHeight/2, sw, backHeight)
+      quad:xywh(scx, HISTORY_HEIGHT + backHeight/2 + yoff, sw, backHeight)
       quad:Draw()
     end
   end, 30)
 
   return function(dt)
+    local yoff = (1 - consoleOpenAux.value) * -(HISTORY_HEIGHT + textHeight + PADDING*2)
+
     for key, clock in pairs(repeatT) do
       repeatT[key] = clock - dt
       if repeatT[key] <= 0 then
@@ -210,7 +217,7 @@ function M.init(self, ctx)
       end
     end
 
-    if consoleOpen then
+    if consoleOpenAux.value > 0.01 then
       blur()
 
       bitmapText:SetShader(actorgen.Proxy.getRaw(scissor))
@@ -222,7 +229,7 @@ function M.init(self, ctx)
 
       bitmapText:diffuse(1, 1, 1, 0.2)
       bitmapText:align(1, 0)
-      bitmapText:xy(sw - PADDING, PADDING)
+      bitmapText:xy(sw - PADDING, PADDING + yoff)
       bitmapText:zoom(0.3)
       bitmapText:settext('GIMMICK v' .. gimmick._VERSION)
       bitmapText:Draw()
@@ -251,12 +258,12 @@ function M.init(self, ctx)
 
           if (#history - i) % 2 == 1 then
             quad:diffuse(0, 0, 0, 0.04)
-            quad:xywh(scx, y + height/2, sw, height)
+            quad:xywh(scx, y + height/2 + yoff, sw, height)
             quad:Draw()
           end
           if status == HistoryType.Error then
             quad:diffuse(1, 0, 0, 0.15)
-            quad:xywh(scx, y + height/2, sw, height)
+            quad:xywh(scx, y + height/2 + yoff, sw, height)
             quad:Draw()
           end
 
@@ -264,25 +271,25 @@ function M.init(self, ctx)
           if status == HistoryType.OK and text == 'nil' then
             bitmapText:diffuse(0.9, 0.9, 0.9, 1)
           end
-          bitmapText:xy(PADDING + LEFT_PADDING, y + 20 * zoom)
+          bitmapText:xy(PADDING + LEFT_PADDING, y + 20 * zoom + yoff)
           bitmapText:Draw()
 
           if status == HistoryType.Error then
-            bitmapText:xy(PADDING, y + 20 * zoom)
+            bitmapText:xy(PADDING, y + 20 * zoom + yoff)
             bitmapText:settext('!')
             bitmapText:diffuse(0, 0, 0, 1)
             drawBorders(bitmapText, 1)
             bitmapText:diffuse(1, 0.2, 0.2, 1)
             bitmapText:Draw()
           elseif status == HistoryType.OK then
-            bitmapText:xy(PADDING, y + 20 * zoom)
+            bitmapText:xy(PADDING, y + 20 * zoom + yoff)
             bitmapText:settext('>')
             bitmapText:diffuse(0, 0, 0, 1)
             drawBorders(bitmapText, 1)
             bitmapText:diffuse(0.2, 1, 0.2, 1)
             bitmapText:Draw()
           elseif status == HistoryType.Log then
-            bitmapText:xy(PADDING, y + 20 * zoom)
+            bitmapText:xy(PADDING, y + 20 * zoom + yoff)
             bitmapText:settext('?')
             bitmapText:diffuse(0, 0, 0, 1)
             drawBorders(bitmapText, 1)
@@ -305,14 +312,14 @@ function M.init(self, ctx)
         local barWidth = 4
 
         quad:diffuse(1, 1, 1, 0.4)
-        quad:xywh(sw - barWidth/2, ((top + bot) / 2) * HISTORY_HEIGHT, barWidth, HISTORY_HEIGHT * scrollHeight)
+        quad:xywh(sw - barWidth/2, ((top + bot) / 2) * HISTORY_HEIGHT + yoff, barWidth, HISTORY_HEIGHT * scrollHeight)
         quad:Draw()
       end
 
       if #history == 0 then
         bitmapText:settext('Welcome to ' .. name .. '\n' .. 'Tip: ' .. tip .. '\nType a Lua expression...')
         bitmapText:diffuse(1, 1, 1, 1)
-        bitmapText:xy(PADDING + LEFT_PADDING, HISTORY_HEIGHT - bitmapText:GetHeight() * zoom - 12)
+        bitmapText:xy(PADDING + LEFT_PADDING, HISTORY_HEIGHT - bitmapText:GetHeight() * zoom - 12 + yoff)
         bitmapText:Draw()
       end
 
@@ -321,14 +328,14 @@ function M.init(self, ctx)
 
       quad:diffuse(0, 0, 0, 0.2)
       local backHeight = height + PADDING*2
-      quad:xywh(scx, HISTORY_HEIGHT + backHeight/2, sw, backHeight)
+      quad:xywh(scx, HISTORY_HEIGHT + backHeight/2 + yoff, sw, backHeight)
       quad:Draw()
 
       bitmapText:diffuse(1, 1, 1, 1)
       bitmapText:align(1, 0)
 
       for _, char in ipairs(positions) do
-        bitmapText:xy(PADDING + LEFT_PADDING + char.x, HISTORY_HEIGHT + PADDING + char.y)
+        bitmapText:xy(PADDING + LEFT_PADDING + char.x, HISTORY_HEIGHT + PADDING + char.y + yoff)
         bitmapText:settext(char.char)
         bitmapText:Draw()
       end
@@ -342,13 +349,13 @@ function M.init(self, ctx)
       local cursorPos = positions[t.cursor] or { x = 0, y = 0 }
 
       bitmapText:align(0, 0)
-      bitmapText:xy(PADDING + LEFT_PADDING + cursorPos.x + cursorOffset * zoom, HISTORY_HEIGHT + PADDING + cursorPos.y)
+      bitmapText:xy(PADDING + LEFT_PADDING + cursorPos.x + cursorOffset * zoom, HISTORY_HEIGHT + PADDING + cursorPos.y + yoff)
       bitmapText:settext(t.insert and '_' or '|')
       local fade = (os.clock() - blink) % 1
       bitmapText:diffuse(1, 1, 1, fade < 0.5 and 0.5 or 0)
       bitmapText:Draw()
 
-      bitmapText:xy(PADDING, HISTORY_HEIGHT + PADDING)
+      bitmapText:xy(PADDING, HISTORY_HEIGHT + PADDING + yoff)
       bitmapText:settext('$')
       bitmapText:diffuse(0.6, 1, 0.4, 1)
       bitmapText:Draw()
@@ -359,7 +366,7 @@ function M.init(self, ctx)
 
       if TextInput.capsLock then
         bitmapText:settext('!')
-        bitmapText:xy(sw - PADDING - 20 * zoom, HISTORY_HEIGHT + backHeight - PADDING - 38 * zoom)
+        bitmapText:xy(sw - PADDING - 20 * zoom, HISTORY_HEIGHT + backHeight - PADDING - 38 * zoom + yoff)
         bitmapText:diffuse(0, 0, 0, 1)
         drawBorders(bitmapText, 1)
         bitmapText:diffuse(1, 0.2, 0.2, 1)
