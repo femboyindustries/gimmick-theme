@@ -42,7 +42,7 @@ usable in said screen initialization. Usually this means that you'll be given
 a `Context` whenever you define a screen:
 
 ```lua
-gimmick.ActorScreen(function(self, ctx)
+gimmick.ActorScreen(function(self, ctx, scope)
   -- `ctx` here is your Context
   local quad = ctx:Quad()  
 end)
@@ -107,7 +107,7 @@ sprite:SetShader(actor235.Proxy.getRaw(shader))
 
 -- However, keep in mind InitCommands will also return the raw actor for a
 -- simpler way to achieve the same:
-shader:addcommad('Init', function(a)
+shader:addcommand('Init', function(a)
   sprite:SetShader(a)
 end)
 -- !! BE WARY OF LOAD ORDER !!, because `shader`'s InitCommand here could be ran
@@ -147,6 +147,13 @@ frame:SetDrawFunction(function()
   parentlessQuad:Draw()
 end)
 ```
+
+### Scopes
+
+Alongside contexts, you'll be passed along a `Scope` during initialization. A
+scope is a generalization of everything specific to a screen. Currently there
+is only a `tick` instance, but in the future events will be handled in there
+aswell.
 
 ### File structure
 
