@@ -2,6 +2,7 @@ local easable = require 'gimmick.lib.easable'
 local MeterWheel = require 'gimmick.lib.meterWheel'
 local barlib = require 'gimmick.bar'
 local MusicWheel = require 'gimmick.screens.ScreenSelectMusic.MusicWheel'
+local TextPool   = require 'gimmick.textpool'
 
 return {
   MusicWheel = MusicWheel.MusicWheel(),
@@ -10,7 +11,7 @@ return {
     On = function(bn)
       bn:ztest(0)
       -- this is only vaguely better than magic numbers
-      bn:xy((48 + 96 + 240)/2, 135)
+      bn:xy((48 + 96 + 240)/2, 100)
       --bn:effectclock('bgm')
       --bn:wag()
     end
@@ -47,6 +48,9 @@ return {
     diffRepText:rotationz(-90)
     diffRepText:shadowlength(0)
     local diffEase = easable(0)
+
+    local statR = TextPool.new(ctx, FONTS.sans_serif, nil, function(self) self:align(1, 0.5); self:zoom(0.28); self:shadowlength(0); self:diffuse(0.6, 0.6, 0.6, 1) end)
+    local statL = TextPool.new(ctx, FONTS.sans_serif, nil, function(self) self:align(0, 0.5); self:zoom(0.32); self:shadowlength(0) end)
 
     ---@type Song
     local song = nil
@@ -187,6 +191,45 @@ return {
       for y = startY, sh + textWidth, textWidth do
         diffRepText:xy(sw - 16, y)
         diffRepText:Draw()
+      end
+
+      if song then
+        local statX = 164
+        local statY = 180
+        do
+          local label = statR:get('ARTIST')
+          local value = statL:get(song:GetDisplayArtist())
+          label:xy(statX, statY)
+          label:Draw()
+          value:xy(statX + 8, statY)
+          value:Draw()
+        end
+        do
+          local label = statR:get('LENGTH')
+          local len = song:MusicLengthSeconds()
+          local value = statL:get(formatTime(len))
+          label:xy(statX, statY + 16)
+          label:Draw()
+          value:xy(statX + 8, statY + 16)
+          value:Draw()
+        end
+        do
+          local label = statR:get('BPM')
+          local min = song:GetMinBPM()
+          local max = song:GetMaxBPM()
+           
+          local str = tostring(math.floor(min))
+          if min ~= max then
+            str = tostring(math.floor(min)) .. ' - ' .. tostring(math.floor(max))
+          end
+          local value = statL:get(str)
+          label:xy(statX, statY + 16 * 2)
+          label:Draw()
+          value:xy(statX + 8, statY + 16 * 2)
+          value:Draw()
+        end
+
+
       end
     end)
   end),

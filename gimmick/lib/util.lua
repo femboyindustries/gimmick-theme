@@ -531,3 +531,8 @@ function filter(table, callback)
   return res
 end
 
+---@param secs number
+---@return string
+function formatTime(secs)
+  return string.format('%02d:%02d', math.floor(secs / 60), math.ceil(secs % 60))
+end
