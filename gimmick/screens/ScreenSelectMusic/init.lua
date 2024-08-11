@@ -28,7 +28,7 @@ return {
     local bar_ease = scope.tick:easable(0,24)
     bar_af:xy(scx * 0.5, scy * 1.5)
 
-    local wheel = MeterWheel.new(ctx)
+    local wheel = MeterWheel.new(ctx, scope)
     
     local text = ctx:BitmapText(FONTS.sans_serif)
     text:shadowlength(0)
