@@ -1,7 +1,7 @@
 ---@param maskFunc fun(ctx: Context): (fun(): nil) @ Given a Context, returns a drawfunction
 function gimmick.common.background(maskFunc)
-  return gimmick.ActorScreen(function(self, ctx)
-    local blur = gimmick.common.blurMask(ctx, maskFunc)
+  return gimmick.ActorScreen(function(self, ctx, scope)
+    local blur = gimmick.common.blurMask(ctx, scope, maskFunc)
 
     local blank = ctx:Quad()
     blank:diffuse(0, 0, 0, 1)

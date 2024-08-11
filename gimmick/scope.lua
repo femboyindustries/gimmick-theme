@@ -2,15 +2,17 @@ local tick = require 'gimmick.lib.tick'
 
 ---@class Scope
 ---@field tick Tick
+---@field event EventHandler
 ---@field active boolean
 ---@field dead boolean
 local Scope = {}
 Scope.__index = Scope
 
 ---@return Scope
-function Scope.new()
+function Scope.new(screenName)
   return setmetatable({
     tick = tick:new(),
+    event = event:subhandler(screenName),
     active = false,
     dead = false,
   }, Scope)
@@ -23,10 +25,21 @@ function Scope:update(dt)
 end
 
 function Scope:onCommand()
+  if self.active then
+    print('WARN: onCommand on scope called twice')
+    return
+  end
+
   self.active = true
 end
 function Scope:offCommand()
+  if self.dead then
+    print('WARN: offCommand on scope called twice')
+    return
+  end
+
   self.dead = true
+  self.event:orphan()
 end
 
 return Scope

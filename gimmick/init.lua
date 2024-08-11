@@ -6,7 +6,10 @@ require 'gimmick.iterfunction'
 require 'gimmick.lib.color'
 if not LITE then require 'gimmick.lib.easings' end
 
-event = require 'gimmick.lib.event235'
+local EventHandler = require 'gimmick.lib.event235'
+-- global EventHandler instance
+event = EventHandler.new('Global')
+
 inputs = require 'gimmick.lib.inputs'
 save = require 'gimmick.save'
 

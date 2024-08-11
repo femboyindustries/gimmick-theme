@@ -44,14 +44,14 @@ local function handleInputEvents(pn, button)
   end
 end
 
-event.on('press', handleInputEvents) -- Register the event handler
-
 return {
   PrevScreen = "ScreenSelectOptions",
   Init = function(self)
   end,
 
-  overlay = gimmick.ActorScreen(function(self, ctx)
+  overlay = gimmick.ActorScreen(function(self, ctx, scope)
+    scope.event:on('press', handleInputEvents) -- Register the event handler
+
     local mascot_actors = {}
     local background_actors = {}
     local bmt = TextPool.new(ctx, FONTS.sans_serif, nil, function(actor)

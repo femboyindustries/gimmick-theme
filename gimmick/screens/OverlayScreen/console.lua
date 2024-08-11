@@ -131,7 +131,7 @@ function M.init(self, ctx, scope)
 
   local t = TextInput.new()
 
-  event.on('keypress', function(device, key)
+  scope.event:on('keypress', function(device, key)
     if device ~= InputDevice.Key then return end
 
     blink = os.clock()
@@ -183,7 +183,7 @@ function M.init(self, ctx, scope)
       t:onKey(key, inputs.rawInputs[device])
     end
   end)
-  event.on('keyrelease', function(device, key)
+  scope.event:on('keyrelease', function(device, key)
     if device ~= InputDevice.Key then return end
 
     repeatT[key] = nil
@@ -191,7 +191,7 @@ function M.init(self, ctx, scope)
 
   local textWidth, textHeight = 0, 0
 
-  local blur = gimmick.common.blurMask(ctx, function()
+  local blur = gimmick.common.blurMask(ctx, scope, function()
     return function()
       local yoff = (1 - consoleOpenAux.value) * -(HISTORY_HEIGHT + textHeight + PADDING*2)
       

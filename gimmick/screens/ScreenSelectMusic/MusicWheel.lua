@@ -38,6 +38,8 @@ local lastDifficulty
 local itemEases = {}
 local itemI = 0
 
+local open = 0
+
 local defineItemI = 0
 
 function MusicWheel.MusicWheel()
@@ -149,7 +151,7 @@ function MusicWheel.init(ctx)
         itemEases[index] = easable(0, 16)
       end
       itemEases[index]:set(selected and 1 or 0)
-      local offX = itemEases[index].eased * -20
+      local offX = itemEases[index].eased * -20 * open + (1 - open) * WHEEL_ITEM_WIDTH
 
       local width = WHEEL_ITEM_WIDTH - offX
       local quadX = -WHEEL_ITEM_WIDTH / 2 + width / 2
@@ -355,6 +357,10 @@ end
 
 function MusicWheel.setDifficulty(diff)
   lastDifficulty = diff
+end
+
+function MusicWheel.setOpen(a)
+  open = a
 end
 
 return MusicWheel

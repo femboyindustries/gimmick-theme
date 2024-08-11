@@ -42,7 +42,7 @@ usable in said screen initialization. Usually this means that you'll be given
 a `Context` whenever you define a screen:
 
 ```lua
-gimmick.ActorScreen(function(self, ctx, scope)
+gimmick.ActorScreen('CoolScreen', function(self, ctx, scope)
   -- `ctx` here is your Context
   local quad = ctx:Quad()  
 end)

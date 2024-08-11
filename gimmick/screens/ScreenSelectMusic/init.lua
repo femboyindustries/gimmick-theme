@@ -16,8 +16,12 @@ return {
       --bn:wag()
     end
   },
-  overlay = gimmick.ActorScreen(function(self, ctx)
+  overlay = gimmick.ActorScreen(function(self, ctx, scope)
     MusicWheel.init(ctx)
+
+    local openAux = scope.tick:aux(0)
+    openAux:ease(0, 0.5, outExpo, 1)
+    scope.event:on('off', function() openAux:ease(0, 0.6, inBack, 0) end)
 
     local bar = barlib.new(ctx)
     local bar_af = bar.actorframe
@@ -62,6 +66,7 @@ return {
 
     setDrawFunctionWithDT(self, function(dt)
       MusicWheel.update(dt)
+      MusicWheel.setOpen(openAux.value)
       bar_ease:update(dt)
 
       local newSong = GAMESTATE:GetCurrentSong()

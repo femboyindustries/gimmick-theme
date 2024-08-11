@@ -193,18 +193,8 @@ local optionsTable = {
 
 }
 
-event.on('press', function(pn, btn)
-  -- hacky workaround to esc being broken
-  if SCREENMAN:GetTopScreen():GetName() == 'ScreenOptionsMenu' and optionsStack:top() and btn == 'Back' then
-    print('Popping stack forcefully: ' .. optionsStack:pop())
-    if not optionsStack:top() then
-      SCREENMAN:SetNewScreen('ScreenTitleMenu')
-    end
-  end
-end)
-
 return {
-  overlay = gimmick.ActorScreen(function(self, ctx)
+  overlay = gimmick.ActorScreen(function(self, ctx, scope)
     local opts = optionsStack:top()
     local res = optionsTable[opts]
 
@@ -220,15 +210,25 @@ return {
     self:SetDrawFunction(function()
       if drawOverlay then drawOverlay() end
     end)
+
+    scope.event:on('press', function(pn, btn)
+      -- hacky workaround to esc being broken
+      if optionsStack:top() and btn == 'Back' then
+        print('Popping stack forcefully: ' .. optionsStack:pop())
+        if not optionsStack:top() then
+          SCREENMAN:SetNewScreen('ScreenTitleMenu')
+        end
+      end
+    end)
   end),
   underlay = gimmick.ActorScreen(function(self, ctx)
     local bg = ctx:Sprite('Graphics/_missing')
     bg:scaletocover(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)
   end),
-  header = gimmick.ActorScreen(function(self, ctx)
-  end),
-  footer = gimmick.ActorScreen(function(self, ctx)
-  end),
+  --header = gimmick.ActorScreen(function(self, ctx)
+  --end),
+  --footer = gimmick.ActorScreen(function(self, ctx)
+  --end),
 
   unlockStack = function()
     stackLocked = false

@@ -81,13 +81,13 @@ function M.update()
     for key in pairs(M.rawInputs[device]) do
       -- now pressed, wasn't before -> press
       if oldRawInputs[device][key] == nil then
-        event.call('keypress', device, key)
+        event:call('keypress', device, key)
       end
     end
     for key in pairs(oldRawInputs[device]) do
       -- was pressed, now isn't -> release
       if M.rawInputs[device][key] == nil then
-        event.call('keyrelease', device, key)
+        event:call('keyrelease', device, key)
       end
     end
   end
@@ -95,13 +95,13 @@ function M.update()
     for button in pairs(M.inputs[pn]) do
       -- now pressed, wasn't before -> press
       if not oldInputs[pn][button] then
-        event.call('press', pn, button)
+        event:call('press', pn, button)
       end
     end
     for button in pairs(oldInputs[pn]) do
       -- was pressed, now isn't -> release
       if not M.inputs[pn][button] then
-        event.call('release', pn, button)
+        event:call('release', pn, button)
       end
     end
   end

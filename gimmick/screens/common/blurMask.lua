@@ -1,7 +1,8 @@
 ---@param ctx Context
----@param maskFunc fun(ctx: Context): (fun(): nil) @ Given a Context, returns a drawfunction
+---@param scope Scope
+---@param maskFunc fun(ctx: Context): (fun():  nil) @ Given a Context, returns a drawfunction
 ---@param radius number?
-function gimmick.common.blurMask(ctx, maskFunc, radius)
+function gimmick.common.blurMask(ctx, scope, maskFunc, radius)
   radius = radius or 25
 
   local blank = ctx:Quad()
@@ -10,7 +11,7 @@ function gimmick.common.blurMask(ctx, maskFunc, radius)
 
   local maskDrawFunc = maskFunc(ctx)
 
-  local maskAFT = aft(ctx, true)
+  local maskAFT = aft(ctx, scope, true)
 
   local blurShaderV = ctx:Shader('Shaders/blurMask.frag')
   local blurShaderH = ctx:Shader('Shaders/blurMask.frag')
@@ -19,9 +20,9 @@ function gimmick.common.blurMask(ctx, maskFunc, radius)
 
   local fauxShader = ctx:Shader('Shaders/blurMaskFaux.frag')
 
-  local blurAFTV, blurSpriteV = aftSpritePair(ctx, true)
+  local blurAFTV, blurSpriteV = aftSpritePair(ctx, scope, true)
 
-  local blurAFTH, blurSpriteH = aftSpritePair(ctx, true)
+  local blurAFTH, blurSpriteH = aftSpritePair(ctx, scope, true)
 
   blurShaderV:uniform1f('strength', 1)
   blurShaderV:uniform1f('radius', radius)

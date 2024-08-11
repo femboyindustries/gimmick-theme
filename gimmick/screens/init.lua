@@ -60,7 +60,6 @@ gimmick.ChoiceProvider = function(choices, setupChoice)
   }
 end
 
-
 ---@param initFunc fun(self: ActorFrame, ctx: Context, scope: Scope): nil
 function gimmick.ActorScreen(initFunc)
   return {
@@ -84,9 +83,18 @@ function gimmick.ActorScreen(initFunc)
 
       self:addcommand('On', function()
         scope:onCommand()
+        scope.event:call('on')
       end)
       self:addcommand('Off', function()
+        scope.event:call('off')
         scope:offCommand()
+      end)
+
+      scope.event:on('press', function(pn, btn)
+        if btn == 'Back' then
+          print('Back key pressed, simulating OffCommand')
+          self:queuecommand('Off')
+        end
       end)
 
       initFunc(self, ctx, scope)

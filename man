@@ -141,18 +141,18 @@ def make(klass,name,v,append):
   screenLua = open('./gimmick/screens/'+ScreenName+'.lua','x')
   if screenLua:
     cecho(ScreenName+"? only lua! 🔥")
-    Lua = """
-return {
+    Lua = f"""
+return {{
   Init = function(self) Trace('theme.com') end,
-  overlay = gimmick.ActorScreen(function(self, ctx)
+  overlay = gimmick.ActorScreen('{ScreenName}', function(self, ctx)
   end),
-  underlay = gimmick.ActorScreen(function(self, ctx)
+  underlay = gimmick.ActorScreen('{ScreenName}', function(self, ctx)
   end),
-  header = gimmick.ActorScreen(function(self, ctx)
+  header = gimmick.ActorScreen('{ScreenName}', function(self, ctx)
   end),
-  footer = gimmick.ActorScreen(function(self, ctx)
+  footer = gimmick.ActorScreen('{ScreenName}', function(self, ctx)
   end),
-}
+}}
 """.lstrip()
   screenLua.write(Lua)
   screenLua.close()

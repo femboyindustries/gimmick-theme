@@ -47,7 +47,7 @@ local function init(self, ctx, scope)
     dw, dh = DISPLAY:GetWindowWidth(), DISPLAY:GetWindowHeight()
 
     if lastdw ~= dw or lastdh ~= dh then
-      event.call('resize', dw, dh)
+      event:call('resize', dw, dh)
       lastdw, lastdh = dw, dh
     end
   end)
@@ -68,7 +68,7 @@ return {
 
       local ctx = actorgen.Context.new()
 
-      init(self, ctx, Scope.new())
+      init(self, ctx, Scope.new('Dummy OverlayScreen'))
 
       actorgen.ready(ctx)
     end,
@@ -82,7 +82,7 @@ return {
 
       local ctx = actorgen.Context.new()
 
-      local scope = Scope.new()
+      local scope = Scope.new('OverlayScreen')
 
       local lastT
       self:addcommand('Update', function()

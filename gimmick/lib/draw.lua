@@ -13,8 +13,9 @@ function drawBorders(actor, amp, passes)
 end
 
 ---@param ctx Context
+---@param scope Scope
 ---@param recreate boolean? @ Useful for OverlayScreens where the initialization step happens twice
-function aft(ctx, recreate)
+function aft(ctx, scope, recreate)
   local aft = ctx:ActorFrameTexture()
 
   aft:SetWidth(dw)
@@ -28,7 +29,8 @@ function aft(ctx, recreate)
     aft:Recreate()
   end
 
-  event.on('resize', function(w, h)
+  scope.event:on('resize', function(w, h)
+    print(aft, 'resizing: ', w, 'x', h)
     aft:SetWidth(w)
     aft:SetHeight(h)
     aft:Recreate()
@@ -38,9 +40,10 @@ function aft(ctx, recreate)
 end
 
 ---@param ctx Context
+---@param scope Scope
 ---@param recreate boolean? @ Useful for OverlayScreens where the initialization step happens twice
-function aftSpritePair(ctx, recreate)
-  local tex = aft(ctx, recreate)
+function aftSpritePair(ctx, scope, recreate)
+  local tex = aft(ctx, scope, recreate)
   local sprite = ctx:Sprite()
 
   sprite:basezoomx(sw / dw)
@@ -48,7 +51,7 @@ function aftSpritePair(ctx, recreate)
   sprite:x(scx)
   sprite:y(scy)
 
-  event.on('resize', function(w, h)
+  scope.event:on('resize', function(w, h)
     sprite:basezoomx(sw / w)
     sprite:basezoomy(-sh / h)
     sprite:x(scx)
