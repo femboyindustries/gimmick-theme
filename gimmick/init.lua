@@ -13,6 +13,8 @@ event = EventHandler.new('Global')
 inputs = require 'gimmick.lib.inputs'
 save = require 'gimmick.save'
 
+gimmick.player = require 'gimmick.player'
+
 require 'gimmick.screens'
 actorgen = require 'gimmick.lib.actor235'
 
