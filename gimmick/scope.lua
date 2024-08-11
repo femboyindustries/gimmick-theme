@@ -30,6 +30,8 @@ function Scope:onCommand()
     return
   end
 
+  self.event:call('on')
+
   self.active = true
 end
 function Scope:offCommand()
@@ -37,6 +39,8 @@ function Scope:offCommand()
     warn('offCommand on scope called twice')
     return
   end
+
+  self.event:call('off')
 
   self.dead = true
   self.event:orphan()
