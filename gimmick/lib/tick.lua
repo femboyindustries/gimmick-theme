@@ -1,4 +1,5 @@
 require 'gimmick.lib.easings'
+local easable = require 'gimmick.lib.easable'
 
 ---@class Tick
 local tick = {
@@ -24,6 +25,9 @@ local tick = {
   auxEases = { },
   ---@type { time: number, dur: number, ease: (fun(a: number): number), aux: Aux, value: number, add: boolean, transient: boolean }[]
   auxEasesActive = { },
+
+  ---@type easable[]
+  easables = { },
 }
 
 local defaultConfig = deepcopy(tick)
@@ -155,6 +159,10 @@ function tick:update(dt)
   for aux, offset in pairs(auxOffsets) do
     aux.value = aux.target + offset
   end
+
+  for _, e in ipairs(self.easables) do
+    e:update(dt)
+  end
 end
 
 ---@param delay number
@@ -251,6 +259,15 @@ function tick:aux(default)
     target = default or 0,
     tick = self,
   }, Aux)
+end
+
+---@param default? number
+---@param speed? number
+---@return easable
+function tick:easable(default, speed)
+  local e = easable(default, speed)
+  table.insert(self.easables, e)
+  return e
 end
 
 ---@param callback fun() @ Callback to call upon finishing

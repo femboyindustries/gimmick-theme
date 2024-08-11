@@ -13,10 +13,11 @@ local MeterWheel = {}
 MeterWheel.__index = MeterWheel
 
 ---@param ctx Context
-function MeterWheel.new(ctx)
+---@param scope Scope
+function MeterWheel.new(ctx, scope)
   local wheel = setmetatable({
-    meter = easable(0),
-    color = easable(DIFFICULTIES[DIFFICULTY_BEGINNER].color),
+    meter = scope.tick:easable(0, 20),
+    color = scope.tick:easable(DIFFICULTIES[DIFFICULTY_BEGINNER].color, 18),
 
     rating = ctx:BitmapText(FONTS.sans_serif),
 
@@ -52,11 +53,7 @@ function MeterWheel:ease(meter, difficulty)
   end
 end
 
----@param dt number
-function MeterWheel:draw(dt, x, y)
-  self.meter:update(dt * 20)
-  self.color:update(dt * 18)
-
+function MeterWheel:draw(x, y)
   local fill = self.meter.eased / 20
 
   self.pie:diffuse(self.color.eased:unpack())

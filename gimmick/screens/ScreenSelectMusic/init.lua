@@ -25,7 +25,7 @@ return {
 
     local bar = barlib.new(ctx)
     local bar_af = bar.actorframe
-    local bar_ease = easable(0,24)
+    local bar_ease = scope.tick:easable(0,24)
     bar_af:xy(scx * 0.5, scy * 1.5)
 
     local wheel = MeterWheel.new(ctx)
@@ -51,7 +51,7 @@ return {
     diffRepText:zoom(0.4)
     diffRepText:rotationz(-90)
     diffRepText:shadowlength(0)
-    local diffEase = easable(0)
+    local diffEase = scope.tick:easable(0, 8)
 
     local statR = TextPool.new(ctx, FONTS.sans_serif, nil, function(self) self:align(1, 0.5); self:zoom(0.28); self:shadowlength(0); self:diffuse(0.6, 0.6, 0.6, 1) end)
     local statL = TextPool.new(ctx, FONTS.sans_serif, nil, function(self) self:align(0, 0.5); self:zoom(0.32); self:shadowlength(0) end)
@@ -67,7 +67,6 @@ return {
     setDrawFunctionWithDT(self, function(dt)
       MusicWheel.update(dt)
       MusicWheel.setOpen(openAux.value)
-      bar_ease:update(dt)
 
       local newSong = GAMESTATE:GetCurrentSong()
       if newSong ~= song then
@@ -95,7 +94,6 @@ return {
         MusicWheel.setDifficulty(difficulty)
         diffEase.eased = -1
       end
-      diffEase:update(dt * 8)
 
       if selected then
         bar_ease:set(selected:GetMeter() * 0.1)
@@ -169,7 +167,7 @@ return {
 
       if selected then
         wheel:ease(selected:GetMeter(), selected:GetDifficulty())
-        wheel:draw(dt, 48, scy)
+        wheel:draw(48, scy)
       else
         wheel:set(0, nil)
       end
