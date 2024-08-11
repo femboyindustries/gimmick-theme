@@ -83,10 +83,8 @@ function gimmick.ActorScreen(initFunc)
 
       self:addcommand('On', function()
         scope:onCommand()
-        scope.event:call('on')
       end)
       self:addcommand('Off', function()
-        scope.event:call('off')
         scope:offCommand()
       end)
 

@@ -98,9 +98,7 @@ return {
     })
 
     local perc = stats:GetPercentDancePoints() * 100
-    local decimal = string.format('%02d', math.floor(perc))
-    local fractional = string.format('%02d', math.floor((perc % 1) * 100 + 0.5))
-    local score = decimal .. '.' .. fractional
+    local score = string.format('%05.2f', math.max(perc, 0))
 
     local title = song:GetDisplayMainTitle()
     local subtitle = song:GetDisplaySubTitle()
@@ -202,20 +200,20 @@ return {
       end)
 
       return
-    else
-      local winner = ctx:Sprite('Graphics/winner.png')
-      local bg = ctx:Sprite('Mascots/backgrounds/jimble.jpg')
-      bg:stretchto(0, 0, sw, sh)
-
-      self:SetDrawFunction(function()
-        bg:Draw()
-
-        winner:scaletofit(scx - 100, scy - 100, scx + 100, scy + 100)
-        winner:xy(scx, scy * 0.6)
-
-        winner:Draw()
-      end)
     end
+
+    local winner = ctx:Sprite('Graphics/winner.png')
+    local bg = ctx:Sprite('Mascots/backgrounds/jimble.jpg')
+    bg:stretchto(0, 0, sw, sh)
+
+    self:SetDrawFunction(function()
+      bg:Draw()
+
+      winner:scaletofit(scx - 100, scy - 100, scx + 100, scy + 100)
+      winner:xy(scx, scy * 0.6)
+
+      winner:Draw()
+    end)
   end),
   header = gimmick.ActorScreen(function(self, ctx)
   end),
