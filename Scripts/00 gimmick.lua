@@ -46,6 +46,12 @@ end
 -- 🐾🐾🐾
 paw.print = gimmick.print
 
+function gimmick.warn(msg)
+  print('WARN: ' .. msg)
+  event:call('warn', msg)
+end
+paw.warn = gimmick.warn
+
 paw.screeninfo = function()
   --paws at You are using an outdated NotITG version ( hello bro
   print(actorToString(SCREENMAN:GetTopScreen()))

@@ -3,6 +3,7 @@ require 'gimmick.lib.easings'
 ---@class Tick
 local tick = {
   time = 0,
+  locked = false,
 
   -- one-time events
   ---@type { time: number, func: fun(time: number) }[]
@@ -159,6 +160,7 @@ end
 ---@param delay number
 ---@param func fun(time: number)
 function tick:func(delay, func)
+  if self.locked then error('this tick instance is locked, no new functions can be scheduled', 2) end
   insertSorted({
     time = delay,
     func = func,
@@ -169,6 +171,7 @@ end
 ---@param dur number
 ---@param func fun(time: number)
 function tick:perframe(delay, dur, func)
+  if self.locked then error('this tick instance is locked, no new functions can be scheduled', 2) end
   insertSorted({
     time = delay,
     dur = dur,
@@ -183,6 +186,7 @@ end
 ---@param to number
 ---@param func fun(time: number)
 function tick:ease(delay, dur, ease, from, to, func)
+  if self.locked then error('this tick instance is locked, no new functions can be scheduled', 2) end
   insertSorted({
     time = delay,
     dur = dur,
@@ -194,7 +198,7 @@ function tick:ease(delay, dur, ease, from, to, func)
 end
  
 ---@return Tick
-function tick:new()
+function tick.new()
   return setmetatable(deepcopy(defaultConfig), tick)
 end
 
@@ -210,6 +214,7 @@ Aux.__index = Aux
 ---@param ease fun(a: number): number
 ---@param value number
 function Aux:ease(delay, duration, ease, value)
+  if self.tick.locked then error('this tick instance is locked, no new functions can be scheduled', 2) end
   insertSorted(self.tick.auxEases, {
     time = self.tick.time + delay,
     dur = duration,
@@ -226,6 +231,7 @@ end
 ---@param ease fun(a: number): number
 ---@param value number
 function Aux:add(delay, duration, ease, value)
+  if self.tick.locked then error('this tick instance is locked, no new functions can be scheduled', 2) end
   insertSorted(self.tick.auxEases, {
     time = self.tick.time + delay,
     dur = duration,
@@ -239,11 +245,29 @@ end
 
 ---@param default? number
 function tick:aux(default)
+  if self.locked then error('this tick instance is locked, no new functions can be scheduled', 2) end
   return setmetatable({
     value = default or 0,
     target = default or 0,
     tick = self,
   }, Aux)
+end
+
+---@param callback fun() @ Callback to call upon finishing
+function tick:lock(callback)
+  local maxTime = 0
+
+  for _, f in ipairs(self.funcs)           do maxTime = math.max(maxTime, f.time) end
+  for _, f in ipairs(self.perframes)       do maxTime = math.max(maxTime, f.time + f.dur) end
+  for _, f in ipairs(self.perframesActive) do maxTime = math.max(maxTime, f.time + f.dur) end
+  for _, f in ipairs(self.eases)           do maxTime = math.max(maxTime, f.time + f.dur) end
+  for _, f in ipairs(self.easesActive)     do maxTime = math.max(maxTime, f.time + f.dur) end
+  for _, f in ipairs(self.auxEases)        do maxTime = math.max(maxTime, f.time + f.dur) end
+  for _, f in ipairs(self.auxEasesActive)  do maxTime = math.max(maxTime, f.time + f.dur) end
+
+  self:func(maxTime, callback)
+
+  self.locked = true
 end
 
 return tick

@@ -13,6 +13,7 @@ local ENABLE_LOGGING = false
 
 local function warn(str)
   Debug('[actor235] WARN: ' .. tostring(str))
+  event:call('warn', 'actor235: ' .. str)
 end
 
 local function print(...)

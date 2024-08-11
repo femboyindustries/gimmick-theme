@@ -33,6 +33,8 @@ local HistoryType = {
   Error = 1,
   Input = 2,
   Log = 3,
+  -- todo: probably worth it to have internal gimmick logs here as seperate
+  -- disableable types
 }
 
 local function formatReturn(args, n)
@@ -74,11 +76,28 @@ end
 
 -- check this shit out
 
-local _print = print
-_G.print = function(...)
+local _print = rawget(_G, 'print')
+rawset(_G, 'print', function(...)
   table.insert(history, {HistoryType.Log, formatReturn(arg)})
   return _print(unpack(arg))
-end
+end)
+local _Trace = rawget(_G, 'Trace')
+rawset(_G, 'Trace', function(msg)
+  table.insert(history, {HistoryType.Log, msg})
+  return _Trace(msg)
+end)
+local _Debug = rawget(_G, 'Debug')
+rawset(_G, 'Debug', function(msg)
+  table.insert(history, {HistoryType.Log, msg})
+  return _Debug(msg)
+end)
+-- keep our own internal logging functions untracked
+Trace = _Trace
+Debug = _Debug
+
+event:on('warn', function(msg)
+  table.insert(history, {HistoryType.Error, 'gimmick: ' .. msg})
+end)
 
 ---@param ctx Context
 ---@param scope Scope

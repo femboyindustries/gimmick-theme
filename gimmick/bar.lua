@@ -270,7 +270,7 @@ function judge_eyes:add(input)
   end
 
   if self.barlevel >= 10 then
-    print('WARN: Bar will not go over 10')
+    warn('Bar will not go over 10')
     self.barlevel = 9.999999
   end
 

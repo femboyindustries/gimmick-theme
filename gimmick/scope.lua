@@ -11,7 +11,7 @@ Scope.__index = Scope
 ---@return Scope
 function Scope.new(screenName)
   return setmetatable({
-    tick = tick:new(),
+    tick = tick.new(),
     event = event:subhandler(screenName),
     active = false,
     dead = false,
@@ -26,7 +26,7 @@ end
 
 function Scope:onCommand()
   if self.active then
-    print('WARN: onCommand on scope called twice')
+    warn('onCommand on scope called twice')
     return
   end
 
@@ -34,12 +34,16 @@ function Scope:onCommand()
 end
 function Scope:offCommand()
   if self.dead then
-    print('WARN: offCommand on scope called twice')
+    warn('offCommand on scope called twice')
     return
   end
 
   self.dead = true
   self.event:orphan()
+  self.event = nil
+  self.tick:lock(function()
+    self.tick = nil
+  end)
 end
 
 return Scope
