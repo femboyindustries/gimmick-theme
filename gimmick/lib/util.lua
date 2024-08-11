@@ -337,12 +337,12 @@ function pretty(o, depth, seen)
         str = str .. ': ' .. pretty(o:GetText(), depth + 1, seen)
       elseif type == 'ActorFrame' then
         local children = o:GetChildren()
-        str = str .. ': ' .. pretty(children, depth + 1, seen)
+        str = str .. ': ' .. pretty(children, depth, seen)
       end
 
       return str
     else
-      return pretty(stripMeta(getmetatable(o)), depth + 1, seen)
+      return tostring(o) .. ': ' .. pretty(stripMeta(getmetatable(o)), depth, seen)
     end
   elseif type(o) == 'table' then
     if seen[o] then return '(circular)' end
@@ -366,7 +366,7 @@ function pretty(o, depth, seen)
         if string.find(s, '\n') or (#str - nPos + #s + depth * 2) > 40 then
           linebreaks = true
           str = str .. '\n'
-          str = str .. string.rep('  ', depth)
+          str = str .. string.rep('  ', depth + 1)
           nPos = #str
         end
         str = str .. s .. ', '
@@ -381,7 +381,7 @@ function pretty(o, depth, seen)
         if string.find(s, '\n') or (#str - nPos + #s + depth * 2) > 40 then
           linebreaks = true
           str = str .. '\n'
-          str = str .. string.rep('  ', depth)
+          str = str .. string.rep('  ', depth + 1)
           nPos = #str
         end
 
@@ -393,9 +393,9 @@ function pretty(o, depth, seen)
 
     if linebreaks then
       if string.sub(str, 1, 1) ~= '\n' then
-        str = '\n' .. string.rep('  ', depth) .. str
+        str = '\n' .. string.rep('  ', depth + 1) .. str
       end
-      str = str .. '\n' .. string.rep('  ', depth - 1) .. '}'
+      str = str .. '\n' .. string.rep('  ', depth) .. '}'
     else
       str = str .. ' }'
     end
