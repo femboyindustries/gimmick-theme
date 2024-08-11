@@ -45,11 +45,4 @@ TNS_GOOD = 5
 TNS_GREAT = 6
 TNS_PERFECT = 7
 ]]
-JUDGEMENTS = {
-  [TNS_MARVELOUS] = hex('27D0FE'),
-  [TNS_PERFECT] = hex('F6E213'),
-  [TNS_GREAT] = hex('46E308'),
-  [TNS_GOOD] = hex('9C0AEB'),
-  [TNS_BOO] = hex('FA7A04'),
-  [TNS_MISS] = hex('FA7A04')
-}
+

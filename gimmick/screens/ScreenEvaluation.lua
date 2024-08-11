@@ -5,35 +5,42 @@ local AWESOME = false
 local judgements = {
   {
     code = 'Marvelous',
-    score = 8, -- TNS_MARVELOUS
+    score = TNS_MARVELOUS, -- TNS_MARVELOUS
     name = 'Fantastic',
+    color = hex('27D0FE'),
   },
   {
     code = 'Perfect',
-    score = 7, -- TNS_PERFECT
+    score = TNS_PERFECT, -- TNS_PERFECT
     name = 'Excellent',
+    color = hex('F6E213'),
   },
   {
     code = 'Great',
-    score = 6, -- TNS_GREAT
+    score = TNS_GREAT, -- TNS_GREAT
     name = 'Great',
+    color = hex('46E308'),
   },
   {
     code = 'Good',
-    score = 5, -- TNS_GOOD
+    score = TNS_GOOD, -- TNS_GOOD
     name = 'Decent',
+    color = hex('9C0AEB'),
   },
   {
     code = 'Boo',
-    score = 4, -- TNS_BOO
+    score = TNS_BOO, -- TNS_BOO
     name = 'Way Off',
+    color = hex('FA7A04'),
   },
   {
     code = 'Miss',
-    score = 3, -- TNS_MISS
+    score = TNS_MISS, -- TNS_MISS
     name = 'Miss',
+    color = hex('B50F00')
   },
 }
+
 
 return {
   Init = function(self) Trace('theme.com') end,
@@ -46,7 +53,7 @@ return {
     ---@param bn Sprite
     On = function(bn)
       bn:ztest(0)
-      bn:xy(scx*0.35,scy*0.6)
+      bn:xy(scx*0.35,scy*0.3)
     end
   },
 
@@ -56,9 +63,6 @@ return {
       actor:zoom(0.5)
       actor:align(0, 0.5)
     end)
-
-
-    --error(GAMESTATE:GetCurrentSong():GetBannerPath())
 
     local pn = 0
     local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(pn)
@@ -73,13 +77,14 @@ return {
       if n[3] == 'M' then minesN = minesN + 1 end
     end
 
-    ---@type { name: string?, value: string?, total: string? }[]
+    ---@type { name: string?, value: string?, total: string?, color: color?}[]
     local fields = {}
 
     for _, judg in ipairs(judgements) do
       table.insert(fields, {
         name = judg.name,
         value = tostring(stats:GetTapNoteScores(judg.score)),
+        color = judg.color
       })
     end
 
@@ -90,11 +95,13 @@ return {
       name = 'Holds',
       value = stats:GetHoldNoteScores(2), -- HNS_OK
       total = holdsN,
+      color = hex('#A0A0A0')
     })
     table.insert(fields, {
       name = 'Mines',
       value = stats:GetTapNoteScores(1), -- TNS_HITMINE
       total = minesN,
+      color = hex('#A0A0A0')
     })
 
     local perc = stats:GetPercentDancePoints() * 100
@@ -104,8 +111,8 @@ return {
     local subtitle = song:GetDisplaySubTitle()
 
 
-    local inside_spacing = 6
-    local item_spacing = sh * 0.06
+    local inside_spacing = 10 --space between value
+    local item_spacing = sh * 0.07 --space between items
 
     --the ActorFrame that holds the judgements table
     local judge_counts = ctx:ActorFrame()
@@ -113,15 +120,18 @@ return {
     for i, field in ipairs(fields) do
       local af = ctx:ActorFrame()
 
+      print(pretty(field))
+      --error('fa')
       local name = ctx:BitmapText(FONTS.sans_serif, field.name or '')
       name:xy(inside_spacing * 0.5, 0)
       name:halign(0)
-      name:zoom(0.4)
+      name:zoom(0.5)
+      name:diffuse(field.color:unpack())
 
       local value = ctx:BitmapText(FONTS.monospace, field.value or '')
       value:halign(1)
       value:xy(-inside_spacing * 0.5, 0)
-      value:zoom(0.5)
+      value:zoom(0.7)
 
       ctx:addChild(af, value)
       ctx:addChild(af, name)
@@ -132,19 +142,28 @@ return {
       ctx:addChild(judge_counts, af)
     end
 
-    judge_counts:xy(sw * 0.85, scy*0.8)
+    judge_counts:xy(sw * 0.85, scy*0.63)
     judge_counts:halign(0.5)
+
+    local is_disqualified = GAMESTATE:IsDisqualified(1)
+    local disqualified
+    if is_disqualified then
+      disqualified = ctx:BitmapText(FONTS.sans_serif,'DISQUALIFIED FROM RANKING')
+      disqualified:xy(scx,scy*1.20)
+      disqualified:zoom(0.25)
+    end
 
 
     setDrawFunctionWithDT(self, function(dt)
       local full_score = pool:get(score)
       full_score:halign(0.5)
-      full_score:zoom(1.5)
-      full_score:xy(scx, scy * 1.3)
+      full_score:valign(0)
+      full_score:zoom(1.4)
+      full_score:xy(scx, scy * 0.96)
       full_score:Draw()
 
       local titleActor = pool:get(title)
-      titleActor:xy(scx * 0.35, scy * 0.9)
+      titleActor:xy(scx * 0.35, scy * 0.62)
       titleActor:halign(0.5)
       titleActor:valign(1)
       titleActor:maxwidth(278/0.4)
@@ -152,12 +171,16 @@ return {
       titleActor:Draw()
 
       local subtitleActor = pool:get(subtitle)
-      subtitleActor:xy(scx * 0.35, scy*0.96)
+      subtitleActor:xy(scx * 0.35, scy*0.69)
       subtitleActor:halign(0.5)
       subtitleActor:valign(1)
       subtitleActor:maxwidth(278/0.25)
       subtitleActor:zoom(0.25)
       subtitleActor:Draw()
+
+      if is_disqualified then
+        disqualified:Draw()
+      end
 
 
       judge_counts:Draw()
@@ -210,7 +233,8 @@ return {
       bg:Draw()
 
       winner:scaletofit(scx - 100, scy - 100, scx + 100, scy + 100)
-      winner:xy(scx, scy * 0.6)
+        winner:valign(0)
+      winner:xy(scx, scy * 0.06)
 
       winner:Draw()
     end)

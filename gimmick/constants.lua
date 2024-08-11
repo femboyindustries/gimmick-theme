@@ -48,4 +48,9 @@ end
 MASCOT_FOLDER = 'Mascots/'
 MASCOT_SUBFOLDERS = {backgrounds = 'backgrounds/', characters = 'characters/'}
 
-
+FANTASTIC = TNS_MARVELOUS
+EXCELLENT = TNS_PERFECT
+GREAT = TNS_GREAT
+DECENT = TNS_GOOD
+WAYOFF = TNS_BOO
+MISS = TNS_MISS
