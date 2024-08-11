@@ -22,3 +22,5 @@ if not LITE then
   -- MESSAGEMAN does not exist in the pre-loading stage
   MESSAGEMAN:Broadcast('GimmickLoad')
 end
+
+introduceEntropyIntoUniverse()

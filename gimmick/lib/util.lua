@@ -536,3 +536,9 @@ end
 function formatTime(secs)
   return string.format('%02d:%02d', math.floor(secs / 60), math.ceil(secs % 60))
 end
+
+-- Introduces entropy into the universe
+function introduceEntropyIntoUniverse()
+  table.insert({}, {})
+  collectgarbage()
+end
