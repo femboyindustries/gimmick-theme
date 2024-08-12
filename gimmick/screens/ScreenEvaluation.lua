@@ -111,6 +111,7 @@ return {
 
     local title = song:GetDisplayMainTitle()
     local subtitle = song:GetDisplaySubTitle()
+    local description = steps:GetDescription()
 
 
     local inside_spacing = 10 --space between value
@@ -157,9 +158,9 @@ return {
     ---@diagnostic disable-next-line: param-type-mismatch
     diff.color = scope.tick:easable(DIFFICULTIES[GAMESTATE:PlayerDifficulty(0)].color)
     diff.meter:reset(0)
-    local diff_int = tostring(steps:GetMeter())
+    local diff_int = steps:GetMeter()
     diff.meter:set(diff_int)
-    diff.rating:settext(diff_int)
+    diff.rating:settext(tostring(diff_int))
 
 
     setDrawFunctionWithDT(self, function(dt)
@@ -186,11 +187,17 @@ return {
       subtitleActor:zoom(0.25)
       subtitleActor:Draw()
 
+      local descriptionActor = pool:get(description)
+      descriptionActor:xy(scx*0.24,scy*0.9)
+      descriptionActor:zoom(0.5)
+      descriptionActor:diffuse(1,1,1,1)
+      descriptionActor:Draw()
+
       if is_disqualified then
         disqualified:Draw()
       end
-
-      diff:draw(scx*0.15,scy)
+      
+      diff:draw(scx*0.125,scy*0.9)
 
       judge_counts:Draw()
       full_score:zoom(0.5)
@@ -223,6 +230,7 @@ return {
     local winner = ctx:Sprite('Graphics/winner.png')
     local bg = ctx:Sprite('Mascots/backgrounds/jimble.jpg')
     bg:stretchto(0, 0, sw, sh)
+    bg:diffusealpha(0.6)
 
     self:SetDrawFunction(function()
       bg:Draw()
