@@ -1,5 +1,6 @@
 local TextPool = require 'gimmick.textpool'
 local easable = require 'gimmick.lib.easable'
+local wheel = require 'gimmick.lib.meterWheel'
 local AWESOME = false
 
 local judgements = {
@@ -57,7 +58,7 @@ return {
     end
   },
 
-  overlay = gimmick.ActorScreen(function(self, ctx)
+  overlay = gimmick.ActorScreen(function(self, ctx, scope)
 
     local pool = TextPool.new(ctx, FONTS.sans_serif, nil, function(actor)
       actor:zoom(0.5)
@@ -68,6 +69,7 @@ return {
     local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(pn)
     local chart = stats:GetPossibleSteps()[1]:GetNoteData()
     local song = GAMESTATE:GetCurrentSong()
+    local steps = GAMESTATE:GetCurrentSteps(1)
 
     --handle hold and mine counts
     local holdsN = 0
@@ -89,7 +91,7 @@ return {
     end
 
     --table.insert(fields, {})
-    table.insert({}, {}) --i felt bad commenting out the line above, please take this as a substitute
+    introduceEntropyIntoUniverse()
 
     table.insert(fields, {
       name = 'Holds',
@@ -120,8 +122,6 @@ return {
     for i, field in ipairs(fields) do
       local af = ctx:ActorFrame()
 
-      print(pretty(field))
-      --error('fa')
       local name = ctx:BitmapText(FONTS.sans_serif, field.name or '')
       name:xy(inside_spacing * 0.5, 0)
       name:halign(0)
@@ -145,13 +145,21 @@ return {
     judge_counts:xy(sw * 0.85, scy*0.63)
     judge_counts:halign(0.5)
 
-    local is_disqualified = GAMESTATE:IsDisqualified(1)
+    local is_disqualified = GAMESTATE:IsDisqualified(0)
     local disqualified
     if is_disqualified then
       disqualified = ctx:BitmapText(FONTS.sans_serif,'DISQUALIFIED FROM RANKING')
       disqualified:xy(scx,scy*1.20)
       disqualified:zoom(0.25)
     end
+
+    local diff = wheel.new(ctx,scope)
+    ---@diagnostic disable-next-line: param-type-mismatch
+    diff.color = scope.tick:easable(DIFFICULTIES[GAMESTATE:PlayerDifficulty(0)].color)
+    diff.meter:reset(0)
+    local diff_int = tostring(steps:GetMeter())
+    diff.meter:set(diff_int)
+    diff.rating:settext(diff_int)
 
 
     setDrawFunctionWithDT(self, function(dt)
@@ -182,22 +190,9 @@ return {
         disqualified:Draw()
       end
 
+      diff:draw(scx*0.15,scy)
 
       judge_counts:Draw()
-      --[[
-        fields table
-        {
-          { value = "286", name = "Fantastic" },
-          { value = "89", name = "Excellent" },
-          { value = "45", name = "Great" },
-          { value = "2", name = "Decent" },
-          { value = "8", name = "Way Off" },
-          { value = "5", name = "Miss" },
-          { value = 14, total = 14, name = "Holds" },
-          { value = 0, total = 3, name = "Mines" }
-        }
-
-      ]]
       full_score:zoom(0.5)
       --error("fart")
 
