@@ -93,8 +93,11 @@ player.comboTweens = {
 function player.init(self, n)
   if not n then
     local name = self:GetName()
-    n = tonumber(string.sub(name, #name))
-    assert(n, 'Cannot find player number')
+    n = tonumber(string.sub(name, string.len(name)))
+    if not n then
+      warn('Cannot find player number of ' .. tostring(self) .. ' (' .. name .. ')')
+      return
+    end
   end
 
   print('! Found P' .. n .. ' (' .. tostring(self) .. ')')
@@ -123,7 +126,7 @@ function player.judgment(self)
 
   self:removecommand('On')
   -- OnCommand is called again after this on SetAwake, so once for P1 and P2 by
-  -- default
+  -- default, unless you're in the editor
   -- OffCommand is only called on song finish, not on backing out, so the screen
   -- must handle deinit if needed
 end
