@@ -1,5 +1,6 @@
 return {
-  Init = function(self) end,
+  Init = function(self)
+  end,
   overlay = gimmick.ActorScreen(function(self, ctx)
     local incorrect = ctx:Sprite('Graphics/incorrect.png')
     local snd = ctx:ActorSound('Sounds/incorrect.ogg')

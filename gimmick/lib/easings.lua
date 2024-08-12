@@ -22,32 +22,32 @@ flip = setmetatable({}, {
 -- the new ease starts by acting like the first argument, and then ends like the second argument
 -- Example: blendease(inQuad, outQuad)
 function blendEase(fn1, fn2)
-    -- This function checks the conditions and blends fn1 and fn2 without caching
-    local transient1 = fn1(1) <= 0.5
-    local transient2 = fn2(1) <= 0.5
-    if transient1 and not transient2 then
-        error("blendEase: the first argument is a transient ease, but the second argument doesn't match")
-    end
-    if transient2 and not transient1 then
-        error("blendEase: the second argument is a transient ease, but the first argument doesn't match")
-    end
-    -- Return the blended easing function directly
-    return function(x)
-        local mixFactor = 3 * x ^ 2 - 2 * x ^ 3
-        return (1 - mixFactor) * fn1(x) + mixFactor * fn2(x)
-    end
+  -- This function checks the conditions and blends fn1 and fn2 without caching
+  local transient1 = fn1(1) <= 0.5
+  local transient2 = fn2(1) <= 0.5
+  if transient1 and not transient2 then
+    error("blendEase: the first argument is a transient ease, but the second argument doesn't match")
+  end
+  if transient2 and not transient1 then
+    error("blendEase: the second argument is a transient ease, but the first argument doesn't match")
+  end
+  -- Return the blended easing function directly
+  return function(x)
+    local mixFactor = 3 * x ^ 2 - 2 * x ^ 3
+    return (1 - mixFactor) * fn1(x) + mixFactor * fn2(x)
+  end
 end
 
 function with1param(fn, defaultparam1)
-    return function(t)
-        return fn(t, defaultparam1)
-    end
+  return function(t)
+    return fn(t, defaultparam1)
+  end
 end
 
 function with2params(fn, defaultparam1, defaultparam2)
-    return function(t)
-        return fn(t, defaultparam1, defaultparam2)
-    end
+  return function(t)
+    return fn(t, defaultparam1, defaultparam2)
+  end
 end
 
 --[[ FUFK YO

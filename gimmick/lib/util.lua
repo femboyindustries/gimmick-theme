@@ -335,7 +335,7 @@ function pretty(o, depth, seen)
 
       if type == 'BitmapText' then
         str = str .. ': ' .. pretty(o:GetText(), depth + 1, seen)
-      elseif type == 'ActorFrame' then
+      elseif type == 'ActorFrame' or o.GetChildren then
         local children = o:GetChildren()
         str = str .. ': ' .. pretty(children, depth, seen)
       end
