@@ -1,19 +1,18 @@
 return {
   Init = function(self)
   end,
-  overlay = gimmick.ActorScreen(function(self, ctx)
+  overlay = gimmick.ActorScreen(function(self, ctx, scope)
     local incorrect = ctx:Sprite('Graphics/incorrect.png')
     local snd = ctx:ActorSound('Sounds/incorrect.ogg')
     local shouldPause = false
     local once = true
     local pausedAt = 0
 
-    local modEnabled = false --TODO: make this a torturemod on ScreenPlayerOptions
+    local modEnabled = false --TODO: make this a torturemod on ScreenPlayerOptions\
 
     incorrect:stretchto(0, 0, sw, sh)
     incorrect:hidden(1)
     incorrect:blend('add')
-
 
     incorrect:addcommand('Fk_P1_W6Message', function(self)
       shouldPause = true
@@ -21,6 +20,13 @@ return {
     snd:addcommand('Fk_P1_W6Message', function(self)
       if modEnabled then
         self:get():Play()
+      end
+    end)
+
+    scope.event:on('press', function(pn, key)
+      if key == 'Start' and not gimmick.s.OverlayScreen.modules.pause.isPaused() then
+        gimmick.s.OverlayScreen.modules.pause.pause()
+        return true
       end
     end)
 
