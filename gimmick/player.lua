@@ -116,19 +116,27 @@ function player.judgment(self)
   print('! Found judgment (' .. tostring(self) .. ')')
   player.init(self:GetParent() --[[@as Player]])
 
+  self:removecommand('On')
+  -- OnCommand is called again after this on SetAwake, so once for P1 and P2 by
+  -- default, unless you're in the editor
+  self:addcommand('On', player.judgmentReady)
+  -- OffCommand is only called on song finish, not on backing out, so the screen
+  -- must handle deinit if needed
+end
+
+---@param self ActorFrame
+function player.judgmentReady(self)
   local sprite = self:GetChildAt(0) --[[@as Sprite]]
   if not sprite then return end
+
+  -- Loading the sprite must be done in here rather than player.judgment because
+  -- else it gets overridden
   sprite:Load(
     -- todo: make this configurable
     THEME:GetPath(EC_GRAPHICS, '' , '_Judgments/Bold')
   )
-  sprite:diffusealpha(0.5)
 
-  self:removecommand('On')
-  -- OnCommand is called again after this on SetAwake, so once for P1 and P2 by
-  -- default, unless you're in the editor
-  -- OffCommand is only called on song finish, not on backing out, so the screen
-  -- must handle deinit if needed
+  --sprite:diffusealpha(0.5)
 end
 
 ---@param self ActorFrame
