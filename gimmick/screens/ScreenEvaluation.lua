@@ -162,6 +162,11 @@ return {
     diff.meter:set(diff_int)
     diff.rating:settext(tostring(diff_int))
 
+    local a1984
+    if diff_int == 1984 then
+      a1984 = ctx:Sprite('Graphics/1984.jpg')
+    end
+
 
     setDrawFunctionWithDT(self, function(dt)
       local full_score = pool:get(score)
@@ -203,6 +208,10 @@ return {
       full_score:zoom(0.5)
       --error("fart")
 
+      if diff_int == 1984 then
+        a1984:stretchto(0,0,sw,sh)
+        a1984:Draw()
+      end
     end)
   end),
   underlay = gimmick.ActorScreen(function(self, ctx)
