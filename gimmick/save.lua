@@ -12,6 +12,10 @@ M.data = {
     show_imap = false,
     show_bootup = false,
     bootup_duration = "7",
+
+    judgment_tween = 1,
+    hold_judgment_tween = 1,
+    combo_tween = 1,
   },
 }
 

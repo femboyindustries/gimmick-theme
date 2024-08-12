@@ -7,6 +7,7 @@
 local consoleModule = require 'gimmick.screens.OverlayScreen.console'
 local saveModule = require 'gimmick.screens.OverlayScreen.save'
 local imapModule = require 'gimmick.screens.OverlayScreen.imap'
+local pauseModule = require 'gimmick.screens.OverlayScreen.pause'
 local tick       = require 'gimmick.lib.tick'
 local Scope      = require 'gimmick.scope'
 
@@ -20,6 +21,7 @@ local function init(self, ctx, scope)
   local drawConsole = consoleModule.init(self, ctx, scope)
   local drawSave = saveModule.init(self, ctx)
   local drawImap = imapModule.init(self, ctx)
+  local drawPause = pauseModule.init(self, ctx, scope)
 
   local lastdw, lastdh = dw, dh
 
@@ -55,6 +57,7 @@ local function init(self, ctx, scope)
   setDrawFunctionWithDT(self, function(dt)
     tick:update(dt)
 
+    drawPause(dt)
     drawConsole(dt)
     drawSave(dt)
     drawImap(dt)
@@ -62,6 +65,9 @@ local function init(self, ctx, scope)
 end
 
 return {
+  modules = {
+    pause = pauseModule
+  },
   overlay = {
     init = function(self)
       self:removecommand('Init')
