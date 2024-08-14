@@ -151,9 +151,84 @@ end)
 ### Scopes
 
 Alongside contexts, you'll be passed along a `Scope` during initialization. A
-scope is a generalization of everything specific to a screen. Currently there
-is only a `tick` instance, but in the future events will be handled in there
-aswell.
+scope is a generalization of everything specific to a screen. Inside it is:
+- A `tick` instance, letting you use Mirin-like scheduling within the screen
+  - `tick:func`, `tick:perframe` etc will behave similarly to their Mirin
+  equivalents
+  - `tick:aux()` will create the equivalent of a `definemod`
+  - `tick:easable()` will create an `easable` instance that is updated and
+  cleant up automatically
+- An `event` instance, letting you register event handlers
+  - Any events called globally will be passed along; see:
+  [Global events](#global-events)
+  - Any events _called_ will only propogate within the screen
+  - Additionally, you have access to `on` and `off` events, called when the
+  screen's OnCommand and OffCommand are triggered
+
+### Global events
+
+Global events can be listened to and created with the `event` global listener,
+or listened to with any `event` instances in a [scope](#scopes) (preferable to
+use when possible).
+
+#### `keypress(device: InputDevice, key: string)`
+
+A raw keypress. `device` corresponds to an `InputDevice`. For instance to detect
+keyboard presses, do:
+
+```lua
+event:on('keypress', function(device, key)
+  if device == InputDevice.Key then
+    -- ...
+  end
+end)
+```
+
+For keyboards, reference [RageKeySymToString](https://github.com/openitg/openitg/blob/master/src/RageInputDevice.cpp#L10)
+for possible values of `key`. You can likely find the other possible values of
+`key` for other device types within the same file.
+
+#### `keyrelease(device: InputDevice, key: string)`
+
+Same as `keypress`, except triggered when the key is no longer held.
+
+#### `press(pn: number, button: string)`
+
+A processed button press, corresponding to the actions you can bind in the game.
+See [m_szButtonNames](https://github.com/openitg/openitg/blob/master/src/GameManager.cpp#L110)
+for possible values.
+
+#### `release(pn: number, button: string)`
+
+Same as `release`, except triggered when the key is no longer held.
+
+#### `resize(dw: number, dh: number)`
+
+Triggered whenever the window resizes. Uses the **display resolution** instead
+of the usual screen resolution. Common usecase is to recreate AFTs with fresh
+sizes.
+
+#### `warn(msg: string)`
+
+A warning; not necessarily a user-facing one. Calls to the `warn` global will
+send this event. Currently only displayed in the console, but could potentially
+be shown to the user later on.
+
+### Notable functions
+
+- `print(...)` works the same way as in regular Lua, except that every value is
+passed through `pretty`. It also calls `Debug` with the results, which means
+it'll show up in stdout without `ShowLogOutput=1`; useful for decluttering the
+NotITG logs during debugging.
+- `warn(msg: string)` displays a message in the console.
+- `pretty(a: any)` is our in-house Lua pretty-printer. Also handles actors.
+- `actorToString(a: Actor)` tries to give a fairly accurate XML representation
+of an actor tree.
+- `introduceEntropyIntoUniverse()` introduces entropy into the universe. Feel
+free to call this at any point if you wish for that to happen.
+
+Make sure to look through [util.lua](gimmick/lib/util.lua) for the rest; there's
+plenty of handy things to be found there.
 
 ### File structure
 
@@ -182,10 +257,3 @@ relate to repository structure) are currently considered to be moved to a better
 spot later on.
 
 Be sure to try and deduplicate files whenever possible with `.redir`s.
-
-### Mayflower wrote these and I want to turn them into proper docs later
-
-POSSIBLE BUTTONS event.on CAN SEND:
-https://github.com/openitg/openitg/blob/master/src/GameManager.cpp#L110
-
-clippy says my balls itch 1/1000 chance
