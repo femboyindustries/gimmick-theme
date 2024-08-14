@@ -42,6 +42,94 @@ local judgements = {
   },
 }
 
+---@type {string: string, file: string}
+local grades = {
+  [GRADE_TIER01] = {
+    string = 'Quad i think',
+    file = 'star'
+  },
+  [GRADE_TIER02] = {
+    string = '3 stars',
+    file = 'star'
+  },
+  [GRADE_TIER03] = {
+    string = '2 stars',
+    file = 'star'
+  },
+  [GRADE_TIER04] = {
+    string = '1 star',
+    file = 'star'
+  },
+  [GRADE_TIER05] = {
+    string = 'S+',
+    file = 's-plus'
+  },
+  [GRADE_TIER06] = {
+    string = 'S',
+    file = 's'
+  },
+  [GRADE_TIER07] = {
+    string = 'S-',
+    file = 's-minus'
+  },
+  [GRADE_TIER08] = {
+    string = 'A+',
+    file = 'a-plus'
+  },
+  [GRADE_TIER09] = {
+    string = 'A',
+    file = 'a'
+  },
+  [GRADE_TIER10] = {
+    string = 'A-',
+    file = 'a-minus'
+  },
+  [GRADE_TIER11] = {
+    string = 'B+',
+    file = 'b+plus'
+  },
+  [GRADE_TIER12] = {
+    string = 'B',
+    file = 'b'
+  },
+  [GRADE_TIER13] = {
+    string = 'B-',
+    file = 'b-minus'
+  },
+  [GRADE_TIER14] = {
+    string = 'C+',
+    file = 'c-plus'
+  },
+  [GRADE_TIER15] = {
+    string = 'C',
+    file = 'c'
+  },
+  [GRADE_TIER16] = {
+    string = 'C-',
+    file = 'c-minus'
+  },
+  [GRADE_TIER17] = {
+    string = 'D+',
+    file = 'd-plus'
+  },
+  [GRADE_TIER18] = {
+    string = 'D',
+    file = 'd'
+  },
+  [GRADE_TIER19] = {
+    string = 'D-',
+    file = 'd-minus'
+  },
+  [GRADE_TIER20] = {
+    string = 'how did you manage this, E',
+    file = 'star'
+  },
+  [GRADE_FAILED] = {
+    string = 'F',
+    file = 'f'
+  },
+}
+
 
 return {
   Init = function(self) Trace('theme.com') end,
@@ -168,6 +256,14 @@ return {
     end
 
 
+    --Grades
+    local grade_int = GetGradeFromPercent(stats:GetPercentDancePoints())
+    print(pretty(grades[grade_int]))
+
+    --error('/Graphics/Grades/'..grades[grade_int].file..'.png')
+    local gradeActor = ctx:Sprite('Graphics/Grades/'..grades[grade_int].file..'.png')
+
+
     setDrawFunctionWithDT(self, function(dt)
       local full_score = pool:get(score)
       full_score:halign(0.5)
@@ -212,6 +308,13 @@ return {
         a1984:stretchto(0,0,sw,sh)
         a1984:Draw()
       end
+
+      gradeActor:scaletofit(0,0,scx*0.5,scy*0.5)
+      gradeActor:xy(scx,scy * 0.9)
+      gradeActor:valign(1)
+      --gradeActor:xy(scx, scy * 0.06)
+      gradeActor:Draw()
+
     end)
   end),
   underlay = gimmick.ActorScreen(function(self, ctx)
@@ -242,13 +345,16 @@ return {
     bg:diffusealpha(0.6)
 
     self:SetDrawFunction(function()
+      
       bg:Draw()
 
+      --[[
       winner:scaletofit(scx - 100, scy - 100, scx + 100, scy + 100)
         winner:valign(0)
       winner:xy(scx, scy * 0.06)
 
       winner:Draw()
+      ]]
     end)
   end),
   header = gimmick.ActorScreen(function(self, ctx)
