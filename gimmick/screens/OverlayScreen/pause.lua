@@ -9,11 +9,13 @@ local pauseButtons = {
     -- todo: disqualify player
   end },
   { 'Restart', function()
-    -- todo trigger offcommand, clean up mods, noteskins
+    SCREENMAN:GetTopScreen():playcommand('Off')
+    GAMESTATE:ApplyGameCommand('mod, clearall, 3x, Overhead, scalable')
     SCREENMAN:SetNewScreen('ScreenGameplay')
   end },
   { 'Exit', function()
-    -- todo same here
+    SCREENMAN:GetTopScreen():playcommand('Off')
+    GAMESTATE:ApplyGameCommand('mod, clearall, 3x, Overhead, scalable')
     SCREENMAN:SetNewScreen('ScreenSelectMusic')
   end },
 }
