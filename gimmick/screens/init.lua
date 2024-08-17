@@ -62,13 +62,20 @@ end
 
 ---@param initFunc fun(self: ActorFrame, ctx: Context, scope: Scope): nil
 function gimmick.ActorScreen(initFunc)
+
+  local dbg = debug.getinfo(2, 'Sl')
+  if dbg.short_src == '(tail call)' then dbg = debug.getinfo(3, 'Sl') end
+  local src = dbg.source .. ':' .. dbg.currentline
+  src = string.gsub(src, '^@%./themes/gimmick/', '') -- to make it clickable in vscode
+  src = string.gsub(src, '^gimmick/', '') -- for conciseness
+
   return {
     ---@param self ActorFrame
     init = function(self)
       self:removecommand('Init')
 
       local ctx = actorgen.Context.new()
-      local scope = Scope.new()
+      local scope = Scope.new(src)
 
       local lastT
       self:addcommand('Update', function()

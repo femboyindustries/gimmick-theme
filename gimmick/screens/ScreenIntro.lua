@@ -104,6 +104,7 @@ return {
       end
 
       self:addcommand('penis', function()
+        SCREENMAN:GetTopScreen():playcommand('Off')
         SCREENMAN:SetNewScreen('ScreenTitleMenu')
       end)
 
@@ -150,6 +151,7 @@ return {
       q:diffuse(0, 0, 0, 1)
 
       self:addcommand('penis', function()
+        SCREENMAN:GetTopScreen():playcommand('Off')
         SCREENMAN:SetNewScreen('ScreenTitleMenu')
       end)
       self:sleep(0.00000001)

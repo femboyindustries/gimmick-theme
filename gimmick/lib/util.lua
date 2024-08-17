@@ -111,11 +111,11 @@ function replace(s, oldValue, newValue)
 end
 
 function startsWith(str, sub)
-  return str:sub(1, #sub) == sub
+  return string.sub(str, 1, string.len(sub)) == sub
 end
 
 function endsWith(str, sub)
-  return str:sub(- #sub) == sub
+  return string.sub(str, -string.len(sub)) == sub
 end
 
 local whitespaces = { ' ', '\n', '\r' }
