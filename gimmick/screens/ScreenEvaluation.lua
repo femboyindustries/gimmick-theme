@@ -1,6 +1,8 @@
 local TextPool = require 'gimmick.textpool'
 local easable = require 'gimmick.lib.easable'
 local wheel = require 'gimmick.lib.meterWheel'
+local mascots = require 'gimmick.mascots'
+local save = require 'gimmick.save'
 local AWESOME = false
 
 local judgements = {
@@ -263,13 +265,19 @@ return {
     --error('/Graphics/Grades/'..grades[grade_int].file..'.png')
     local gradeActor = ctx:Sprite('Graphics/Grades/'..grades[grade_int].file..'.png')
 
+    local mascot
+    if save.data.settings.mascot_enabled then
+      --placeholder mascot grade
+      mascot = ctx:Sprite('Mascots/grades/default.png')
+    end
+
 
     setDrawFunctionWithDT(self, function(dt)
       local full_score = pool:get(score)
       full_score:halign(0.5)
       full_score:valign(0)
       full_score:zoom(1.4)
-      full_score:xy(scx, scy * 0.96)
+      full_score:xy(scx, scy * 0.6)
       full_score:Draw()
 
       local titleActor = pool:get(title)
@@ -310,10 +318,19 @@ return {
       end
 
       gradeActor:scaletofit(0,0,scx*0.5,scy*0.5)
-      gradeActor:xy(scx,scy * 0.9)
-      gradeActor:valign(1)
+      gradeActor:xy(scx,scy * 0.3)
+      gradeActor:valign(0.5)
       --gradeActor:xy(scx, scy * 0.06)
       gradeActor:Draw()
+
+      if save.data.settings.mascot_enabled then
+        --local paths = mascots.getPaths(save.data.settings.mascot)
+        mascot:scaletofit(0,0,sw*0.4,sh*0.4)
+        mascot:valign(0)
+        mascot:xy(scx,scy*0.9)
+        mascot:Draw()
+
+      end
 
     end)
   end),
