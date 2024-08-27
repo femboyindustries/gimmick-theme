@@ -132,24 +132,27 @@ local grades = {
   },
 }
 
+local bn_width = 278
+local bn_height = 109
+local bn_x = scx * 0.35
+local bn_y = scy * 0.3
 
 return {
   Init = function(self) Trace('theme.com') end,
 
 
   --Position the Banner LargeBannerOnCommand from metrics.ini gives us
-  Banner = {    
-    Width = 278,
-    Height = 109,
+  Banner = {
+    Width = bn_width,
+    Height = bn_height,
     ---@param bn Sprite
     On = function(bn)
       bn:ztest(0)
-      bn:xy(scx*0.35,scy*0.3)
+      bn:xy(bn_x, bn_y)
     end
   },
 
   overlay = gimmick.ActorScreen(function(self, ctx, scope)
-
     local pool = TextPool.new(ctx, FONTS.sans_serif, nil, function(actor)
       actor:zoom(0.5)
       actor:align(0, 0.5)
@@ -204,7 +207,7 @@ return {
     local description = steps:GetDescription()
 
 
-    local inside_spacing = 10 --space between value
+    local inside_spacing = 10      --space between value
     local item_spacing = sh * 0.07 --space between items
 
     --the ActorFrame that holds the judgements table
@@ -233,18 +236,20 @@ return {
       ctx:addChild(judge_counts, af)
     end
 
-    judge_counts:xy(sw * 0.85, scy*0.63)
+    judge_counts:xy(sw * 0.85, scy * 0.63)
     judge_counts:halign(0.5)
+
+    local musicrate = GAMESTATE:GetMusicRate()
 
     local is_disqualified = GAMESTATE:IsDisqualified(0)
     local disqualified
     if is_disqualified then
-      disqualified = ctx:BitmapText(FONTS.sans_serif,'DISQUALIFIED FROM RANKING')
-      disqualified:xy(scx,scy*1.20)
+      disqualified = ctx:BitmapText(FONTS.sans_serif, 'DISQUALIFIED FROM RANKING')
+      disqualified:xy(scx, scy * 1.20)
       disqualified:zoom(0.25)
     end
 
-    local diff = wheel.new(ctx,scope)
+    local diff = wheel.new(ctx, scope)
     ---@diagnostic disable-next-line: param-type-mismatch
     diff.color = scope.tick:easable(DIFFICULTIES[GAMESTATE:PlayerDifficulty(0)].color)
     diff.meter:reset(0)
@@ -263,7 +268,8 @@ return {
     print(pretty(grades[grade_int]))
 
     --error('/Graphics/Grades/'..grades[grade_int].file..'.png')
-    local gradeActor = ctx:Sprite('Graphics/Grades/'..grades[grade_int].file..'.png')
+    --TODO: Quads
+    local gradeActor = ctx:Sprite('Graphics/Grades/' .. grades[grade_int].file .. '.png')
 
     local mascot
     if save.data.settings.mascot_enabled then
@@ -271,6 +277,8 @@ return {
       mascot = ctx:Sprite('Mascots/grades/default.png')
     end
 
+
+    local rateOverlay = ctx:Quad()
 
     setDrawFunctionWithDT(self, function(dt)
       local full_score = pool:get(score)
@@ -284,54 +292,73 @@ return {
       titleActor:xy(scx * 0.35, scy * 0.62)
       titleActor:halign(0.5)
       titleActor:valign(1)
-      titleActor:maxwidth(278/0.4)
+      titleActor:maxwidth(278 / 0.4)
       titleActor:zoom(0.4)
       titleActor:Draw()
 
       local subtitleActor = pool:get(subtitle)
-      subtitleActor:xy(scx * 0.35, scy*0.69)
+      subtitleActor:xy(scx * 0.35, scy * 0.69)
       subtitleActor:halign(0.5)
       subtitleActor:valign(1)
-      subtitleActor:maxwidth(278/0.25)
+      subtitleActor:maxwidth(278 / 0.25)
       subtitleActor:zoom(0.25)
       subtitleActor:Draw()
 
       local descriptionActor = pool:get(description)
-      descriptionActor:xy(scx*0.24,scy*0.9)
+      descriptionActor:xy(scx * 0.24, scy * 0.9)
       descriptionActor:zoom(0.5)
-      descriptionActor:diffuse(1,1,1,1)
+      descriptionActor:diffuse(1, 1, 1, 1)
       descriptionActor:Draw()
+
+      if musicrate ~= 1 then
+        rateOverlay:halign(0.5)
+        rateOverlay:valign(0.5)
+        rateOverlay:xy(bn_x, bn_y)
+        rateOverlay:SetWidth(bn_width)
+        rateOverlay:SetHeight(bn_height)
+        rateOverlay:diffuse(0, 0, 0, 0.7)
+        rateOverlay:Draw()
+
+        local rateActor = pool:get(tostring(musicrate) .. "x")
+        rateActor:halign(0.5)
+        rateActor:valign(0.5)
+        rateActor:zoom(1.4)
+        rateActor:xy(bn_x, bn_y)
+        rateActor:diffuse(1, 1, 1, 1)
+        rateActor:rotationz(-10)
+        rateActor:Draw()
+      end
+
+
 
       if is_disqualified then
         disqualified:Draw()
       end
-      
-      diff:draw(scx*0.125,scy*0.9)
+
+      diff:draw(scx * 0.125, scy * 0.9)
 
       judge_counts:Draw()
       full_score:zoom(0.5)
       --error("fart")
 
       if diff_int == 1984 then
-        a1984:stretchto(0,0,sw,sh)
+        a1984:stretchto(0, 0, sw, sh)
         a1984:Draw()
       end
 
-      gradeActor:scaletofit(0,0,scx*0.5,scy*0.5)
-      gradeActor:xy(scx,scy * 0.3)
+      gradeActor:scaletofit(0, 0, scx * 0.5, scy * 0.5)
+      gradeActor:xy(scx, scy * 0.3)
       gradeActor:valign(0.5)
       --gradeActor:xy(scx, scy * 0.06)
       gradeActor:Draw()
 
       if save.data.settings.mascot_enabled then
         --local paths = mascots.getPaths(save.data.settings.mascot)
-        mascot:scaletofit(0,0,sw*0.4,sh*0.4)
+        mascot:scaletofit(0, 0, sw * 0.4, sh * 0.4)
         mascot:valign(0)
-        mascot:xy(scx,scy*0.9)
+        mascot:xy(scx, scy * 0.9)
         mascot:Draw()
-
       end
-
     end)
   end),
   underlay = gimmick.ActorScreen(function(self, ctx)
@@ -362,7 +389,6 @@ return {
     bg:diffusealpha(0.6)
 
     self:SetDrawFunction(function()
-      
       bg:Draw()
 
       --[[
