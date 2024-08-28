@@ -48,15 +48,15 @@ local judgements = {
 local grades = {
   [GRADE_TIER01] = {
     string = 'Quad i think',
-    file = 'star'
+    file = 'star-quad'
   },
   [GRADE_TIER02] = {
     string = '3 stars',
-    file = 'star'
+    file = 'star-triple'
   },
   [GRADE_TIER03] = {
     string = '2 stars',
-    file = 'star'
+    file = 'star-double'
   },
   [GRADE_TIER04] = {
     string = '1 star',
