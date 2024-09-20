@@ -99,6 +99,18 @@ event:on('warn', function(msg)
   table.insert(history, {HistoryType.Error, 'gimmick: ' .. msg})
 end)
 
+---@param device InputDevice
+local function isCtrlDown(device)
+  return
+    (inputs.rawInputs[device]['left ctrl'] or inputs.rawInputs[device]['right ctrl'])
+    and not (inputs.rawInputs[device]['left alt'] or inputs.rawInputs[device]['right alt'])
+    and not (inputs.rawInputs[device]['left shift'] or inputs.rawInputs[device]['right shift'])
+end
+---@param device InputDevice
+local function isShiftDown(device)
+  return inputs.rawInputs[device]['left shift'] or inputs.rawInputs[device]['right shift']
+end
+
 ---@param ctx Context
 ---@param scope Scope
 function M.init(self, ctx, scope)
@@ -155,7 +167,7 @@ function M.init(self, ctx, scope)
 
     blink = os.clock()
 
-    if key == '9' and (inputs.rawInputs[device]['left ctrl'] or inputs.rawInputs[device]['right ctrl']) and not (inputs.rawInputs[device]['left alt'] or inputs.rawInputs[device]['right alt']) then
+    if key == '9' and isCtrlDown(device) then
       consoleOpen = not consoleOpen
       SCREENMAN:SetInputMode(consoleOpen and 1 or 0)
       consoleOpenAux:ease(0, 0.3, consoleOpen and outQuad or inQuad, consoleOpen and 1 or 0)
@@ -163,7 +175,7 @@ function M.init(self, ctx, scope)
     end
 
     if consoleOpen then
-      if key == 'enter' and not (inputs.rawInputs[device]['left shift'] or inputs.rawInputs[device]['right shift']) then
+      if key == 'enter' and not isShiftDown(device) then
         table.insert(typedHistory, t.text)
         historyIdx = 0
         table.insert(history, {HistoryType.Input, t:toString()})
@@ -191,7 +203,7 @@ function M.init(self, ctx, scope)
         scroll = scroll + ((key == 'pgup' and 1 or -1)) * 70
         scroll = math.max(scroll, 0)
       end
-      if (inputs.rawInputs[device]['left ctrl'] or inputs.rawInputs[device]['right ctrl']) and (key == '-' or key == '=') then
+      if isCtrlDown(device) and (key == '-' or key == '=') then
         local mult = key == '=' and (1 / 0.85) or 0.85
         zoom = zoom * mult
         return
