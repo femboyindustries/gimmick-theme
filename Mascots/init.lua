@@ -16,10 +16,10 @@ return {
     character = 'she',
     description = 'she'
   },
-  tate = {
-    background = 'tate',
-    character = 'tate',
-    description = 'Why is he here',
+  jonkler = {
+    background = 'jonkler',
+    character = 'jonkler',
+    description = 'Why so serialized?',
   },
   jolly = {
     background = 'white',
@@ -32,7 +32,7 @@ return {
     description = 'rya'
   },
   osaka = {
-    background = 'tate',
+    background = 'jonkler',
     character = 'xjag5b1r4orc1',
     description = 'sata andagii'
   },
