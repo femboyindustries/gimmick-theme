@@ -153,6 +153,21 @@ return {
   },
 
   overlay = gimmick.ActorScreen(function(self, ctx, scope)
+    local opacity = scope.tick:aux(0)
+    scope.event:on('on',function()
+      --self:zoomy(0.5)
+
+      opacity:ease(0,0.1,linear,1)
+      
+    end)
+
+    scope.event:on('off',function()
+      --self:zoomy(0.5)
+
+      opacity:ease(0,5,linear,0)
+      
+    end)
+
     local pool = TextPool.new(ctx, FONTS.sans_serif, nil, function(actor)
       actor:zoom(0.5)
       actor:align(0, 0.5)
@@ -281,6 +296,9 @@ return {
     local rateOverlay = ctx:Quad()
 
     setDrawFunctionWithDT(self, function(dt)
+      self:diffusealpha(opacity.value)
+
+
       local full_score = pool:get(score)
       full_score:halign(0.5)
       full_score:valign(0)
