@@ -35,6 +35,8 @@ return {
     text:zoom(0.35)
     local fold = ctx:Quad()
 
+    local lockIcon = ctx:Sprite('Graphics/lock.png')
+
     local quad = ctx:Quad()
 
     ---@type table<number, easable>
@@ -58,7 +60,8 @@ return {
 
     ---@type Song
     local song = nil
-    ---@type {[1]: number, [2]: Steps}[]
+    ---@alias StepSet {[1]: number, [2]: Steps, locked: boolean}
+    ---@type StepSet[]
     local steps = {}
     local difficulty = nil
 
@@ -77,7 +80,11 @@ return {
         difficulty = nil
         if song then
           for i, step in ipairs(song:GetAllSteps()) do
-            steps[i] = { step:GetDifficulty() + diffOffset, step }
+            local locked = false
+            if UNLOCKMAN.StepsIsLocked and UNLOCKMAN:StepsIsLocked(song, step) then
+              locked = true
+            end
+            table.insert(steps, { step:GetDifficulty() + diffOffset, step, locked = locked })
             if step:GetDifficulty() == DIFFICULTY_EDIT then
               -- there's no better way to keep track of multiple edits than this
               diffOffset = diffOffset + 1
@@ -111,7 +118,7 @@ return {
         v:set(0)
       end
 
-      ---@type table<number, Steps | { fake: true }>
+      ---@type table<number, StepSet | { fake: boolean }>
       local renderSteps = {}
 
       for k in pairs(folds) do
@@ -121,7 +128,7 @@ return {
         renderSteps[k] = { fake = true }
       end
       for _, stepSet in ipairs(steps) do
-        renderSteps[stepSet[1]] = stepSet[2]
+        renderSteps[stepSet[1]] = stepSet
       end
 
       for diffI = 0, (countKeys(renderSteps) - 1) do
@@ -132,7 +139,10 @@ return {
         local w = folds[diffI]
 
         fold:diffuse(diff.color:unpack())
-        if (not step.fake) and step == selected then
+        if step.locked then
+          fold:diffuse((diff.color * 0.6):unpack())
+        end
+        if (not step.fake) and step[2] == selected then
           local width = TOTAL_FOLD_WIDTH
           for diffI2, step2 in pairs(renderSteps) do
             if diffI ~= diffI2 then
@@ -145,7 +155,7 @@ return {
           fold:SetWidth(w.eased)
           fold:xy(x, scy)
           fold:Draw()
-          text:settext(step:GetDescription())
+          text:settext(step[2]:GetDescription())
           text:diffuse(0, 0, 0, 1)
           text:xy(x + FOLD_BORDER, scy)
           text:Draw()
@@ -156,6 +166,13 @@ return {
           fold:SetWidth(w.eased)
           fold:xy(x, scy)
           fold:Draw()
+          if step.locked then
+            lockIcon:xy(x + w.eased/2, scy)
+            local zoom = math.min(w.eased - 2, 16)
+            lockIcon:diffuse(0, 0, 0, 1)
+            lockIcon:zoomto(zoom, zoom)
+            lockIcon:Draw()
+          end
         end
 
         x = x + w.eased + clamp(w.eased / (FOLD_BORDER * 2), 0, 1) * FOLD_GAP
