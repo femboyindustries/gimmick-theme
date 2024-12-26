@@ -16,7 +16,7 @@ M.option = {}
 ---@field Choices string[]
 ---@field EnabledForPlayers (0 | 1)[]?
 ---@field ReloadRowMessages string[]?
----@field LoadSelections (fun(self: OptionRow, selected: table<number, boolean>))
+---@field LoadSelections (fun(self: OptionRow, selected: table<number, boolean>, pn: number))
 ---@field SaveSelections (fun(self: OptionRow, selected: table<number, boolean>, pn: number))
 
 ---@param name string
@@ -92,7 +92,56 @@ function M.option.button(name, value, onPress)
   end)
 end
 
----@alias Option { type: 'lua', optionRow: OptionRow, y: number? } | { type: 'conf', pref: string, y: number? } | { type: 'list', list: string, y: number? }
+local function applyMod(mod, pn, f)
+  local m = mod
+  if m then
+    if f then
+      m = f .. '% ' .. m
+    end
+    GAMESTATE:ApplyModifiers(m, pn)
+  end
+end
+
+---@alias ModEntry { name?: string } | ({ type: 'bool' } | { type: 'float', step?: number } | { type: 'select', values: number[] })
+---@type table<string, ModEntry>
+local modRegistry = {}
+
+---@param modName string
+local function modOptionRow(modName)
+  local origModName = modName
+  modName = string.lower(modName)
+  local entry = modRegistry[modName]
+
+  if not entry then
+    entry = { type = 'bool' }
+    gimmick.warn('mod name \'' .. modName .. '\' unrecognized, defaulting to bool')
+  end
+
+  if entry.type == 'bool' then
+    return M.option.toggle(entry.name or origModName, function(self, selected, pn)
+      local enabled = GAMESTATE:PlayerIsUsingModifier(pn, modName)
+      selected[enabled and 1 or 2] = true
+    end, function(self, selected, pn)
+      if selected[2] then
+        applyMod(modName, pn+1)
+        applyMod(modName, pn+3)
+        applyMod(modName, pn+5)
+        applyMod(modName, pn+7)
+      else
+        applyMod('no ' .. modName, pn+1)
+        applyMod('no ' .. modName, pn+3)
+        applyMod('no ' .. modName, pn+5)
+        applyMod('no ' .. modName, pn+7)
+      end
+    end)
+  elseif entry.type == 'float' then
+
+  elseif entry.type == 'select' then
+
+  end
+end
+
+---@alias Option { type: 'lua', optionRow: OptionRow, y: number? } | { type: 'conf', pref: string, y: number? } | { type: 'list', list: string, y: number? } | { type: 'mod', modName: string, y: number? }
 
 local ROWS_SHOWN = 10
 local HEIGHT = 300
@@ -110,6 +159,8 @@ function M.LineProvider(screenName, optionsGetter)
       return 'conf,' .. opt.pref
     elseif opt.type == 'list' then
       return 'list,' .. opt.list
+    elseif opt.type == 'mod' then
+      return 'lua,gimmick.s.' .. screenName .. '.lines.mod(' .. n .. ')'
     end
   end)
 
@@ -120,13 +171,22 @@ function M.LineProvider(screenName, optionsGetter)
     end,
     Line1 = command,
     option = function(n)
-      return optionsGetter()[n].optionRow
+      local option = optionsGetter()[n]
+      assert(option.optionRow, 'option #' .. n .. ' type specified to be \'option\', but no \'optionRow\' exists!')
+      return option.optionRow
+    end,
+    mod = function(n)
+      local option = optionsGetter()[n]
+      print(option)
+      assert(option.modName, 'option #' .. n .. ' type specified to be \'mod\', but no \'modName\' exists!')
+      return modOptionRow(option.modName)
     end,
     NumRowsShown = function()
       return ROWS_SHOWN
     end,
   }
 
+  -- todo this is ugly
   for i = 1, 99 do
     local i = i
     t['Row' .. i .. 'Y'] = function()
