@@ -181,10 +181,13 @@ function MusicWheel.init(ctx)
 
         local t = itemText:get(groupName:GetText())
         local w = t:GetWidth() * 0.4
-        t:xy(margin + -w/2 + offX, 2)
+        local maxWidth = WHEEL_ITEM_WIDTH - margin - 16
+        t:xy(margin + -math.min(w, maxWidth)/2 + offX - 16, 2)
         t:zoom(0.4)
         t:diffuse(0.8, 0.8, 0.8, 1)
+        t:maxwidth(maxWidth/0.4)
         t:Draw()
+        t:maxwidth(0)
 
         --local leftBar = (WHEEL_ITEM_WIDTH/2 - w/2 - pad) - pad
         --local rightBar = (width - w/2 - pad)
@@ -272,16 +275,19 @@ function MusicWheel.init(ctx)
           quad:Draw()
 
           local meterT = meterText:get(tostring(curStep:GetMeter()))
-
           meterT:xy(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH / 2 + offX, 2)
           meterT:diffuse(diff.text:unpack())
           meterT:zoom(0.45)
+          meterT:maxwidth(METER_WIDTH/0.45)
           meterT:Draw()
+          meterT:maxwidth(0)
         end
 
         local titleText = itemText:get(titleT)
+        local maxWidth = WHEEL_ITEM_WIDTH - METER_WIDTH - 16
         titleText:xy(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH + 6 + offX, 2)
         titleText:zoom(0.4)
+        titleText:maxwidth(maxWidth/0.4)
 
         if not subtitle:GetHidden() and subtitleT ~= '' then
           titleText:xy(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH + 6 + offX, -5 + 2)
@@ -293,6 +299,8 @@ function MusicWheel.init(ctx)
         else
           titleText:Draw()
         end
+
+        titleText:maxwidth(0)
       elseif not sortName:GetHidden() then
         local sortType = sortName:GetText()
 

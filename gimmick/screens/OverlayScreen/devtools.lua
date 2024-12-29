@@ -104,6 +104,10 @@ function M.init(self, ctx, scope)
           selectedNode:hidden(selectedNode:GetHidden() and 0 or 1)
         end
       end
+      if key == 'r' then
+        _SelectedNode = selectedNode
+        print('Set global _SelectedNode to the highlighted node')
+      end
       return true
     end
   end)
