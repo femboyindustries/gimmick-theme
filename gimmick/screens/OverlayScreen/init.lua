@@ -4,10 +4,12 @@
 -- pretend-running through to get all the actors from the already-generated
 -- actorframe. yippee!
 
+-- todo import order matters for event ordering. FOR NOW. i want to change this.
+local pauseModule = require 'gimmick.screens.OverlayScreen.pause'
+local devToolsModule = require 'gimmick.screens.OverlayScreen.devtools'
 local consoleModule = require 'gimmick.screens.OverlayScreen.console'
 local saveModule = require 'gimmick.screens.OverlayScreen.save'
 local imapModule = require 'gimmick.screens.OverlayScreen.imap'
-local pauseModule = require 'gimmick.screens.OverlayScreen.pause'
 local tick       = require 'gimmick.lib.tick'
 local Scope      = require 'gimmick.scope'
 local inputs     = require 'gimmick.lib.inputs'
@@ -23,6 +25,7 @@ local function init(self, ctx, scope)
   local drawSave = saveModule.init(self, ctx)
   local drawImap = imapModule.init(self, ctx)
   local drawPause = pauseModule.init(self, ctx, scope)
+  local drawDevTools = devToolsModule.init(self, ctx, scope)
 
   local lastdw, lastdh = dw, dh
 
@@ -60,6 +63,7 @@ local function init(self, ctx, scope)
 
     drawPause(dt)
     drawConsole(dt)
+    drawDevTools(dt)
     drawSave(dt)
     drawImap(dt)
   end)

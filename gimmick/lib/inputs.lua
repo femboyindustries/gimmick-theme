@@ -76,18 +76,22 @@ function M.input(inputDevice, button, pn, keyName, keySecondary)
   end
 end
 
-function M.update()
+function M.handlePress()
+  -- todo: really annoying: this is hardcoded such that keypresses are processed,
+  -- and therefore are able to be cancelled before presses. it's in this
+  -- order because in the event of the console being open at the same time as
+  -- the pause menu, you want the console to take priority.
+  -- ideally the two events will be merged into one, with different argument
+  -- types, but that's an issue for future me, not for current me
+
+  --print(' -- handlepress --')
+
   for device in pairs(M.rawInputs) do
     for key in pairs(M.rawInputs[device]) do
       -- now pressed, wasn't before -> press
       if oldRawInputs[device][key] == nil then
-        event:call('keypress', device, key)
-      end
-    end
-    for key in pairs(oldRawInputs[device]) do
-      -- was pressed, now isn't -> release
-      if M.rawInputs[device][key] == nil then
-        event:call('keyrelease', device, key)
+        local res = event:call('keypress', device, key)
+        if res then return end
       end
     end
   end
@@ -95,16 +99,37 @@ function M.update()
     for button in pairs(M.inputs[pn]) do
       -- now pressed, wasn't before -> press
       if not oldInputs[pn][button] then
-        event:call('press', pn, button)
-      end
-    end
-    for button in pairs(oldInputs[pn]) do
-      -- was pressed, now isn't -> release
-      if not M.inputs[pn][button] then
-        event:call('release', pn, button)
+        local res = event:call('press', pn, button)
+        if res then return end
       end
     end
   end
+end
+
+function M.handleRelease()
+  for device in pairs(M.rawInputs) do
+    for key in pairs(oldRawInputs[device]) do
+      -- was pressed, now isn't -> release
+      if M.rawInputs[device][key] == nil then
+        local res = event:call('keyrelease', device, key)
+        if res then return end
+      end
+    end
+  end
+  for pn in pairs(M.inputs) do
+    for button in pairs(oldInputs[pn]) do
+      -- was pressed, now isn't -> release
+      if not M.inputs[pn][button] then
+        local res = event:call('release', pn, button)
+        if res then return end
+      end
+    end
+  end
+end
+
+function M.update()
+  M.handlePress()
+  M.handleRelease()
 end
 
 ---@param button string

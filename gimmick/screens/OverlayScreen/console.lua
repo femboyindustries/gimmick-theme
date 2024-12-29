@@ -162,6 +162,44 @@ function M.init(self, ctx, scope)
 
   local t = TextInput.new()
 
+  local function onKey(key, device, isRepeat)
+    if key == 'enter' and not isShiftDown(device) and not isRepeat then
+      table.insert(typedHistory, t.text)
+      historyIdx = 0
+      table.insert(history, {HistoryType.Input, t:toString()})
+      local status, res = eval(t:toString())
+      table.insert(history, {status, res})
+      t.cursor = 0
+      t.text = {}
+      scroll = 0
+      return
+    end
+
+    if key == 'up' or key == 'down' then
+      historyIdx = historyIdx + ((key == 'up') and 1 or -1)
+      historyIdx = math.max(historyIdx, 0)
+      historyIdx = math.min(historyIdx, #typedHistory)
+
+      if historyIdx == 0 then
+        t.text = {}
+      else
+        t.text = typedHistory[#typedHistory - (historyIdx - 1)]
+      end
+      t.cursor = #t.text
+    end
+    if key == 'pgup' or key == 'pgdn' then
+      scroll = scroll + ((key == 'pgup' and 1 or -1)) * 70
+      scroll = math.max(scroll, 0)
+    end
+    if isCtrlDown(device) and (key == '-' or key == '=') then
+      local mult = key == '=' and (1 / 0.85) or 0.85
+      zoom = zoom * mult
+      return
+    end
+
+    t:onKey(key, inputs.rawInputs[device])
+  end
+
   scope.event:on('keypress', function(device, key)
     if device ~= InputDevice.Key then return end
 
@@ -171,47 +209,13 @@ function M.init(self, ctx, scope)
       consoleOpen = not consoleOpen
       SCREENMAN:SetInputMode(consoleOpen and 1 or 0)
       consoleOpenAux:ease(0, 0.3, consoleOpen and outQuad or inQuad, consoleOpen and 1 or 0)
-      return
+      return true
     end
 
     if consoleOpen then
-      if key == 'enter' and not isShiftDown(device) then
-        table.insert(typedHistory, t.text)
-        historyIdx = 0
-        table.insert(history, {HistoryType.Input, t:toString()})
-        local status, res = eval(t:toString())
-        table.insert(history, {status, res})
-        t.cursor = 0
-        t.text = {}
-        scroll = 0
-        return
-      end
-
-      if key == 'up' or key == 'down' then
-        historyIdx = historyIdx + ((key == 'up') and 1 or -1)
-        historyIdx = math.max(historyIdx, 0)
-        historyIdx = math.min(historyIdx, #typedHistory)
-
-        if historyIdx == 0 then
-          t.text = {}
-        else
-          t.text = typedHistory[#typedHistory - (historyIdx - 1)]
-        end
-        t.cursor = #t.text
-      end
-      if key == 'pgup' or key == 'pgdn' then
-        scroll = scroll + ((key == 'pgup' and 1 or -1)) * 70
-        scroll = math.max(scroll, 0)
-      end
-      if isCtrlDown(device) and (key == '-' or key == '=') then
-        local mult = key == '=' and (1 / 0.85) or 0.85
-        zoom = zoom * mult
-        return
-      end
-
       repeatT[key] = REPEAT_DELAY
-
-      t:onKey(key, inputs.rawInputs[device])
+      onKey(key, device)
+      return true
     end
   end)
   scope.event:on('keyrelease', function(device, key)
@@ -244,7 +248,7 @@ function M.init(self, ctx, scope)
       repeatT[key] = clock - dt
       if repeatT[key] <= 0 then
         repeatT[key] = repeatT[key] + REPEAT_INTERVAL
-        t:onKey(key, inputs.rawInputs[InputDevice.Key])
+        onKey(key, InputDevice.Key)
       end
     end
 
@@ -285,7 +289,7 @@ function M.init(self, ctx, scope)
         if (y + height) > 0 and y < HISTORY_HEIGHT then
           height = math.min(height, HISTORY_HEIGHT - y)
           --bitmapText:cropbottom(height / bitmapText:GetHeight())
-          scissor:uniform1f('bottom', 1 - HISTORY_HEIGHT / sh)
+          scissor:uniform1f('bottom', 1 - (HISTORY_HEIGHT + yoff) / sh)
 
           if (#history - i) % 2 == 1 then
             quad:diffuse(0, 0, 0, 0.04)
@@ -298,6 +302,9 @@ function M.init(self, ctx, scope)
             quad:Draw()
           end
 
+          bitmapText:diffuse(0, 0, 0, 0.2)
+          bitmapText:xy(PADDING + LEFT_PADDING + 3, y + 20 * zoom + yoff + 3)
+          bitmapText:Draw()
           bitmapText:diffuse(1, 1, 1, 1)
           if status == HistoryType.OK and text == 'nil' then
             bitmapText:diffuse(0.9, 0.9, 0.9, 1)
@@ -362,9 +369,15 @@ function M.init(self, ctx, scope)
       quad:xywh(scx, HISTORY_HEIGHT + backHeight/2 + yoff, sw, backHeight)
       quad:Draw()
 
-      bitmapText:diffuse(1, 1, 1, 1)
       bitmapText:align(1, 0)
 
+      bitmapText:diffuse(0, 0, 0, 0.15)
+      for _, char in ipairs(positions) do
+        bitmapText:xy(PADDING + LEFT_PADDING + char.x + 3, HISTORY_HEIGHT + PADDING + char.y + yoff + 3)
+        bitmapText:settext(char.char)
+        bitmapText:Draw()
+      end
+      bitmapText:diffuse(1, 1, 1, 1)
       for _, char in ipairs(positions) do
         bitmapText:xy(PADDING + LEFT_PADDING + char.x, HISTORY_HEIGHT + PADDING + char.y + yoff)
         bitmapText:settext(char.char)

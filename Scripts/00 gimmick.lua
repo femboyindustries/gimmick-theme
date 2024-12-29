@@ -33,15 +33,52 @@ _G.paw = paw
 paw()
 
 function gimmick.print(...)
+  ---@type { [1]: string, type: TokenType }[][]
   local msg = {}
   for _, val in ipairs(arg) do
-    if type(val) ~= 'string' and paw.pretty then
-      table.insert(msg, paw.pretty(val))
+    if type(val) ~= 'string' and paw.prettyColored then
+      table.insert(msg, paw.prettyColored(val, { maxWidth = 80, maxDepth = 5 }))
     else
-      table.insert(msg, tostring(val))
+      table.insert(msg, {{ tostring(val) }})
     end
   end
-  Debug('[GIMMICK] ' .. table.concat(msg, '\t'))
+  if USING_WINE then
+    local msgPlain = {}
+    for _, part in ipairs(msg) do
+      local str = {}
+      for _, token in ipairs(part) do
+        local code = '0'
+        if token.type == TokenType.Collapsed then
+          code = '90'
+        elseif token.type == TokenType.Plain or token.type == TokenType.Parens then
+          code = '39'
+        elseif token.type == TokenType.Number then
+          code = '33'
+        elseif token.type == TokenType.Ref then
+          code = '35'
+        elseif token.type == TokenType.String then
+          code = '32'
+        elseif token.type == TokenType.Value then
+          code = '31'
+        end
+        table.insert(str, '\27[' .. code .. 'm')
+        table.insert(str, token[1])
+      end
+      table.insert(msgPlain, table.concat(str, ''))
+    end
+    Debug('\27[0m\27[32m[GIMMICK]\27[0m ' .. table.concat(msgPlain, '\t') .. '\27[0m')
+  else
+    local msgPlain = {}
+    for _, part in ipairs(msg) do
+      local str = {}
+      for _, token in ipairs(part) do
+        table.insert(str, token[1])
+      end
+      table.insert(msgPlain, table.concat(str, ''))
+    end
+
+    Debug('[GIMMICK] ' .. table.concat(msgPlain, '\t'))
+  end
 end
 -- 🐾🐾🐾
 paw.print = gimmick.print

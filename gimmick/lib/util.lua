@@ -240,14 +240,16 @@ function countKeys(t)
   return n
 end
 
+---@return string
 function getActorType(actor)
   local _, _, type = string.find(tostring(actor), '(%a+)%s.*')
   return type
 end
 
 ---@param actor Actor | ActorFrame
+---@param hideChildren boolean
 ---@param depth number?
-function actorToString(actor, depth)
+function actorToString(actor, hideChildren, depth)
   depth = depth or 0
 
   local name = 'Layer'
@@ -262,6 +264,7 @@ function actorToString(actor, depth)
     Type = type,
     Name = actor:GetName(),
     Shader = actor:GetShader() and tostring(actor:GetShader()),
+    Text = actor.GetText and actor:GetText()
   }
 
   for k, v in pairs(values) do
@@ -274,10 +277,10 @@ function actorToString(actor, depth)
     end
   end
 
-  if actor.GetChildren and type ~= 'ActorFrameTexture' then
+  if (not hideChildren) and actor.GetChildren and type ~= 'ActorFrameTexture' then
     table.insert(str, '><children>\n')
     for _, child in ipairs(actor:GetChildren()) do
-      table.insert(str, string.rep('  ', (depth + 1)) .. actorToString(child, depth + 1) .. '\n')
+      table.insert(str, string.rep('  ', (depth + 1)) .. actorToString(child, hideChildren, depth + 1) .. '\n')
     end
     table.insert(str, string.rep('  ', depth) .. '</children></' .. name .. '>')
   else
@@ -305,6 +308,13 @@ end
 function copy(tab)
   return { unpack(tab) }
 end
+function copyPairs(tab)
+  local q = {}
+  for k, v in pairs(tab) do
+    q[k] = v
+  end
+  return q
+end
 
 function stripMeta(tab)
   local new = {}
@@ -316,103 +326,193 @@ function stripMeta(tab)
   return new
 end
 
+---@enum TokenType
+TokenType = {
+  Plain = 1,
+  Value = 2,
+  Parens = 3,
+  Ref = 4,
+  Collapsed = 5,
+  String = 6,
+  Number = 7,
+}
+
+---@alias PrettyConfig { maxDepth: number?, maxWidth: number? }
+
 ---@param o any
-function pretty(o, depth, seen)
+---@param config PrettyConfig?
+---@return { [1]: string, type: TokenType }[]
+function prettyColored(o, config, depth, indent, seen)
   depth = depth or 0
-  if depth > 3 then
-    return '...'
+  indent = indent or 0
+  config = config or {}
+  if depth > (config.maxDepth or 3) then
+    return {{ '...', type = TokenType.Collapsed }}
   end
-  seen = seen and copy(seen) or {}
+  seen = seen and copyPairs(seen) or {}
   --print(depth, countKeys(seen))
+  local maxWidth = config.maxWidth or 40
 
   if type(o) == 'userdata' then
-    if seen[o] then return '(circular)' end
+    if seen[o] then return {{ '(circular)', type = TokenType.Collapsed }} end
     seen[o] = true
 
     if o.x then -- actor
       local type = getActorType(o)
-      local str = type .. '[' .. o:GetName() .. ']'
+      --local str = type .. '[' .. o:GetName() .. ']'
+      local str = {
+        { type, type = TokenType.Plain },
+        { '[', type = TokenType.Parens },
+        { o.getName and o:getName() or '', type = TokenType.Value },
+        { ']', type = TokenType.Parens }
+      }
 
       if type == 'BitmapText' then
-        str = str .. ': ' .. pretty(o:GetText(), depth + 1, seen)
-      elseif type == 'ActorFrame' or o.GetChildren then
+        table.insert(str, { ': ', type = TokenType.Parens })
+        for _, p in ipairs(prettyColored(o:GetText(), config, depth, indent + 1, seen)) do
+          table.insert(str, p)
+        end
+      elseif o.GetChildren then
+        table.insert(str, { ': ', type = TokenType.Parens })
         local children = o:GetChildren()
-        str = str .. ': ' .. pretty(children, depth, seen)
+        for _, p in ipairs(prettyColored(children, config, depth, indent, seen)) do
+          table.insert(str, p)
+        end
       end
 
       return str
     else
-      return tostring(o) .. ': ' .. pretty(stripMeta(getmetatable(o)), depth, seen)
+      local str = {
+        { tostring(o), type = TokenType.Ref },
+        { ': ', type = TokenType.Parens },
+      }
+      for _, p in ipairs(prettyColored(stripMeta(getmetatable(o)), config, depth, indent, seen)) do
+        table.insert(str, p)
+      end
+      return str
     end
   elseif type(o) == 'table' then
-    if seen[o] then return '(circular)' end
+    if seen[o] then return { { '(circular)', type = TokenType.Collapsed } } end
     seen[o] = true
-    local keys = countKeys(o)
-    local onlyNumbers = true
-    for i = 1, keys do
-      if rawget(o, i) == nil then
-        onlyNumbers = false
-        break
-      end
-    end
 
-    local str = ''
+    local str = {}
     local linebreaks = false
-    local nPos = 0
+    local strWidth = 0
 
-    if onlyNumbers then
-      for i, v in ipairs(o) do
-        local s = pretty(v, depth + 1, seen)
-        if string.find(s, '\n') or (#str - nPos + #s + depth * 2) > 40 then
-          linebreaks = true
-          str = str .. '\n'
-          str = str .. string.rep('  ', depth + 1)
-          nPos = #str
+    local shownKeys = {}
+    for i, v in ipairs(o) do
+      shownKeys[i] = true
+      local s = prettyColored(v, config, depth, indent + 1, seen)
+      local sWidth = 0
+      local hasNewline = false
+      for _, p in ipairs(s) do
+        sWidth = sWidth + #p[1]
+        if string.find(p[1], '\n') then
+          hasNewline = true
         end
-        str = str .. s .. ', '
       end
-    else
-      for k, v in pairs(o) do
-        local ks = (type(k) == 'string' and string.find(k, '^[a-zA-Z0-9]+$')) and k or
-        ('[' .. pretty(k, depth + 1, seen) .. ']')
-        local vs = pretty(v, depth + 1, seen)
-        local s = ks .. ' = ' .. vs
-        local nPos = (string.find(str, '\n') or 0)
-        if string.find(s, '\n') or (#str - nPos + #s + depth * 2) > 40 then
-          linebreaks = true
-          str = str .. '\n'
-          str = str .. string.rep('  ', depth + 1)
-          nPos = #str
+      strWidth = strWidth + sWidth
+
+      --if hasNewline or (strWidth + (indent + 1) * 2) > maxWidth then
+      --  linebreaks = true
+      --  table.insert(str, { '\n' .. string.rep('  ', indent + 1), type = TokenType.Plain })
+      --  strWidth = 0
+      --end
+
+      for _, p in ipairs(s) do
+        table.insert(str, p)
+      end
+      table.insert(str, { ', ', type = TokenType.Plain })
+      strWidth = strWidth + 2
+
+      -- todo temporary until i figure out why tables break otherwise
+      linebreaks = true
+      table.insert(str, { '\n' .. string.rep('  ', indent + 1), type = TokenType.Plain })
+      strWidth = 0
+    end
+    for k, v in pairs(o) do
+      if not shownKeys[k] then
+        if type(k) == 'string' and string.find(k, '^[a-zA-Z_][a-zA-Z0-9_]*$') then
+          table.insert(str, { k, type = TokenType.Plain })
+          strWidth = strWidth + #k
+        else
+          table.insert(str, { '[', type = TokenType.Plain })
+          strWidth = strWidth + 1
+          for _, p in ipairs(prettyColored(k, config, depth, indent + 1, seen)) do
+            table.insert(str, p)
+            strWidth = strWidth + #p[1]
+          end
+          table.insert(str, { ']', type = TokenType.Plain })
+          strWidth = strWidth + 1
+        end
+        table.insert(str, {' = ', type = TokenType.Plain })
+        strWidth = strWidth + 3
+        local s = prettyColored(v, config, depth, indent + 1, seen)
+
+        for _, p in ipairs(s) do
+          table.insert(str, p)
+          strWidth = strWidth + #p[1]
         end
 
-        str = str .. s .. ', '
+        table.insert(str, { ', ', type = TokenType.Plain })
+        strWidth = strWidth + 2
+
+        linebreaks = true
+        table.insert(str, { '\n' .. string.rep('  ', indent + 1), type = TokenType.Plain })
+        strWidth = 0
       end
     end
 
-    str = string.sub(str, 1, #str - 2)
+    -- remove trailing comma
+    local p = table.remove(str, #str)
+    if p then
+      strWidth = strWidth - #p[1]
+    end
 
     if linebreaks then
-      if string.sub(str, 1, 1) ~= '\n' then
-        str = '\n' .. string.rep('  ', depth + 1) .. str
+      -- remove trailing newline
+      local p = table.remove(str, #str)
+      if p then
+        strWidth = strWidth - #p[1]
       end
-      str = str .. '\n' .. string.rep('  ', depth) .. '}'
+
+      if string.sub(str[1][1], 1, 1) ~= '\n' then
+        table.insert(str, 1, { '\n' .. string.rep('  ', indent + 1), type = TokenType.Plain })
+      end
+      table.insert(str, { '\n' .. string.rep('  ', indent), type = TokenType.Plain })
+      table.insert(str, { '}', type = TokenType.Parens })
     else
-      str = str .. ' }'
+      table.insert(str, { '}', type = TokenType.Parens })
     end
 
-    return '{ ' .. str
+    table.insert(str, 1, { '{', type = TokenType.Parens })
+
+    return str
   elseif type(o) == 'string' then
-    return string.format('%q', o)
+    return {{ string.gsub(string.gsub(string.format('%q', o), '\\\n', '\\n'), '\t', '\\t'), type = TokenType.String }}
     --if string.find(o, '\n') then
     --  return '[[' .. string.gsub(o, '\\', '\\\\') .. ']]'
     --else
     --  return '"' .. string.gsub(string.gsub(o, '\\', '\\\\'), '"', '\\"') .. '"'
     --end
   elseif type(o) == 'nil' then
-    return 'nil'
+    return {{ 'nil', type = TokenType.Value }}
+  elseif type(o) == 'number' then
+    return {{ tostring(o), type = TokenType.Number }}
+  elseif type(o) == 'function' or type(o) == 'userdata' then
+    return {{ tostring(o), type = TokenType.Ref }}
   else
-    return tostring(o)
+    return {{ tostring(o), type = TokenType.Value }}
   end
+end
+
+function pretty(...)
+  local tab = prettyColored(unpack(arg))
+  local res = {}
+  for _, token in ipairs(tab) do
+    table.insert(res, token[1])
+  end
+  return table.concat(res, '')
 end
 
 function ot_enough_memory()
@@ -433,7 +533,6 @@ function ot_enough_memory()
   end
 
   for i = 1, 25 do
-    print(i);
     crash(i)
   end
 end
