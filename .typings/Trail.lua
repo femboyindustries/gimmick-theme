@@ -17,7 +17,7 @@ function Trail:GetLengthSeconds() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function Trail:GetDifficulty() end
 
 --- Returns the radar values for the trail
@@ -33,7 +33,7 @@ function Trail:GetRadarValues() end
 ---
 --- |since_notitg_v4_2_0|
 ---
---- @return int
+--- @return integer
 function Trail:GetStepsType() end
 
 --- Tests for equality against another userdata object

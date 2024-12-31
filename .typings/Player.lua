@@ -37,7 +37,7 @@ function Player:IsUsingCMod() end
 ---
 --- |since_notitg_v3|
 ---
---- @return int
+--- @return integer
 function Player:GetCMod() end
 
 --- Returns the player's XMod speed
@@ -60,32 +60,32 @@ function Player:GetSpeedMod() end
 ---
 --- |since_notitg_v3|
 ---
---- @param combo int The new combo to set
+--- @param combo integer The new combo to set
 ---
---- @return void
+--- @return nil
 function Player:SetCombo(combo) end
 
 --- Returns the player's combo
 ---
 --- |since_notitg_v3|
 ---
---- @return int
+--- @return integer
 function Player:GetCombo() end
 
 --- Sets the player's miss combo
 ---
 --- |since_notitg_v3|
 ---
---- @param combo int The new miss combo to set
+--- @param combo integer The new miss combo to set
 ---
---- @return void
+--- @return nil
 function Player:SetMissCombo(combo) end
 
 --- Returns the player's miss combo
 ---
 --- |since_notitg_v3|
 ---
---- @return int
+--- @return integer
 function Player:GetMissCombo() end
 
 
@@ -93,9 +93,9 @@ function Player:GetMissCombo() end
 ---
 --- |since_notitg_v3|
 ---
---- @param chart int Chart index? (0 indexed)
+--- @param chart integer Chart index? (0 indexed)
 ---
---- @return void
+--- @return nil
 function Player:SetNoteData(chart) end
 
 --- Replaces a player's steps
@@ -104,7 +104,7 @@ function Player:SetNoteData(chart) end
 ---
 --- @param noteData table[table] See :ref:`note_data_format`
 ---
---- @return void
+--- @return nil
 function Player:SetNoteDataFromLua(noteData) end
 
 --- Returns the chart's note data
@@ -119,6 +119,15 @@ function Player:SetNoteDataFromLua(noteData) end
 --- @return table[]
 function Player:GetNoteData(startBeat, endBeat) end
 
+--- When enabled, models use a fixed version of RageDisplay::SetMaterial that properly applies alpha, making the 0-1 diffuse range line up with other actor types
+---
+--- |since_notitg_v4_9|
+---
+--- @param enable boolean
+---
+--- @return nil
+function Player:SetUseFullAlphaRange(enable) end
+
 --- Takes note data and stores it in a global variable
 ---
 --- Prefer :lua:meth:`Player.GetNoteData` over this
@@ -131,7 +140,7 @@ function Player:GetNoteData(startBeat, endBeat) end
 --- @param startBeat float|nil The start beat number (can be ``nil`` if you want to fetch *all* note data)
 --- @param endBeat float|nil The end beat number (can be ``nil`` if you want to fetch *all* note data)
 ---
---- @return void
+--- @return nil
 function Player:PushNoteData(varName, startBeat, endBeat) end
 
 --- Takes note data and stores it in a global variable
@@ -144,7 +153,7 @@ function Player:PushNoteData(varName, startBeat, endBeat) end
 --- @param startBeat float|nil The start beat number (can be ``nil`` if you want to fetch *all* note data)
 --- @param endBeat float|nil The end beat number (can be ``nil`` if you want to fetch *all* note data)
 ---
---- @return void
+--- @return nil
 function Player:PushNoteDataTime(varName, startBeat, endBeat) end
 
 --- Like :lua:meth:`Player.GetNoteData`, but the note data uses seconds instead of beat numbers
@@ -158,132 +167,132 @@ function Player:GetNoteDataTime() end
 ---
 --- |since_notitg_v3|
 ---
---- @param index int The spline index (0 - 39)
---- @param column int Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
+--- @param index integer The spline index (0 - 39)
+--- @param column integer Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
 --- @param value float What value the spline point should have
 --- @param offset float How far away arrows will be when hitting the spline point (calculate a spline offset as ``beat_offset * 100 * xmod_speed``)
 --- @param activationSpeed float How quickly spline changes should take effect (-1 for instant)
 ---
---- @return void
+--- @return nil
 function Player:SetXSpline(index, column, value, offset, activationSpeed) end
 
 --- Reset all X position spline points for a column
 ---
 --- |since_notitg_v4|
 ---
---- @param column int The column to reset (0 indexed)
+--- @param column integer The column to reset (0 indexed)
 ---
---- @return void
+--- @return nil
 function Player:ResetXSplines(column) end
 
 --- Sets a Y position spline
 ---
 --- |since_notitg_v3|
 ---
---- @param index int The spline index (0 - 39)
---- @param column int Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
+--- @param index integer The spline index (0 - 39)
+--- @param column integer Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
 --- @param value float What value the spline point should have
 --- @param offset float How far away arrows will be when hitting the spline point (calculate a spline offset as ``beat_offset * 100 * xmod_speed``)
 --- @param activationSpeed float How quickly spline changes should take effect (-1 for instant)
 ---
---- @return void
+--- @return nil
 function Player:SetYSpline(index, column, value, offset, activationSpeed) end
 
 --- Reset all Y position spline points for a column
 ---
 --- |since_notitg_v4|
 ---
---- @param column int The column to reset (0 indexed)
+--- @param column integer The column to reset (0 indexed)
 ---
---- @return void
+--- @return nil
 function Player:ResetYSplines(column) end
 
 --- Sets a Z position spline
 ---
 --- |since_notitg_v3|
 ---
---- @param index int The spline index (0 - 39)
---- @param column int Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
+--- @param index integer The spline index (0 - 39)
+--- @param column integer Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
 --- @param value float What value the spline point should have
 --- @param offset float How far away arrows will be when hitting the spline point (calculate a spline offset as ``beat_offset * 100 * xmod_speed``)
 --- @param activationSpeed float How quickly spline changes should take effect (-1 for instant)
 ---
---- @return void
+--- @return nil
 function Player:SetZSpline(index, column, value, offset, activationSpeed) end
 
 --- Reset all Z position spline points for a column
 ---
 --- |since_notitg_v4|
 ---
---- @param column int The column to reset (0 indexed)
+--- @param column integer The column to reset (0 indexed)
 ---
---- @return void
+--- @return nil
 function Player:ResetZSplines(column) end
 
 --- Sets an X rotation spline
 ---
 --- |since_notitg_v3|
 ---
---- @param index int The spline index (0 - 39)
---- @param column int Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
+--- @param index integer The spline index (0 - 39)
+--- @param column integer Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
 --- @param value float What value the spline point should have
 --- @param offset float How far away arrows will be when hitting the spline point (calculate a spline offset as ``beat_offset * 100 * xmod_speed``)
 --- @param activationSpeed float How quickly spline changes should take effect (-1 for instant)
 ---
---- @return void
+--- @return nil
 function Player:SetRotXSpline(index, column, value, offset, activationSpeed) end
 
 --- Reset all X rotation spline points for a column
 ---
 --- |since_notitg_v4|
 ---
---- @param column int The column to reset (0 indexed)
+--- @param column integer The column to reset (0 indexed)
 ---
---- @return void
+--- @return nil
 function Player:ResetRotXSplines(column) end
 
 --- Sets a Y rotation spline
 ---
 --- |since_notitg_v3|
 ---
---- @param index int The spline index (0 - 39)
---- @param column int Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
+--- @param index integer The spline index (0 - 39)
+--- @param column integer Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
 --- @param value float What value the spline point should have
 --- @param offset float How far away arrows will be when hitting the spline point (calculate a spline offset as ``beat_offset * 100 * xmod_speed``)
 --- @param activationSpeed float How quickly spline changes should take effect (-1 for instant)
 ---
---- @return void
+--- @return nil
 function Player:SetRotYSpline(index, column, value, offset, activationSpeed) end
 
 --- Reset all Y rotation spline points for a column
 ---
 --- |since_notitg_v4|
 ---
---- @param column int The column to reset (0 indexed)
+--- @param column integer The column to reset (0 indexed)
 ---
---- @return void
+--- @return nil
 function Player:ResetRotYSplines(column) end
 
 --- Sets a Z rotation spline
 ---
 --- |since_notitg_v3|
 ---
---- @param index int The spline index (0 - 39)
---- @param column int Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
+--- @param index integer The spline index (0 - 39)
+--- @param column integer Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
 --- @param value float What value the spline point should have
 --- @param offset float How far away arrows will be when hitting the spline point (calculate a spline offset as ``beat_offset * 100 * xmod_speed``)
 --- @param activationSpeed float How quickly spline changes should take effect (-1 for instant)
 ---
---- @return void
+--- @return nil
 function Player:SetRotZSpline(index, column, value, offset, activationSpeed) end
 
 --- Reset all Z rotation spline points for a column
 ---
 --- |since_notitg_v4|
 ---
---- @param column int The column to reset (0 indexed)
+--- @param column integer The column to reset (0 indexed)
 ---
---- @return void
+--- @return nil
 function Player:ResetRotZSplines(column) end
 
 --- Sets a size spline
@@ -292,44 +301,44 @@ function Player:ResetRotZSplines(column) end
 ---
 --- |since_notitg_v3|
 ---
---- @param index int The spline index (0 - 39)
---- @param column int Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
+--- @param index integer The spline index (0 - 39)
+--- @param column integer Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
 --- @param value float What value the spline point should have
 --- @param offset float How far away arrows will be when hitting the spline point (calculate a spline offset as ``beat_offset * 100 * xmod_speed``)
 --- @param activationSpeed float How quickly spline changes should take effect (-1 for instant)
 ---
---- @return void
+--- @return nil
 function Player:SetSizeSpline(index, column, value, offset, activationSpeed) end
 
 --- Reset all size spline points for a column
 ---
 --- |since_notitg_v4|
 ---
---- @param column int The column to reset (0 indexed)
+--- @param column integer The column to reset (0 indexed)
 ---
---- @return void
+--- @return nil
 function Player:ResetSizeSplines(column) end
 
 --- Sets a skew spline
 ---
 --- |since_notitg_v3|
 ---
---- @param index int The spline index (0 - 39)
---- @param column int Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
+--- @param index integer The spline index (0 - 39)
+--- @param column integer Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
 --- @param value float What value the spline point should have
 --- @param offset float How far away arrows will be when hitting the spline point (calculate a spline offset as ``beat_offset * 100 * xmod_speed``)
 --- @param activationSpeed float How quickly spline changes should take effect (-1 for instant)
 ---
---- @return void
+--- @return nil
 function Player:SetSkewSpline(index, column, value, offset, activationSpeed) end
 
 --- Reset all skew spline points for a column
 ---
 --- |since_notitg_v4|
 ---
---- @param column int The column to reset (0 indexed)
+--- @param column integer The column to reset (0 indexed)
 ---
---- @return void
+--- @return nil
 function Player:ResetSkewSplines(column) end
 
 
@@ -339,22 +348,22 @@ function Player:ResetSkewSplines(column) end
 ---
 --- |since_notitg_v3|
 ---
---- @param index int The spline index (0 - 39)
---- @param column int Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
+--- @param index integer The spline index (0 - 39)
+--- @param column integer Which column to apply the spline to (0 indexed, pass -1 to apply the spline to all columns)
 --- @param value float What value the spline point should have
 --- @param offset float How far away arrows will be when hitting the spline point (calculate a spline offset as ``beat_offset * 100 * xmod_speed``)
 --- @param activationSpeed float How quickly spline changes should take effect (-1 for instant)
 ---
---- @return void
+--- @return nil
 function Player:SetStealthSpline(index, column, value, offset, activationSpeed) end
 
 --- Reset all stealth spline points for a column
 ---
 --- |since_notitg_v4|
 ---
---- @param column int The column to reset (0 indexed)
+--- @param column integer The column to reset (0 indexed)
 ---
---- @return void
+--- @return nil
 function Player:ResetStealthSplines(column) end
 --- Set whether the ``mod,clearall`` command should reset splines
 ---
@@ -362,7 +371,7 @@ function Player:ResetStealthSplines(column) end
 ---
 --- @param enable boolean ``true`` to prevent spline clearing when mods are cleared, ``false`` to let mod clearing also reset splines
 ---
---- @return void
+--- @return nil
 function Player:NoClearSplines(enable) end
 
 --- Sets a custom shader to use for drawing arrows
@@ -371,7 +380,7 @@ function Player:NoClearSplines(enable) end
 ---
 --- @param shader RageShaderProgram The custom shader to set
 ---
---- @return void
+--- @return nil
 function Player:SetArrowShader(shader) end
 
 --- Returns the custom shader used for drawing arrows
@@ -387,7 +396,7 @@ function Player:GetArrowShader() end
 ---
 --- |since_notitg_v3|
 ---
---- @return void
+--- @return nil
 function Player:ClearArrowShader() end
 
 --- Sets a custom shader to use for drawing holds
@@ -396,7 +405,7 @@ function Player:ClearArrowShader() end
 ---
 --- @param shader RageShaderProgram The custom shader to set
 ---
---- @return void
+--- @return nil
 function Player:SetHoldShader(shader) end
 
 --- Returns the custom shader used for drawing holds
@@ -412,7 +421,7 @@ function Player:GetHoldShader() end
 ---
 --- |since_notitg_v3|
 ---
---- @return void
+--- @return nil
 function Player:ClearHoldShader() end
 
 --- Sets a custom shader to use for drawing receptors
@@ -421,7 +430,7 @@ function Player:ClearHoldShader() end
 ---
 --- @param shader RageShaderProgram The custom shader to set
 ---
---- @return void
+--- @return nil
 function Player:SetReceptorShader(shader) end
 
 --- Returns the custom shader used for drawing receptors
@@ -437,7 +446,7 @@ function Player:GetReceptorShader() end
 ---
 --- |since_notitg_v3|
 ---
---- @return void
+--- @return nil
 function Player:ClearReceptorShader() end
 
 --- Sets a custom shader to use for drawing arrow paths
@@ -446,7 +455,7 @@ function Player:ClearReceptorShader() end
 ---
 --- @param shader RageShaderProgram The custom shader to set
 ---
---- @return void
+--- @return nil
 function Player:SetArrowPathShader(shader) end
 
 --- Returns the custom shader used for drawing arrow paths
@@ -462,112 +471,112 @@ function Player:GetArrowPathShader() end
 ---
 --- |since_notitg_v3|
 ---
---- @return void
+--- @return nil
 function Player:ClearArrowPathShader() end
 
 --- Sets the number of points the arrow gradient will have
 ---
 --- |since_notitg_v3|
 ---
---- @param column int The column to apply it to (0 indexed)
---- @param amount int The number of points
+--- @param column integer The column to apply it to (0 indexed)
+--- @param amount integer The number of points
 ---
---- @return void
+--- @return nil
 function Player:SetNumArrowGradientPoints(column, amount) end
 
 --- Sets the position of an arrow gradient point along a column
 ---
 --- |since_notitg_v3|
 ---
---- @param point int The point index (0 indexed)
---- @param column int The column (0 indexed)
+--- @param point integer The point index (0 indexed)
+--- @param column integer The column (0 indexed)
 --- @param offset float How far away from the receptors the point should be (where ``1`` = the size of an arrow = ``64`` pixels)
 ---
---- @return void
+--- @return nil
 function Player:SetArrowGradientPoint(point, column, offset) end
 
 --- Sets the color of an arrow gradient point
 ---
 --- |since_notitg_v3|
 ---
---- @param point int The point index (0 indexed)
---- @param column int The column (0 indexed)
+--- @param point integer The point index (0 indexed)
+--- @param column integer The column (0 indexed)
 --- @param r float The red value (0 - 1)
 --- @param g float The green value (0 - 1)
 --- @param b float The blue value (0 - 1)
 --- @param a float The alpha value (0 - 1)
 ---
---- @return void
+--- @return nil
 function Player:SetArrowGradientColor(point, column, r, g, b, a) end
 
 --- Sets the number of points the stealth gradient will have
 ---
 --- |since_notitg_v3|
 ---
---- @param column int The column to apply it to (0 indexed)
---- @param amount int The number of points
+--- @param column integer The column to apply it to (0 indexed)
+--- @param amount integer The number of points
 ---
---- @return void
+--- @return nil
 function Player:SetNumStealthGradientPoints(column, amount) end
 
 --- Sets the position of a stealth gradient point along a column
 ---
 --- |since_notitg_v3|
 ---
---- @param point int The point index (0 indexed)
---- @param column int The column (0 indexed)
+--- @param point integer The point index (0 indexed)
+--- @param column integer The column (0 indexed)
 --- @param offset float How far away from the receptors the point should be (where ``1`` = the size of an arrow = ``64`` pixels)
 ---
---- @return void
+--- @return nil
 function Player:SetStealthGradientPoint(point, column, offset) end
 
 --- Sets the color of a stealth gradient point
 ---
 --- |since_notitg_v3|
 ---
---- @param point int The point index (0 indexed)
---- @param column int The column (0 indexed)
+--- @param point integer The point index (0 indexed)
+--- @param column integer The column (0 indexed)
 --- @param r float The red value (0 - 1)
 --- @param g float The green value (0 - 1)
 --- @param b float The blue value (0 - 1)
 --- @param a float The alpha value (0 - 1)
 ---
---- @return void
+--- @return nil
 function Player:SetStealthGradientColor(point, column, r, g, b, a) end
 
 --- Sets the number of points the path gradient will have
 ---
 --- |since_notitg_v3|
 ---
---- @param column int The column to apply it to (0 indexed)
---- @param amount int The number of points
+--- @param column integer The column to apply it to (0 indexed)
+--- @param amount integer The number of points
 ---
---- @return void
+--- @return nil
 function Player:SetNumPathGradientPoints(column, amount) end
 
 --- Sets the position of a path gradient point along a column
 ---
 --- |since_notitg_v3|
 ---
---- @param point int The point index (0 indexed)
---- @param column int The column (0 indexed)
+--- @param point integer The point index (0 indexed)
+--- @param column integer The column (0 indexed)
 --- @param offset float How far away from the receptors the point should be (where ``1`` = the size of an arrow = ``64`` pixels)
 ---
---- @return void
+--- @return nil
 function Player:SetPathGradientPoint(point, column, offset) end
 
 --- Sets the color of a path gradient point
 ---
 --- |since_notitg_v3|
 ---
---- @param point int The point index (0 indexed)
---- @param column int The column (0 indexed)
+--- @param point integer The point index (0 indexed)
+--- @param column integer The column (0 indexed)
 --- @param r float The red value (0 - 1)
 --- @param g float The green value (0 - 1)
 --- @param b float The blue value (0 - 1)
 --- @param a float The alpha value (0 - 1)
 ---
---- @return void
+--- @return nil
 function Player:SetPathGradientColor(point, column, r, g, b, a) end
 
 --- Sets the arrow path's blend mode
@@ -578,7 +587,7 @@ function Player:SetPathGradientColor(point, column, r, g, b, a) end
 ---
 --- @param mode string The new blend mode to set (``normal``, ``add``, ``subtract``, ``modulate``, ``copysrc``, ``alphamask``, ``alphaknockout``, ``alphamultiply``, ``weightedmultiply``, ``invertdest``, ``noeffect``)
 ---
---- @return void
+--- @return nil
 function Player:SetArrowPathBlendMode(mode) end
 
 --- Sets regions of arrows that should be hidden
@@ -589,15 +598,44 @@ function Player:SetArrowPathBlendMode(mode) end
 ---
 --- @param regions table[] A list of regions to hide
 ---
---- @return void
+--- @return nil
 function Player:SetHiddenRegions(regions) end
 
 --- Removes all hidden regions
 ---
 --- |since_notitg_v4|
 ---
---- @return void
+--- @return nil
 function Player:ClearHiddenRegions() end
+
+--- Swaps a noteskin directly from Lua without attacks
+---
+--- |since_notitg_v4_9|
+---
+--- @param noteSkin string Name of the noteskin
+--- @param startBeat float
+--- @param endBeat float
+---
+--- @return nil
+function Player:SetNoteSkinForBeatRange(noteSkin, startBeat, endBeat) end
+
+--- Caches a noteskin, to prevent stutters during gameplay
+---
+--- |since_notitg_v4_9|
+---
+--- @param noteSkin string Name of the noteskin
+---
+--- @return nil
+function Player:CacheNoteSkin(noteSkin) end
+
+--- Changes the draw mode of arrowpaths
+---
+--- |since_notitg_v4_9|
+---
+--- @param drawMode string The draw mode (``triangles`` or ``fan`` or ``strip`` or ``linestrip``)
+---
+--- @return nil
+function Player:SetArrowPathDrawMode(drawMode) end
 
 --- Multiplies the note type (timing color) of notes
 ---
@@ -607,14 +645,14 @@ function Player:ClearHiddenRegions() end
 ---
 --- @param multipliers table[] A list of multiplier tables
 ---
---- @return void
+--- @return nil
 function Player:SetNoteTypeMults(multipliers) end
 
 --- Removes all note type multipliers
 ---
 --- |since_notitg_v4|
 ---
---- @return void
+--- @return nil
 function Player:ClearNoteTypeMults() end
 
 --- Simulates a step (without triggering any note hits)
@@ -623,18 +661,18 @@ function Player:ClearNoteTypeMults() end
 ---
 --- |since_notitg_v3|
 ---
---- @param column int The column to press
+--- @param column integer The column to press
 ---
---- @return void
+--- @return nil
 function Player:FakeStep(column) end
 
 --- ?
 ---
 --- |since_notitg_v3|
 ---
---- @param column int The column
+--- @param column integer The column
 ---
---- @return void
+--- @return nil
 function Player:FakeSetPressed(column) end
 
 --- Simulates a step (triggering any note hits)
@@ -643,9 +681,9 @@ function Player:FakeSetPressed(column) end
 ---
 --- |since_notitg_v3|
 ---
---- @param column int The column to press
+--- @param column integer The column to press
 ---
---- @return void
+--- @return nil
 function Player:RealStep(column) end
 
 --- Simulates a note being hit
@@ -668,11 +706,11 @@ function Player:RealStep(column) end
 ---
 --- |since_notitg_v3|
 ---
---- @param column int The column to flash (0 indexed)
---- @param judgment int The judgment
+--- @param column integer The column to flash (0 indexed)
+--- @param judgment integer The judgment
 --- @param unk boolean|nil unknown
 ---
---- @return void
+--- @return nil
 function Player:DidTapNote(column, judgment, unk) end
 
 --- Simulates a hold note being held to completion
@@ -681,10 +719,10 @@ function Player:DidTapNote(column, judgment, unk) end
 ---
 --- |since_notitg_v3|
 ---
---- @param column int The column to flash (0 indexed)
+--- @param column integer The column to flash (0 indexed)
 --- @param unk boolean|nil unknown
 ---
---- @return void
+--- @return nil
 function Player:DidHoldNote(column, unk) end
 
 --- Returns the number of taps in a range
@@ -694,25 +732,25 @@ function Player:DidHoldNote(column, unk) end
 --- @param startBeat float The start beat
 --- @param endBeat float The end beat
 ---
---- @return int
+--- @return integer
 function Player:GetNumTapsInRange(startBeat, endBeat) end
 
 --- Sets the player's controller (whether it should be controlled by a human or by the game)
 ---
 --- |since_notitg_v3|
 ---
---- @param controller int The new controller to set (See :cpp:enum:`PlayerController`)
+--- @param controller integer The new controller to set (See :cpp:enum:`PlayerController`)
 ---
---- @return void
+--- @return nil
 function Player:SetPlayerController(controller) end
 
 --- Sets which player's inputs should control the player
 ---
 --- |since_notitg_v3|
 ---
---- @param player int ``0`` for player 1, ``1`` for player 2, ``>1`` for AutoPlay
+--- @param player integer ``0`` for player 1, ``1`` for player 2, ``>1`` for AutoPlay
 ---
---- @return void
+--- @return nil
 function Player:SetInputPlayer(player) end
 
 --- Sets the mine sound
@@ -721,7 +759,7 @@ function Player:SetInputPlayer(player) end
 ---
 --- @param path string The file path to mine sound file
 ---
---- @return void
+--- @return nil
 function Player:SetMineSound(path) end
 
 --- Sends a judgment
@@ -742,12 +780,12 @@ function Player:SetMineSound(path) end
 ---
 --- |since_notitg_v3|
 ---
---- @param judgment int The judgment to send
+--- @param judgment integer The judgment to send
 --- @param early boolean ``true`` for an early judgment, ``false`` for a late judgment
 --- @param offset float|nil Optional judgment offset, in milliseconds
 --- @param beat float|nil Optional beat number
 ---
---- @return void
+--- @return nil
 function Player:SendJudgment(judgment, early, offset, beat) end
 
 --- Checks if a player is using ``Reverse`` or not
@@ -767,7 +805,7 @@ function Player:IsUsingReverse() end
 ---
 --- @param mod string The turn mod to use
 ---
---- @return void
+--- @return nil
 function Player:SetRandomVanishTransform(mod) end
 
 --- Returns a ``Player (MemoryAddress)`` string

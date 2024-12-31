@@ -132,7 +132,7 @@ UNLOCKMAN = {}
 --- |since_itg|
 ---
 --- @export
---- @type float
+--- @type number
 SCREEN_WIDTH = 0
 
 --- The window height, scaled
@@ -144,7 +144,7 @@ SCREEN_WIDTH = 0
 --- |since_itg|
 ---
 --- @export
---- @type float
+--- @type number
 SCREEN_HEIGHT = 0
 
 --- The leftmost coordinate of the window - always zero
@@ -153,7 +153,7 @@ SCREEN_HEIGHT = 0
 ---
 --- @export
 --- @constant
---- @type float
+--- @type number
 SCREEN_LEFT = 0
 
 --- The rightmost coordinate of the window - equal to :lua:attr:`SCREEN_WIDTH`
@@ -161,7 +161,7 @@ SCREEN_LEFT = 0
 --- |since_itg|
 ---
 --- @export
---- @type float
+--- @type number
 SCREEN_RIGHT = 0
 
 --- The topmost coordinate of the window - always zero
@@ -170,7 +170,7 @@ SCREEN_RIGHT = 0
 ---
 --- @export
 --- @constant
---- @type float
+--- @type number
 SCREEN_TOP = 0
 
 --- The bottommost coordinate of the window - equal to :lua:attr:`SCREEN_HEIGHT`
@@ -178,7 +178,7 @@ SCREEN_TOP = 0
 --- |since_itg|
 ---
 --- @export
---- @type float
+--- @type number
 SCREEN_BOTTOM = 0
 
 --- The middle X coordinate of the window
@@ -188,7 +188,7 @@ SCREEN_BOTTOM = 0
 --- |since_itg|
 ---
 --- @export
---- @type float
+--- @type number
 SCREEN_CENTER_X = 0
 
 --- The middle Y coordinate of the window
@@ -198,7 +198,7 @@ SCREEN_CENTER_X = 0
 --- |since_itg|
 ---
 --- @export
---- @type float
+--- @type number
 SCREEN_CENTER_Y = 0
 
 --- The monitor width
@@ -206,7 +206,7 @@ SCREEN_CENTER_Y = 0
 --- |since_itg|
 ---
 --- @export
---- @type float
+--- @type number
 DISPLAY_WIDTH = 0
 
 --- The monitor height
@@ -214,7 +214,7 @@ DISPLAY_WIDTH = 0
 --- |since_itg|
 ---
 --- @export
---- @type float
+--- @type number
 DISPLAY_HEIGHT = 0
 
 --- The leftmost coordinate of the monitor - always zero
@@ -223,7 +223,7 @@ DISPLAY_HEIGHT = 0
 ---
 --- @export
 --- @constant
---- @type float
+--- @type number
 DISPLAY_LEFT = 0
 
 --- The rightmost coordinate of the monitor - equal to :lua:attr:`DISPLAY_WIDTH`
@@ -231,7 +231,7 @@ DISPLAY_LEFT = 0
 --- |since_itg|
 ---
 --- @export
---- @type float
+--- @type number
 DISPLAY_RIGHT = 0
 
 --- The topmost coordinate of the monitor - always zero
@@ -240,7 +240,7 @@ DISPLAY_RIGHT = 0
 ---
 --- @export
 --- @constant
---- @type float
+--- @type number
 DISPLAY_TOP = 0
 
 --- The bottommost coordinate of the monitor - equal to :lua:attr:`DISPLAY_HEIGHT`
@@ -248,7 +248,7 @@ DISPLAY_TOP = 0
 --- |since_itg|
 ---
 --- @export
---- @type float
+--- @type number
 DISPLAY_BOTTOM = 0
 
 --- The middle X coordinate of the monitor
@@ -258,7 +258,7 @@ DISPLAY_BOTTOM = 0
 --- |since_itg|
 ---
 --- @export
---- @type float
+--- @type number
 DISPLAY_CENTER_X = 0
 
 --- The middle Y coordinate of the monitor
@@ -268,7 +268,7 @@ DISPLAY_CENTER_X = 0
 --- |since_itg|
 ---
 --- @export
---- @type float
+--- @type number
 DISPLAY_CENTER_Y = 0
 
 --- Equal to ``0``
@@ -276,7 +276,7 @@ DISPLAY_CENTER_Y = 0
 --- |since_itg|
 ---
 --- @export
---- @type int
+--- @type integer
 PLAYER_1 = 0
 
 --- Equal to ``1``
@@ -284,7 +284,7 @@ PLAYER_1 = 0
 --- |since_itg|
 ---
 --- @export
---- @type int
+--- @type integer
 PLAYER_2 = 1
 
 --- Equal to ``true``
@@ -300,7 +300,7 @@ OPENITG = true
 --- |since_itg|
 ---
 --- @export
---- @type int
+--- @type integer
 OPENITG_VERSION = 0
 
 --- Equal to ``true``
@@ -311,37 +311,109 @@ OPENITG_VERSION = 0
 --- @type boolean
 FUCK_EXE = true
 
+--- Equal to ``true``
+---
+--- |since_notitg_v4_9|
+---
+--- @export
+--- @type boolean
+NOTITG = true
+
 --- Equal to ``20161226`` (The release date of |notitg_v1|)
 ---
 --- |since_notitg_v3| (yes really)
 ---
 --- @export
---- @type int
+--- @type integer
 FUCK_VERSION_1 = 20161226
+
+--- Equal to ``20161226`` (The release date of |notitg_v1|)
+---
+--- |since_notitg_v4_9| (yes really)
+---
+--- @export
+--- @type integer
+NOTITG_VERSION_1 = 20161226
 
 --- Equal to ``20170405`` (The release date of |notitg_v2|)
 ---
 --- |since_notitg_v3| (yes really)
 ---
 --- @export
---- @type int
+--- @type integer
 FUCK_VERSION_2 = 20170405
+
+--- Equal to ``20170405`` (The release date of |notitg_v2|)
+---
+--- |since_notitg_v4_9| (yes really)
+---
+--- @export
+--- @type integer
+NOTITG_VERSION_2 = 20170405
 
 --- Equal to ``20180609`` (The release date of |notitg_v3|)
 ---
 --- |since_notitg_v4| (yes really)
 ---
 --- @export
---- @type int
+--- @type integer
 FUCK_VERSION_3 = 20180609
+
+--- Equal to ``20180609`` (The release date of |notitg_v3|)
+---
+--- |since_notitg_v4_9| (yes really)
+---
+--- @export
+--- @type integer
+NOTITG_VERSION_3 = 20180609
 
 --- Equal to ``20180826`` (The release date of |notitg_v3_1|)
 ---
 --- |since_notitg_v4| (yes really)
 ---
 --- @export
---- @type int
+--- @type integer
 FUCK_VERSION_3_1 = 20180826
+
+--- Equal to ``20180826`` (The release date of |notitg_v3_1|)
+---
+--- |since_notitg_v4_9| (yes really)
+---
+--- @export
+--- @type integer
+NOTITG_VERSION_3_1 = 20180826
+
+--- Equal to ``20240917`` (The release date of |notitg_v4_9|)
+---
+--- |since_notitg_v4_9|
+---
+--- @export
+--- @type integer
+FUCK_VERSION_4_9 = 20240917
+
+--- Equal to ``20240917`` (The release date of |notitg_v4_9|)
+---
+--- |since_notitg_v4_9|
+---
+--- @export
+--- @type integer
+NOTITG_VERSION_4_9 = 20240917
+
+--- Equal to ``20241010`` (The release date of |notitg_v4_9_1|)
+---
+--- |since_notitg_v4_9_1|
+---
+--- @export
+--- @type integer
+FUCK_VERSION_4_9_1 = 20241010
+
+--- Equal to ``20241010`` (The release date of |notitg_v4_9_1|)
+---
+--- |since_notitg_v4_9_1|
+---
+--- @export
+--- @type integer
+NOTITG_VERSION_4_9_1 = 20241010
 
 --- Returns whether all active players failed the current stage
 ---
@@ -378,7 +450,7 @@ function IsNetSMOnline() end
 ---
 --- |since_itg|
 ---
---- @param player int The player number (0 indexed)
+--- @param player integer The player number (0 indexed)
 ---
 --- @return boolean
 function IsSMOnlineLoggedIn(player) end
@@ -394,7 +466,7 @@ function ReportStyle() end
 ---
 --- |since_itg|
 ---
---- @param difficulty int The difficulty - see :cpp:enum:`Difficulty`
+--- @param difficulty integer The difficulty - see :cpp:enum:`Difficulty`
 ---
 --- @return string
 function DifficultyToThemedString(difficulty) end
@@ -403,7 +475,7 @@ function DifficultyToThemedString(difficulty) end
 ---
 --- |since_itg|
 ---
---- @param courseDifficulty int The course difficulty - see :cpp:enum:`CourseDifficulty`
+--- @param courseDifficulty integer The course difficulty - see :cpp:enum:`CourseDifficulty`
 ---
 --- @return string
 function CourseDifficultyToThemedString(courseDifficulty) end
@@ -412,7 +484,7 @@ function CourseDifficultyToThemedString(courseDifficulty) end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function CourseSongIndex() end
 
 --- Returns the name of the current style
@@ -428,21 +500,21 @@ function CurStyleName() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function DayOfMonth() end
 
 --- Returns the current month of the year (1 indexed)
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function MonthOfYear() end
 
 --- Returns the current day of the year (0 indexed)
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function DayOfYear() end
 
 --- Returns the current weekday (0 - 6)
@@ -451,35 +523,35 @@ function DayOfYear() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function Weekday() end
 
 --- Returns the current year
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function Year() end
 
 --- Returns the current hour
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function Hour() end
 
 --- Returns the current minute
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function Minute() end
 
 --- Returns the current second
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function Second() end
 
 --- Converts a month number to a human-readable string
@@ -497,7 +569,7 @@ function MonthToString() end
 ---
 --- |since_itg|
 ---
---- @param seconds int The number of seconds
+--- @param seconds integer The number of seconds
 ---
 --- @return string
 function SecondsToMMSS(seconds) end
@@ -506,7 +578,7 @@ function SecondsToMMSS(seconds) end
 ---
 --- |since_itg|
 ---
---- @param seconds float The number of seconds
+--- @param seconds number The number of seconds
 ---
 --- @return string
 function SecondsToMMSSMsMs(seconds) end
@@ -515,7 +587,7 @@ function SecondsToMMSSMsMs(seconds) end
 ---
 --- |since_itg|
 ---
---- @param seconds float The number of seconds
+--- @param seconds number The number of seconds
 ---
 --- @return string
 function SecondsToMMSSMsMsMs(seconds) end
@@ -524,7 +596,7 @@ function SecondsToMMSSMsMsMs(seconds) end
 ---
 --- |since_itg|
 ---
---- @param seconds float The number of seconds
+--- @param seconds number The number of seconds
 ---
 --- @return string
 function SecondsToMSSMsMs(seconds) end
@@ -557,7 +629,7 @@ function Trace(message) end
 ---
 --- |since_itg|
 ---
---- @param score float The dance points score
+--- @param score number The dance points score
 ---
 --- @return string
 function FormatPercentScore(score) end
@@ -568,7 +640,7 @@ function FormatPercentScore(score) end
 ---
 --- See :cpp:enum:`Grade`
 ---
---- @return int
+--- @return integer
 function GetBestFinalGrade() end
 
 --- Returns the amount of free space available on the partition the game is installed on
@@ -595,7 +667,7 @@ function GetDiskSpaceTotal() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GetEasiestNotesDifficulty() end
 
 --- Returns the grade for a given percentage score
@@ -604,9 +676,9 @@ function GetEasiestNotesDifficulty() end
 ---
 --- |since_itg|
 ---
---- @param percent float The percentage score
+--- @param percent number The percentage score
 ---
---- @return int
+--- @return integer
 function GetGradeFromPercent(percent) end
 
 --- Returns the internal IP and netmask of the machine
@@ -629,28 +701,28 @@ function GetInputType() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GetNumCrashLogs() end
 
 --- Returns the number drive IO errors
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GetNumIOErrors() end
 
 --- Returns the number of edits registered in the machine
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GetNumMachineEdits() end
 
 --- Returns the number of scored saved on the machine
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GetNumMachineScores() end
 
 --- Returns the number of players enabled
@@ -659,7 +731,7 @@ function GetNumMachineScores() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GetNumMachineScores() end
 
 --- Returns the name (and version if applicable) of the executable
@@ -684,7 +756,7 @@ function GetProductVer() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GetRevision() end
 
 --- Returns the serial number of the installation
@@ -722,7 +794,7 @@ function GetUptime() end
 ---
 --- @param name string The grade name
 ---
---- @return int
+--- @return integer
 function Grade(name) end
 
 --- Returns a grade name from a grade
@@ -733,7 +805,7 @@ function Grade(name) end
 ---
 --- |since_itg|
 ---
---- @param grade int The grade
+--- @param grade integer The grade
 ---
 --- @return string
 function GradeToString(grade) end
@@ -749,7 +821,7 @@ function HubIsConnected() end
 ---
 --- |since_itg|
 ---
---- @param player int The player number (0 indexed)
+--- @param player integer The player number (0 indexed)
 ---
 --- @return boolean
 function IsUsingMemoryCard(player) end
@@ -767,7 +839,7 @@ function IsAnyPlayerUsingMemoryCard() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function NumStagesLeft() end
 
 --- Returns whether the current stage is the extra stage

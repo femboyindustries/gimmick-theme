@@ -10,9 +10,9 @@ local MemoryCardManager = {}
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
---- @return int
+--- @return integer
 function MemoryCardManager:GetCardState(playerNumber) end
 
 --- Check equality with another userdata object

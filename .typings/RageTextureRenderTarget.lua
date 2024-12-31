@@ -10,14 +10,14 @@ local RageTextureRenderTarget = {}
 ---
 --- @param preserveTexture boolean Whether the currently stored texture should be preserved (not cleared) before rendering
 ---
---- @return void
+--- @return nil
 function RageTextureRenderTarget:BeginRenderingTo(preserveTexture) end
 
 --- Stops rendering to the texture
 ---
 --- |since_notitg_v1|
 ---
---- @return void
+--- @return nil
 function RageTextureRenderTarget:FinishRenderingTo() end
 
 --- Returns a ``RageTextureRenderTarget (MemoryAddress)`` string

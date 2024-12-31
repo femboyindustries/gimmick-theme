@@ -10,7 +10,7 @@ local BitmapText = {}
 ---
 --- @param text string The new text to display
 ---
---- @return void
+--- @return nil
 function BitmapText:settext(text) end
 
 --- Returns the currently displayed text
@@ -26,9 +26,9 @@ function BitmapText:GetText() end
 ---
 --- |since_itg|
 ---
---- @param width float The new maximum width to set, or 0 to disable the width limit
+--- @param width number The new maximum width to set, or 0 to disable the width limit
 ---
---- @return void
+--- @return nil
 function BitmapText:maxwidth(width) end
 
 --- Sets/clears the maximum height allowed for rendering text
@@ -37,18 +37,18 @@ function BitmapText:maxwidth(width) end
 ---
 --- |since_itg|
 ---
---- @param height float The new maximum height to set, or 0 to disable the height limit
+--- @param height number The new maximum height to set, or 0 to disable the height limit
 ---
---- @return void
+--- @return nil
 function BitmapText:maxheight(height) end
 
 --- Sets the text wrapping point
 ---
 --- |since_itg|
 ---
---- @param width int Where to start wrapping text (in pixels)
+--- @param width integer Where to start wrapping text (in pixels)
 ---
---- @return void
+--- @return nil
 function BitmapText:wrapwidthpixels(width) end
 
 --- Returns a ``BitmapText (MemoryAddress)`` string

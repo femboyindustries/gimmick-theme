@@ -10,28 +10,28 @@ local Polygon = {}
 ---
 --- |since_notitg_unk|
 ---
---- @param count int The number of vertices
+--- @param count integer The number of vertices
 ---
---- @return void
+--- @return nil
 function Polygon:SetNumVertices(count) end
 
 --- Returns the number of vertices the polygon actor has
 ---
 --- |since_notitg_unk|
 ---
---- @return int
+--- @return integer
 function Polygon:GetNumVertices() end
 
 --- Sets a vertex's position
 ---
 --- |since_notitg_unk|
 ---
---- @param index int The vertex index (0 indexed)
+--- @param index integer The vertex index (0 indexed)
 --- @param x float The vertex's X position
 --- @param y float The vertex's Y position
 --- @param z float The vertex's Z position
 ---
---- @return void
+--- @return nil
 function Polygon:SetVertexPosition(index, x, y, z) end
 
 --- Returns a vertex's position
@@ -42,7 +42,7 @@ function Polygon:SetVertexPosition(index, x, y, z) end
 ---
 --- |since_notitg_unk|
 ---
---- @param index int The vertex index (0 indexed)
+--- @param index integer The vertex index (0 indexed)
 ---
 --- @return multiple
 function Polygon:GetVertexPosition(index) end
@@ -51,12 +51,12 @@ function Polygon:GetVertexPosition(index) end
 ---
 --- |since_notitg_unk|
 ---
---- @param index int The vertex index (0 indexed)
+--- @param index integer The vertex index (0 indexed)
 --- @param x float The X component of the vertex's normal
 --- @param y float The Y component of the vertex's normal
 --- @param z float The Z component of the vertex's normal
 ---
---- @return void
+--- @return nil
 function Polygon:SetVertexNormal(index, x, y, z) end
 
 --- Returns a vertex's normal
@@ -67,7 +67,7 @@ function Polygon:SetVertexNormal(index, x, y, z) end
 ---
 --- |since_notitg_unk|
 ---
---- @param index int The vertex index (0 indexed)
+--- @param index integer The vertex index (0 indexed)
 ---
 --- @return multiple
 function Polygon:GetVertexNormal(index) end
@@ -76,13 +76,13 @@ function Polygon:GetVertexNormal(index) end
 ---
 --- |since_notitg_unk|
 ---
---- @param index int The vertex index (0 indexed)
+--- @param index integer The vertex index (0 indexed)
 --- @param r float The red value
 --- @param g float The green value
 --- @param b float The blue value
 --- @param a float The alpha value
 ---
---- @return void
+--- @return nil
 function Polygon:SetVertexColor(index, r, g, b, a) end
 
 --- Returns a vertex's color
@@ -93,7 +93,7 @@ function Polygon:SetVertexColor(index, r, g, b, a) end
 ---
 --- |since_notitg_unk|
 ---
---- @param index int The vertex index (0 indexed)
+--- @param index integer The vertex index (0 indexed)
 ---
 --- @return multiple
 function Polygon:GetVertexColor(index) end
@@ -102,22 +102,22 @@ function Polygon:GetVertexColor(index) end
 ---
 --- |since_notitg_unk|
 ---
---- @param index int The vertex index (0 indexed)
+--- @param index integer The vertex index (0 indexed)
 --- @param a float The alpha value
 ---
---- @return void
+--- @return nil
 function Polygon:SetVertexAlpha(index, a) end
 
 --- Sets a vertex's texture coordinate
 ---
 --- |since_notitg_unk|
 ---
---- @param index int The vertex index (0 indexed)
+--- @param index integer The vertex index (0 indexed)
 --- @param u float The U value (X position)
 --- @param v float The V value (Y position)
 --- @param w float|nil The W value (Z position - irrelevant for 2D textures)
 ---
---- @return void
+--- @return nil
 function Polygon:SetVertexTexCoord(index, u, v, w) end
 
 --- Returns a vertex's texture coordinate
@@ -128,7 +128,7 @@ function Polygon:SetVertexTexCoord(index, u, v, w) end
 ---
 --- |since_notitg_unk|
 ---
---- @param index int The vertex index (0 indexed)
+--- @param index integer The vertex index (0 indexed)
 ---
 --- @return multiple
 function Polygon:GetVertexTexCoord(index) end
@@ -137,9 +137,9 @@ function Polygon:GetVertexTexCoord(index) end
 ---
 --- |since_notitg_unk|
 ---
---- @param mode int The new mode to set - see :cpp:enum:`PolygonMode`
+--- @param mode integer The new mode to set - see :cpp:enum:`PolygonMode`
 ---
---- @return void
+--- @return nil
 function Polygon:SetPolygonMode(mode) end
 
 --- Sets the polygon actor's draw mode
@@ -148,16 +148,16 @@ function Polygon:SetPolygonMode(mode) end
 ---
 --- @param mode string The draw mode (``triangles`` or ``quads`` or ``quadstrip`` or ``fan`` or ``strip`` or ``linestrip``)
 ---
---- @return void
+--- @return nil
 function Polygon:SetDrawMode(mode) end
 
 --- ???
 ---
 --- |since_notitg_unk|
 ---
---- @param index int The vertex index (0 indexed)
+--- @param index integer The vertex index (0 indexed)
 ---
---- @return void
+--- @return nil
 function Polygon:AddDrawSplit(index) end
 
 --- Sets the width for drawing lines (if the actor is in line polygon mode)
@@ -166,7 +166,7 @@ function Polygon:AddDrawSplit(index) end
 ---
 --- @param width float The line width
 ---
---- @return void
+--- @return nil
 function Polygon:SetLineWidth(width) end
 
 --- Sets the polygon actor's texture
@@ -175,7 +175,7 @@ function Polygon:SetLineWidth(width) end
 ---
 --- @param texture RageTexture the texture to set
 ---
---- @return void
+--- @return nil
 function Polygon:SetTexture(texture) end
 
 --- Returns the polygon actor's texture

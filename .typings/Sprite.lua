@@ -10,7 +10,7 @@ local Sprite = {}
 ---
 --- @param texture RageTexture The new texture to set
 ---
---- @return void
+--- @return nil
 function Sprite:SetTexture(texture) end
 
 --- Returns the sprite's texture
@@ -26,7 +26,7 @@ function Sprite:GetTexture() end
 ---
 --- @param path string|nil The texture path to load, or ``nil`` to unload
 ---
---- @return void
+--- @return nil
 function Sprite:Load(path) end
 
 --- Like :lua:meth:`Sprite.Load`, but for song banners
@@ -35,7 +35,7 @@ function Sprite:Load(path) end
 ---
 --- @param path string The texture path to load
 ---
---- @return void
+--- @return nil
 function Sprite:LoadBanner(path) end
 
 --[[
@@ -46,7 +46,7 @@ function Sprite:LoadBanner(path) end
 ---
 --- @param song Song The song to load the banner from
 ---
---- @return void
+--- @return nil
 function Sprite:LoadFromSongBanner() end
 
 --- Load a song background texture
@@ -55,7 +55,7 @@ function Sprite:LoadFromSongBanner() end
 ---
 --- @param song Song The song to load the background from
 ---
---- @return void
+--- @return nil
 function Sprite:LoadFromSongBackground() end
 
 ]]
@@ -66,7 +66,7 @@ function Sprite:LoadFromSongBackground() end
 ---
 --- @param path string The texture path to load
 ---
---- @return void
+--- @return nil
 function Sprite:LoadBackground(path) end
 
 --- Sets whether an animated texture should loop
@@ -77,7 +77,7 @@ function Sprite:LoadBackground(path) end
 ---
 --- @param enable boolean ``true`` to loop the animation, ``false`` to have a play-once animation
 ---
---- @return void
+--- @return nil
 function Sprite:loop(enable) end
 
 --- Sets the animated texture's loop point
@@ -86,16 +86,16 @@ function Sprite:loop(enable) end
 ---
 --- |since_notitg_v4|
 ---
---- @param point int The new loop point to set
+--- @param point integer The new loop point to set
 ---
---- @return void
+--- @return nil
 function Sprite:looppoint(point) end
 
 --- Returns the current frame of an animated texture
 ---
 --- |since_notitg_v4|
 ---
---- @return int
+--- @return integer
 function Sprite:getstate() end
 
 --- Sets the playback rate of an animated texture
@@ -106,7 +106,7 @@ function Sprite:getstate() end
 ---
 --- @param rate float The new playback rate to set (0 - 1)
 ---
---- @return void
+--- @return nil
 function Sprite:rate(rate) end
 
 --- Scales the image to fit a rectangle
@@ -118,7 +118,7 @@ function Sprite:rate(rate) end
 --- @param right float The right coordinate of the rectangle
 --- @param bottom float The bottom coordinate of the rectangle
 ---
---- @return void
+--- @return nil
 function Sprite:customtexturerect(left, top, right, bottom) end
 
 --- Scales the sprite to the specified dimensions
@@ -128,7 +128,7 @@ function Sprite:customtexturerect(left, top, right, bottom) end
 --- @param width float The target width
 --- @param height float The height width
 ---
---- @return void
+--- @return nil
 function Sprite:scaletoclipped(width, height) end
 
 --- Sets custom coordinates to the frames of the texture
@@ -138,7 +138,7 @@ function Sprite:scaletoclipped(width, height) end
 --- @param x float The X translation to apply
 --- @param y float The Y translation to apply
 ---
---- @return void
+--- @return nil
 function Sprite:stretchtexcoords(x, y) end
 
 --- Sets the texture scroll speed
@@ -150,14 +150,14 @@ function Sprite:stretchtexcoords(x, y) end
 --- @param x float The X scroll speed to apply
 --- @param y float The Y scroll speed to apply
 ---
---- @return void
+--- @return nil
 function Sprite:texcoordvelocity(x, y) end
 
 --- Returns the number of states the sprite has
 ---
 --- |since_notitg_v4_2_0|
 ---
---- @return int
+--- @return integer
 function Sprite:GetNumStates() end
 
 --- Returns an ``Sprite (MemoryAddress)`` string

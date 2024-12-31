@@ -14,7 +14,7 @@ local ActorProxy = {}
 ---
 --- @param actor Actor|nil The actor this proxy will re-draw, or nil to un-set the target (``nil`` is only accepted since |notitg_v4|)
 ---
---- @return void
+--- @return nil
 function ActorProxy:SetTarget(actor) end
 
 --- Returns the target of the actor proxy

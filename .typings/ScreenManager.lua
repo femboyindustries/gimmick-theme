@@ -12,7 +12,7 @@ local ScreenManager = {}
 ---
 --- @param message string The message to show
 ---
---- @return void
+--- @return nil
 function ScreenManager:SystemMessage(message) end
 
 --- Like :lua:meth:`ScreenManager.SystemMessage`, but does not animate the message in
@@ -21,7 +21,7 @@ function ScreenManager:SystemMessage(message) end
 ---
 --- @param message string The message to show
 ---
---- @return void
+--- @return nil
 function ScreenManager:SystemMessageNoAnimate(message) end
 
 --- Overlays a message on top of the entire screen
@@ -30,14 +30,14 @@ function ScreenManager:SystemMessageNoAnimate(message) end
 ---
 --- @param message string The message to show
 ---
---- @return void
+--- @return nil
 function ScreenManager:OverlayMessage(message) end
 
 --- Hides any message previously shown with :lua:meth:`ScreenManager.OverlayMessage`
 ---
 --- |since_itg|
 ---
---- @return void
+--- @return nil
 function ScreenManager:HideOverlayMessage() end
 
 --- Switches to the specified screen
@@ -46,7 +46,7 @@ function ScreenManager:HideOverlayMessage() end
 ---
 --- @param screenName string The name of the screen to switch to
 ---
---- @return void
+--- @return nil
 function ScreenManager:SetNewScreen(screenName) end
 
 --- Returns the currently displayed screen
@@ -62,9 +62,9 @@ function ScreenManager:GetTopScreen() end
 ---
 --- |since_notitg_v4|
 ---
---- @param mode int ``0`` for all screens, ``1`` for only overlay screens, ``2`` for no screens
+--- @param mode integer ``0`` for all screens, ``1`` for only overlay screens, ``2`` for no screens
 ---
---- @return void
+--- @return nil
 function ScreenManager:SetInputMode(mode) end
 
 --- ?

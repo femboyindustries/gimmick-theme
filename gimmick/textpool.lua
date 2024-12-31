@@ -21,9 +21,9 @@
 
 ---@class TextPool
 ---@field texts table<string, BitmapText>
----@field usage table<BitmapText, int>
----@field i int
----@field lowest int
+---@field usage table<BitmapText, integer>
+---@field i integer
+---@field lowest integer
 ---@field init (fun(actor: BitmapText): nil)?
 local TextPool = {}
 

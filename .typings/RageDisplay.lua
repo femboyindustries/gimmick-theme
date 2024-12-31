@@ -8,21 +8,21 @@ local RageDisplay = {}
 ---
 --- |since_notitg_v1|
 ---
---- @return int
+--- @return integer
 function RageDisplay:GetVPF() end
 
 --- Returns the frames drawn per second
 ---
 --- |since_notitg_v1|
 ---
---- @return int
+--- @return integer
 function RageDisplay:GetFPS() end
 
 --- Returns the cumulative (average) FPS
 ---
 --- |since_notitg_v1|
 ---
---- @return int
+--- @return integer
 function RageDisplay:GetCumFPS() end
 
 --- Applies a shader to *all* on-screen actors
@@ -31,14 +31,14 @@ function RageDisplay:GetCumFPS() end
 ---
 --- @param shader RageShaderProgram The shader program to apply
 ---
---- @return void
+--- @return nil
 function RageDisplay:ShaderFuck(shader) end
 
 --- Undoes :lua:meth:`RageDisplay.ShaderFuck`
 ---
 --- |since_notitg_v3|
 ---
---- @return void
+--- @return nil
 function RageDisplay:ClearShaderFuck() end
 
 --- Sets the game window's position and size
@@ -50,7 +50,7 @@ function RageDisplay:ClearShaderFuck() end
 --- @param xZoom float The window X scale (Where one unit is the theme's width - which is typically 640)
 --- @param yZoom float The window Y scale (Where one unit is the theme's height)
 ---
---- @return void
+--- @return nil
 function RageDisplay:SetWindow(xPos, yPos, xZoom, yZoom) end
 
 --- Sets the window center's X position, in pixels
@@ -59,7 +59,7 @@ function RageDisplay:SetWindow(xPos, yPos, xZoom, yZoom) end
 ---
 --- @param x float The new X position to set
 ---
---- @return void
+--- @return nil
 function RageDisplay:SetWindowX(x) end
 
 --- Returns the window center's X position, in pixels
@@ -75,7 +75,7 @@ function RageDisplay:GetWindowX() end
 ---
 --- @param y float The new Y position to set
 ---
---- @return void
+--- @return nil
 function RageDisplay:SetWindowY(y) end
 
 --- Returns the window center's Y position, in pixels
@@ -91,7 +91,7 @@ function RageDisplay:GetWindowY() end
 ---
 --- @param xZoom float The window X scale (Where one unit is the theme's width - which is typically 640)
 ---
---- @return void
+--- @return nil
 function RageDisplay:SetWindowZoomX(xZoom) end
 
 --- Sets the window's Y scale
@@ -100,7 +100,7 @@ function RageDisplay:SetWindowZoomX(xZoom) end
 ---
 --- @param yZoom float The window Y scale (Where one unit is the theme's height)
 ---
---- @return void
+--- @return nil
 function RageDisplay:SetWindowZoomY(yZoom) end
 
 --- Sets the window's X and Y scale
@@ -111,7 +111,7 @@ function RageDisplay:SetWindowZoomY(yZoom) end
 ---
 --- @param yZoom float The window Y scale (Where one unit is the theme's height)
 ---
---- @return void
+--- @return nil
 function RageDisplay:SetWindowZoom(xZoom, yZoom) end
 
 --- Returns the window's X scale
@@ -138,7 +138,7 @@ function RageDisplay:GetWindowZoomY() end
 ---
 --- @param width float The new width, in pixels
 ---
---- @return void
+--- @return nil
 function RageDisplay:SetWindowWidth(width) end
 
 --- Returns the window's width, in pixels
@@ -154,7 +154,7 @@ function RageDisplay:GetWindowWidth() end
 ---
 --- @param height float The new height, in pixels
 ---
---- @return void
+--- @return nil
 function RageDisplay:SetWindowHeight(height) end
 
 --- Returns the window's height, in pixels
@@ -177,7 +177,7 @@ function RageDisplay:GetVendor() end
 ---
 --- @param x float The horizontal offset to add, in pixels
 ---
---- @return void
+--- @return nil
 function RageDisplay:SetWindowAddX(x) end
 
 --- Adds ``y`` to the window's current vertical position
@@ -186,7 +186,7 @@ function RageDisplay:SetWindowAddX(x) end
 ---
 --- @param y float The vertical offset to add, in pixels
 ---
---- @return void
+--- @return nil
 function RageDisplay:SetWindowAddY(y) end
 
 --- Returns the window width
@@ -214,7 +214,7 @@ function RageDisplay:GetDisplayHeight() end
 --- @param x float The X position, in pixels
 --- @param y float the Y position, in pixels
 ---
---- @return void
+--- @return nil
 function RageDisplay:SetWindowPosition(x, y) end
 
 --- Sets the window position relative to the center of the screen, and its size
@@ -228,7 +228,7 @@ function RageDisplay:SetWindowPosition(x, y) end
 --- @param w float The window width, in pixels
 --- @param h float the window height, in pixels
 ---
---- @return void
+--- @return nil
 function RageDisplay:SetWindowPositionAndSize(x, y, w, h) end
 
 --- Returns the main monitor's width
@@ -249,10 +249,10 @@ function RageDisplay:GetDesktopHeight() end
 ---
 --- |since_notitg_v1|
 ---
---- @param translateX int The X offset
---- @param translateY int The Y offset
---- @param addX int The width to add
---- @param addY int The height to add
+--- @param translateX integer The X offset
+--- @param translateY integer The Y offset
+--- @param addX integer The width to add
+--- @param addY integer The height to add
 function RageDisplay:ChangeCentering(translateX, translateY, addX, addY) end
 
 --- Toggle whether the window will have a border
@@ -263,7 +263,7 @@ function RageDisplay:ChangeCentering(translateX, translateY, addX, addY) end
 ---
 --- @param enable boolean Whether the window should have a border
 ---
---- @return void
+--- @return nil
 function RageDisplay:SetBorderless(enable) end
 
 --- Tests for equality against another userdata object

@@ -10,7 +10,7 @@ local FadingBanner = {}
 ---
 --- @param song Song The song to load the banner from
 ---
---- @return void
+--- @return nil
 function FadingBanner:LoadFromSong(song) end
 
 --- Scales the banner to the specified dimmensions
@@ -19,10 +19,10 @@ function FadingBanner:LoadFromSong(song) end
 ---
 --- |since_itg|
 ---
---- @param width float The desired width
---- @param height float The desired height
+--- @param width number The desired width
+--- @param height number The desired height
 ---
---- @return void
+--- @return nil
 function FadingBanner:ScaleToClipped(width, height) end
 
 --- Returns a ``FadingBanner (MemoryAddress)`` string

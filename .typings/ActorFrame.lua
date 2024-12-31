@@ -11,9 +11,9 @@ local ActorFrame = {}
 ---
 --- |since_itg|
 ---
---- @param fov float The new field-of-view to use, in degrees
+--- @param fov number The new field-of-view to use, in degrees
 ---
---- @return void
+--- @return nil
 function ActorFrame:fov(fov) end
 
 --- Set the ActorFrame's field-of-view (used when rendering children)
@@ -22,9 +22,9 @@ function ActorFrame:fov(fov) end
 ---
 --- |since_itg|
 ---
---- @param fov float The new field-of-view to use, in degrees
+--- @param fov number The new field-of-view to use, in degrees
 ---
---- @return void
+--- @return nil
 function ActorFrame:SetFOV(fov) end
 
 --- Sets the ActorFrame's update command
@@ -33,7 +33,7 @@ function ActorFrame:SetFOV(fov) end
 ---
 --- @param name string The command name to call on updates
 ---
---- @return void
+--- @return nil
 function ActorFrame:SetUpdateCommand(name) end
 
 --- Sets the ActorFrame's update function
@@ -44,23 +44,23 @@ function ActorFrame:SetUpdateCommand(name) end
 ---
 --- @param updateFunc function The function to call on updates
 ---
---- @return void
+--- @return nil
 function ActorFrame:SetUpdateFunction(updateFunc) end
 
 --- Sets how frequently the ActorFrame should fire it's update command/function
 ---
 --- |since_itg|
 ---
---- @param rate float The new update rate to use
+--- @param rate number The new update rate to use
 ---
---- @return void
+--- @return nil
 function ActorFrame:SetUpdateRate(rate) end
 
 --- Returns the number of children the ActorFrame has
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function ActorFrame:GetNumChildren() end
 
 --- Returns all children of the ActorFrame in a table
@@ -87,7 +87,7 @@ function ActorFrame:GetChild(name) end
 ---
 --- |since_notitg_v1|
 ---
---- @param index int The index of the child to get
+--- @param index integer The index of the child to get
 ---
 --- @return Actor|nil
 function ActorFrame:GetChildAt(index) end
@@ -98,9 +98,9 @@ function ActorFrame:GetChildAt(index) end
 ---
 --- |since_notitg_v3|
 ---
---- @param farDist float The new draw distance t oset
+--- @param farDist number The new draw distance t oset
 ---
---- @return void
+--- @return nil
 function ActorFrame:SetFarDist(farDist) end
 
 -- TODO: Link screen center consts
@@ -111,9 +111,9 @@ function ActorFrame:SetFarDist(farDist) end
 ---
 --- |since_notitg_v1|
 ---
---- @param x float The X coordinate to set
+--- @param x number The X coordinate to set
 ---
---- @return void
+--- @return nil
 function ActorFrame:SetVanishX(x) end
 
 --- Sets the Y coordinate for the ActorFrame's vanishing point
@@ -122,9 +122,9 @@ function ActorFrame:SetVanishX(x) end
 ---
 --- |since_notitg_v1|
 ---
---- @param y float The Y coordinate to set
+--- @param y number The Y coordinate to set
 ---
---- @return void
+--- @return nil
 function ActorFrame:SetVanishY(y) end
 
 --- Sets the vanishing point for the ActorFrame
@@ -133,10 +133,10 @@ function ActorFrame:SetVanishY(y) end
 ---
 --- |since_notitg_v1|
 ---
---- @param x float The X coordinate to set
---- @param y float The Y coordinate to set
+--- @param x number The X coordinate to set
+--- @param y number The Y coordinate to set
 ---
---- @return void
+--- @return nil
 function ActorFrame:SetVanishPoint(x, y) end
 
 --- Set whether commands should be propagated to children
@@ -145,9 +145,9 @@ function ActorFrame:SetVanishPoint(x, y) end
 ---
 --- |since_itg|
 ---
---- @param enable int ``1`` to enable, ``0`` to disable
+--- @param enable integer ``1`` to enable, ``0`` to disable
 ---
---- @return void
+--- @return nil
 function ActorFrame:propagate(enable) end
 
 --- Set whether shaders should be propagated to children
@@ -156,9 +156,9 @@ function ActorFrame:propagate(enable) end
 ---
 --- |since_notitg_v3|
 ---
---- @param enable int ``1`` to enable, ``0`` to disable
+--- @param enable integer ``1`` to enable, ``0`` to disable
 ---
---- @return void
+--- @return nil
 function ActorFrame:propagateshaders(enable) end
 
 --- Sets the ActorFrame's draw function
@@ -167,7 +167,7 @@ function ActorFrame:propagateshaders(enable) end
 ---
 --- @param drawFunc function The function to call at every draw attempt
 ---
---- @return void
+--- @return nil
 function ActorFrame:SetDrawFunction(drawFunc) end
 
 --- Sets whether the "draw by Z positon" behaviour should be enabled
@@ -178,7 +178,7 @@ function ActorFrame:SetDrawFunction(drawFunc) end
 ---
 --- @param enable boolean Whether the "draw by Z positon" behavious should be enabled
 ---
---- @return void
+--- @return nil
 function ActorFrame:SetDrawByZPosition(enable) end
 
 --- Returns a child of the actor frame
@@ -196,7 +196,7 @@ function ActorFrame:__call(child) end
 ---
 --- |since_notitg_v4|
 ---
---- @return int
+--- @return integer
 function ActorFrame:__len() end
 
 --- Retruns an ``ActorFrame (MemoryAddress)`` string

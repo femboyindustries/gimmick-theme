@@ -10,7 +10,7 @@ local DifficultyMeter = {}
 ---
 --- @param steps Steps The steps to use
 ---
---- @return void
+--- @return nil
 function DifficultyMeter:SetFromSteps(steps) end
 
 --- Sets the difficulty meter's data from a trail
@@ -19,17 +19,17 @@ function DifficultyMeter:SetFromSteps(steps) end
 ---
 --- @param trail Trail The trail to use
 ---
---- @return void
+--- @return nil
 function DifficultyMeter:SetFromTrail(trail) end
 
 --- Sets the difficulty meter's data from a meter and difficulty value
 ---
 --- |since_itg|
 ---
---- @param meter int The rated numerical difficulty to use
---- @param difficulty int The difficulty to use - See :cpp:enum:`Difficulty`
+--- @param meter integer The rated numerical difficulty to use
+--- @param difficulty integer The difficulty to use - See :cpp:enum:`Difficulty`
 ---
---- @return void
+--- @return nil
 function DifficultyMeter:SetFromMeterAndDifficulty(meter, difficulty) end
 
 --- Loads specified graphics into the difficulty meter
@@ -38,7 +38,7 @@ function DifficultyMeter:SetFromMeterAndDifficulty(meter, difficulty) end
 ---
 --- @param path string The path to load
 ---
---- @return void
+--- @return nil
 function DifficultyMeter:Load(path) end
 
 --- Returns a ``DifficultyMeter (MemoryAddress)`` string

@@ -16,6 +16,15 @@ local RageFileManager = {}
 --- @return multiple
 function RageFileManager:LuaLoadFile(path) end
 
+--- Loads and parses an .ini file
+---
+--- |since_notitg_v4_9|
+---
+--- @param path string Path to the .ini file
+---
+--- @return table
+function RageFileManager:LoadIniFile(path) end
+
 --- Tests for equality against another userdata object
 ---
 --- |since_unk|

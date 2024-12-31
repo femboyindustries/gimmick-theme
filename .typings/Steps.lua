@@ -15,7 +15,7 @@ function Steps:GetDescription() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function Steps:GetMeter() end
 
 --- Returns the steps' difficulty
@@ -24,7 +24,7 @@ function Steps:GetMeter() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function Steps:GetDifficulty() end
 
 --- Return the steps' radar values
@@ -40,8 +40,17 @@ function Steps:GetRadarValues() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function Steps:GetStepsType() end
+
+--- Returns the note data from one of the song's steps
+---
+--- See :ref:`note_data_format`
+---
+--- |since_notitg_v4_9|
+---
+--- @return table[]
+function Steps:GetNoteData() end
 
 --- Tests for equality against another userdata object
 ---

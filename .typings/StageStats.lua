@@ -15,7 +15,7 @@ function StageStats:GetGameplaySeconds() end
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
 --- @return PlayerStageStats
 function StageStats:GetPlayerStageStats(playerNumber) end

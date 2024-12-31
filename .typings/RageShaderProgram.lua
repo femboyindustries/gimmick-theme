@@ -9,9 +9,9 @@ local RageShaderProgram = {}
 --- |since_notitg_v3|
 ---
 --- @param uniformName string The name of the uniform to set
---- @param value int The value to set on uniform
+--- @param value integer The value to set on uniform
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:uniform1i(uniformName, value) end
 
 --- Sets an int/bool uniform, or an array of int/bool uniforms
@@ -21,7 +21,7 @@ function RageShaderProgram:uniform1i(uniformName, value) end
 --- @param uniformName string The name of the uniform to set
 --- @param values table The values to set (This should be a table with 1 element, or any multiple of 1 for setting arrays)
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:uniform1iv(uniformName, values) end
 
 --- Sets a float uniform
@@ -31,7 +31,7 @@ function RageShaderProgram:uniform1iv(uniformName, values) end
 --- @param uniformName string The name of the uniform to set
 --- @param value float The value to set on the uniform
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:uniform1f(uniformName, value) end
 
 --- Sets a float uniform, or an array of float uniforms
@@ -41,7 +41,7 @@ function RageShaderProgram:uniform1f(uniformName, value) end
 --- @param uniformName string The name of the uniform to set
 --- @param values table The values to set (This should be a table with 1 element, or any multiple of 1 for setting arrays)
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:uniform1fv(uniformName, values) end
 
 --- Sets a \*vec2 uniform
@@ -52,7 +52,7 @@ function RageShaderProgram:uniform1fv(uniformName, values) end
 --- @param x float The X value to set on the uniform
 --- @param y float The Y value to set on the uniform
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:uniform2f(uniformName, x, y) end
 
 --- Sets a \*vec2 uniform, or an array of \*vec2 uniforms
@@ -62,7 +62,7 @@ function RageShaderProgram:uniform2f(uniformName, x, y) end
 --- @param uniformName string The name of the uniform to set
 --- @param values table The values to set (This should be a table with 2 elements, or any multiple of 2 for setting arrays)
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:uniform2fv(uniformName, values) end
 
 --- Sets a \*vec3 uniform
@@ -74,7 +74,7 @@ function RageShaderProgram:uniform2fv(uniformName, values) end
 --- @param y float The Y value to set on the uniform
 --- @param z float The Z value to set on the uniform
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:uniform3f(uniformName, x, y, z) end
 
 --- Sets a \*vec3 uniform, or an array of \*vec3 uniforms
@@ -84,7 +84,7 @@ function RageShaderProgram:uniform3f(uniformName, x, y, z) end
 --- @param uniformName string The name of the uniform to set
 --- @param values table The values to set (This should be a table with 3 elements, or any multiple of 3 for setting arrays)
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:uniform3fv(uniformName, values) end
 
 --- Sets a \*vec4 uniform
@@ -97,7 +97,7 @@ function RageShaderProgram:uniform3fv(uniformName, values) end
 --- @param z float The Z value to set on the uniform
 --- @param w float The W value to set on the uniform
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:uniform4f(uniformName, x, y, z, w) end
 
 --- Sets a \*vec4 uniform, or an array of \*vec4 uniforms
@@ -107,7 +107,7 @@ function RageShaderProgram:uniform4f(uniformName, x, y, z, w) end
 --- @param uniformName string The name of the uniform to set
 --- @param values table The values to set (This should be a table with 4 elements, or any multiple of 4 for setting arrays)
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:uniform4fv(uniformName, values) end
 
 --- Sets a 2x2 matrix uniform, or an array of 2x2 matrix uniforms
@@ -117,7 +117,7 @@ function RageShaderProgram:uniform4fv(uniformName, values) end
 --- @param uniformName string The name of the uniform to set
 --- @param values table The values to set (This should be a table with 4 elements, or any multiple of 4 for setting arrays)
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:uniformMatrix2fv(uniformName, values) end
 
 --- Sets a 3x3 matrix uniform, or an array of 3x3 matrix uniforms
@@ -127,7 +127,7 @@ function RageShaderProgram:uniformMatrix2fv(uniformName, values) end
 --- @param uniformName string The name of the uniform to set
 --- @param values table The values to set (This should be a table with 9 elements, or any multiple of 9 for setting arrays)
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:uniformMatrix3fv(uniformName, values) end
 
 --- Sets a 4x4 matrix uniform, or an array of 4x4 matrix uniforms
@@ -137,7 +137,7 @@ function RageShaderProgram:uniformMatrix3fv(uniformName, values) end
 --- @param uniformName string The name of the uniform to set
 --- @param values table The values to set (This should be a table with 16 elements, or any multiple of 16 for setting arrays)
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:uniformMatrix4fv(uniformName, values) end
 
 --- Sets a sampler uniform
@@ -149,7 +149,7 @@ function RageShaderProgram:uniformMatrix4fv(uniformName, values) end
 --- @param uniformName string The name of the uniform to set
 --- @param texture RageTexture The texture to set on the sampler
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:uniformTexture(uniformName, texture) end
 
 --- Compiles and links a new shader program
@@ -161,7 +161,7 @@ function RageShaderProgram:uniformTexture(uniformName, texture) end
 --- @param vertCode string The vertex shader code to compile, or an empty string to use NotITG's default vertex shader
 --- @param fragCode string The fragment shader code to compile, or an empty string to use NotITG's default fragment shader
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:compile(vertCode, fragCode) end
 
 --- Immediately recompile/relink the shader program
@@ -172,7 +172,7 @@ function RageShaderProgram:compile(vertCode, fragCode) end
 ---
 --- |since_notitg_v4|
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:compileImmediate() end
 
 --- Injects a ``#define`` line at the top of shader code
@@ -186,7 +186,7 @@ function RageShaderProgram:compileImmediate() end
 --- @param key string The name of the macro to define
 --- @param value string|boolean|number|nil What to define the macro as
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:define(key, value) end
 
 --- Removes a ``#define`` previously added with :lua:meth:`RageShaderProgram.define`
@@ -197,7 +197,7 @@ function RageShaderProgram:define(key, value) end
 ---
 --- @param key string The name of the macro to remove
 ---
---- @return void
+--- @return nil
 function RageShaderProgram:clearDefine(key) end
 
 --- Tests for equality against another userdata object

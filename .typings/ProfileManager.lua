@@ -15,14 +15,14 @@ function ProfileManager:GetMachineProfile() end
 ---
 --- |since_itg|
 ---
---- @return void
+--- @return nil
 function ProfileManager:SaveMachineProfile() end
 
 --- Returns the profile for a given player
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
 --- @return Profile
 function ProfileManager:GetProfile(playerNumber) end
@@ -31,7 +31,7 @@ function ProfileManager:GetProfile(playerNumber) end
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
 --- @return boolean
 function ProfileManager:IsPersistentProfile(playerNumber) end

@@ -45,7 +45,7 @@ function ThemeManager:GetMetric(class, element) end
 ---
 --- |since_itg|
 ---
---- @param type int The type of the wanted element - see :cpp:enum:`ElementCategory`
+--- @param type integer The type of the wanted element - see :cpp:enum:`ElementCategory`
 --- @param class string The class to use
 --- @param element string The element to find within the class
 ---

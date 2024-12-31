@@ -62,7 +62,7 @@ function RageTexture:GetSourceHeight() end
 ---
 --- |since_notitg_v1|
 ---
---- @param frame int The frame number to fetch the rect for (0 indexed)
+--- @param frame integer The frame number to fetch the rect for (0 indexed)
 ---
 --- @return multiple
 function RageTexture:GetTextureCoordRect(frame) end
@@ -89,7 +89,7 @@ function RageTexture:Reload() end
 ---
 --- |since_notitg_v1|
 ---
---- @return int
+--- @return integer
 function RageTexture:GetNumFrames() end
 
 --- Sets the playback position of an animated texture
@@ -98,7 +98,7 @@ function RageTexture:GetNumFrames() end
 ---
 --- @param position float The new playback positon to set
 ---
---- @return void
+--- @return nil
 function RageTexture:position(position) end
 
 --- Sets whether an animated texture should loop or not
@@ -107,7 +107,7 @@ function RageTexture:position(position) end
 ---
 --- @param enable boolean ``true`` to loop the animation, ``false`` to not loop
 ---
---- @return void
+--- @return nil
 function RageTexture:loop(enable) end
 
 --- Sets the playback rate of an animated texture
@@ -116,7 +116,7 @@ function RageTexture:loop(enable) end
 ---
 --- @param rate float The playback rate to set
 ---
---- @return void
+--- @return nil
 function RageTexture:rate(rate) end
 
 --- Tests for equality against another userdata object

@@ -10,7 +10,7 @@ local ActorSound = {}
 ---
 --- |since_notitg_v1|
 ---
---- @return void
+--- @return nil
 function ActorSound:start() end
 
 --- (Doesn't work) Presumably, plays the sound from the beginning
@@ -19,7 +19,7 @@ function ActorSound:start() end
 ---
 --- |since_notitg_v1|
 ---
---- @return void
+--- @return nil
 function ActorSound:play() end
 
 --- Pauses/resumes sound playback
@@ -28,14 +28,14 @@ function ActorSound:play() end
 ---
 --- @param enable boolean ``true`` to pause, ``false`` to unpause
 ---
---- @return void
+--- @return nil
 function ActorSound:pause(enable) end
 
 --- Stops the sound
 ---
 --- |since_notitg_v1|
 ---
---- @return void
+--- @return nil
 function ActorSound:stop() end
 
 --- Loads a new sound
@@ -44,7 +44,7 @@ function ActorSound:stop() end
 ---
 --- @param path string The filepath of the sound to load
 ---
---- @return void
+--- @return nil
 function ActorSound:load(path) end
 
 --- Returns the loaded sound object

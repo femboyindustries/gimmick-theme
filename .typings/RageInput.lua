@@ -17,7 +17,7 @@ function RageInput:GetDescriptions() end
 ---
 --- |since_notitg_v1|
 ---
---- @return void
+--- @return nil
 function RageInput:Reset() end
 
 --- Tests for equality against another userdata object

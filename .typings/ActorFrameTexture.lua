@@ -10,14 +10,14 @@ local ActorFrameTexture = {}
 ---
 --- |since_notitg_v1|
 ---
---- @return void
+--- @return nil
 function ActorFrameTexture:Create() end
 
 --- Recreates the render target
 ---
 --- |since_notitg_unk| (|notitg_v4| or earlier?)
 ---
---- @return void
+--- @return nil
 function ActorFrameTexture:Recreate() end
 
 --- Sets whether the render target should have an alpha buffer
@@ -28,7 +28,7 @@ function ActorFrameTexture:Recreate() end
 ---
 --- @param enable boolean Whether an alpha buffer should be created
 ---
---- @return void
+--- @return nil
 function ActorFrameTexture:EnableAlphaBuffer(enable) end
 
 --- Sets whether the render target should have a depth buffer/Z buffer
@@ -39,7 +39,7 @@ function ActorFrameTexture:EnableAlphaBuffer(enable) end
 ---
 --- @param enable boolean Whether a depth buffer should be created
 ---
---- @return void
+--- @return nil
 function ActorFrameTexture:EnableDepthBuffer(enable) end
 
 --- Sets whether the render target should be grayscale
@@ -50,7 +50,7 @@ function ActorFrameTexture:EnableDepthBuffer(enable) end
 ---
 --- @param enable boolean Whether the render target should be grayscale
 ---
---- @return void
+--- @return nil
 function ActorFrameTexture:EnableGrayscale(enable) end
 
 --- Sets whether the render target should be cleared before drawing to it
@@ -63,19 +63,19 @@ function ActorFrameTexture:EnableGrayscale(enable) end
 ---
 --- @param enable boolean Whether preserve texture should be enabled or not
 ---
---- @return void
+--- @return nil
 function ActorFrameTexture:EnablePreserveTexture(enable) end
 
---- Sets whether the ActorFrameTexture should use floating point buffers
+--- Sets whether the ActorFrameTexture should use numbering point buffers
 ---
 --- This is disabled by default
 ---
 --- |since_notitg_v1|
 ---
---- @param enable boolean Whether floating point buffers should be used
+--- @param enable boolean Whether numbering point buffers should be used
 ---
---- @return void
-function ActorFrameTexture:EnableFloat(enable) end
+--- @return nil
+function ActorFrameTexture:Enablenumber(enable) end
 
 --- Returns the texture/render target
 ---
@@ -92,7 +92,7 @@ function ActorFrameTexture:GetTexture() end
 ---
 --- @param name string The new name for the texture
 ---
---- @return void
+--- @return nil
 function ActorFrameTexture:SetTextureName(name) end
 
 --- Returns the texture's name

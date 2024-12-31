@@ -10,14 +10,14 @@ local RageSound = {}
 ---
 --- |since_notitg_v3|
 ---
---- @return void
+--- @return nil
 function RageSound:Play() end
 
 --- Stops the sound
 ---
 --- |since_notitg_v3|
 ---
---- @return void
+--- @return nil
 function RageSound:Stop() end
 
 --- Pauses/resumes sound playback
@@ -28,7 +28,7 @@ function RageSound:Stop() end
 ---
 --- @param enable boolean ``true`` to pause, ``false`` to unpause
 ---
---- @return void
+--- @return nil
 function RageSound:Pause(enable) end
 
 --- Returns whether the sound is paused
@@ -53,7 +53,7 @@ function RageSound:IsPlaying() end
 ---
 --- @param volume float The new volume to set (0 - 1)
 ---
---- @return void
+--- @return nil
 function RageSound:volume(volume) end
 
 --- Returns the sound's volume
@@ -69,7 +69,7 @@ function RageSound:GetVolume() end
 ---
 --- @param balance float The new panning to apply (0 = left, 0.5 = center, 1 = right)
 ---
---- @return void
+--- @return nil
 function RageSound:pan(balance) end
 
 --- Returns the sound's panning
@@ -85,7 +85,7 @@ function RageSound:GetPan() end
 ---
 --- @param speed float The new speed to apply (0 - 100)
 ---
---- @return void
+--- @return nil
 function RageSound:speed(speed) end
 
 --- An alias for :lua:meth:`RageSound.speed`
@@ -94,14 +94,14 @@ function RageSound:speed(speed) end
 ---
 --- @param speed float The new speed to apply (0 - 100)
 ---
---- @return void
+--- @return nil
 function RageSound:pitch(speed) end
 
 --- Sets the current sound's playback position, in seconds
 ---
 --- |since_notitg_v3|
 ---
---- @return void
+--- @return nil
 function RageSound:SetSoundPosition() end
 
 --- Returns the current sound's playback position, in seconds
@@ -117,7 +117,7 @@ function RageSound:GetSoundPosition() end
 ---
 --- @param start float The new start point, in seconds
 ---
---- @return void
+--- @return nil
 function RageSound:startsecond(start) end
 
 --- Returns the start point, in seconds
@@ -142,7 +142,7 @@ function RageSound:GetLengthSeconds() end
 ---
 --- @param mode string The new stop mode to set (``stop``, ``loop``, ``continue``, ``auto``)
 ---
---- @return void
+--- @return nil
 function RageSound:stopmode(mode) end
 
 --- Returns the sound's stop mode
@@ -159,7 +159,7 @@ function RageSound:GetStopMode() end
 --- @param param string The parameter to set (``StartSecond``, ``Pitch``, ``Speed``, ``Pan``, ``Volume``)
 --- @param value float The value to assign
 ---
---- @return void
+--- @return nil
 function RageSound:SetParam(param, value) end
 
 --- Loads a new sound
@@ -168,7 +168,7 @@ function RageSound:SetParam(param, value) end
 ---
 --- @param path string The filepath of the new sound file to load
 ---
---- @return void
+--- @return nil
 function RageSound:Load(path) end
 
 --- Tests for equality against another userdata object

@@ -15,9 +15,9 @@ function StatsManager:GetAccumStageStats() end
 ---
 --- |since_itg|
 ---
---- @param rounds int The number of rounds to fetch
+--- @param rounds integer The number of rounds to fetch
 ---
---- @return StageStats|void
+--- @return StageStats|nil
 function StatsManager:GetPlayedStageStats(rounds) end
 
 --- Returns the current stage stats
@@ -31,7 +31,7 @@ function StatsManager:GetCurStageStats() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function StatsManager:GetStagesPlayed() end
 
 --- Returns the final grade for the specified player
@@ -40,9 +40,9 @@ function StatsManager:GetStagesPlayed() end
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
---- @return int
+--- @return integer
 function StatsManager:GetFinalGrade(playerNumber) end
 
 --- Returns the worst grade
@@ -51,7 +51,7 @@ function StatsManager:GetFinalGrade(playerNumber) end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function StatsManager:GetWorstGrade() end
 
 --- Returns the best grade
@@ -60,14 +60,14 @@ function StatsManager:GetWorstGrade() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function StatsManager:GetBestGrade() end
 
 --- Resets stored stats
 ---
 --- |since_itg|
 ---
---- @return void
+--- @return nil
 function StatsManager:Reset() end
 
 --- Tests for equality against another userdata object

@@ -247,7 +247,7 @@ function getActorType(actor)
 end
 
 ---@param actor Actor | ActorFrame
----@param hideChildren boolean
+---@param hideChildren boolean?
 ---@param depth number?
 function actorToString(actor, hideChildren, depth)
   depth = depth or 0

@@ -11,8 +11,8 @@ local Profile = {}
 ---
 --- |since_itg|
 ---
---- @param stepsType int The steps type - see :cpp:enum:`StepsType`
---- @param difficulty int The difficulty - see :cpp:enum:`Difficulty`
+--- @param stepsType integer The steps type - see :cpp:enum:`StepsType`
+--- @param difficulty integer The difficulty - see :cpp:enum:`Difficulty`
 ---
 --- @return float
 function Profile:GetCoursesPossible(stepsType, difficulty) end
@@ -21,8 +21,8 @@ function Profile:GetCoursesPossible(stepsType, difficulty) end
 ---
 --- |since_itg|
 ---
---- @param stepsType int The steps type - see :cpp:enum:`StepsType`
---- @param difficulty int The difficulty - see :cpp:enum:`Difficulty`
+--- @param stepsType integer The steps type - see :cpp:enum:`StepsType`
+--- @param difficulty integer The difficulty - see :cpp:enum:`Difficulty`
 ---
 --- @return float
 function Profile:GetCoursesActual(stepsType, difficulty) end
@@ -31,8 +31,8 @@ function Profile:GetCoursesActual(stepsType, difficulty) end
 ---
 --- |since_itg|
 ---
---- @param stepsType int The steps type - see :cpp:enum:`StepsType`
---- @param difficulty int The difficulty - see :cpp:enum:`Difficulty`
+--- @param stepsType integer The steps type - see :cpp:enum:`StepsType`
+--- @param difficulty integer The difficulty - see :cpp:enum:`Difficulty`
 ---
 --- @return float
 function Profile:GetCoursesPercentComplete(stepsType, difficulty) end
@@ -41,8 +41,8 @@ function Profile:GetCoursesPercentComplete(stepsType, difficulty) end
 ---
 --- |since_itg|
 ---
---- @param stepsType int The steps type - see :cpp:enum:`StepsType`
---- @param difficulty int The difficulty - see :cpp:enum:`Difficulty`
+--- @param stepsType integer The steps type - see :cpp:enum:`StepsType`
+--- @param difficulty integer The difficulty - see :cpp:enum:`Difficulty`
 ---
 --- @return float
 function Profile:GetSongsPossible(stepsType, difficulty) end
@@ -51,8 +51,8 @@ function Profile:GetSongsPossible(stepsType, difficulty) end
 ---
 --- |since_itg|
 ---
---- @param stepsType int The steps type - see :cpp:enum:`StepsType`
---- @param difficulty int The difficulty - see :cpp:enum:`Difficulty`
+--- @param stepsType integer The steps type - see :cpp:enum:`StepsType`
+--- @param difficulty integer The difficulty - see :cpp:enum:`Difficulty`
 ---
 --- @return float
 function Profile:GetSongsActual(stepsType, difficulty) end
@@ -61,8 +61,8 @@ function Profile:GetSongsActual(stepsType, difficulty) end
 ---
 --- |since_itg|
 ---
---- @param stepsType int The steps type - see :cpp:enum:`StepsType`
---- @param difficulty int The difficulty - see :cpp:enum:`Difficulty`
+--- @param stepsType integer The steps type - see :cpp:enum:`StepsType`
+--- @param difficulty integer The difficulty - see :cpp:enum:`Difficulty`
 ---
 --- @return float
 function Profile:GetSongsPercentComplete(stepsType, difficulty) end
@@ -71,29 +71,29 @@ function Profile:GetSongsPercentComplete(stepsType, difficulty) end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function Profile:GetTotalNumSongsPlayed() end
 
 --- Returns the number of steps scored on a specific grade, matching ``stepsType`` and ``difficulty``
 ---
 --- |since_itg|
 ---
---- @param stepsType int The steps type - see :cpp:enum:`StepsType`
---- @param difficulty int The difficulty - see :cpp:enum:`Difficulty`
---- @param grade int The grade - see :cpp:enum:`Grade`
+--- @param stepsType integer The steps type - see :cpp:enum:`StepsType`
+--- @param difficulty integer The difficulty - see :cpp:enum:`Difficulty`
+--- @param grade integer The grade - see :cpp:enum:`Grade`
 ---
---- @return int
+--- @return integer
 function Profile:GetTotalStepsWithTopGrade(stepsType, difficulty, grade) end
 
 --- Returns the number of trails scored on a specific grade, matching ``stepsType`` and ``difficulty``
 ---
 --- |since_itg|
 ---
---- @param stepsType int The steps type - see :cpp:enum:`StepsType`
---- @param difficulty int The difficulty - see :cpp:enum:`Difficulty`
---- @param grade int The grade - see :cpp:enum:`Grade`
+--- @param stepsType integer The steps type - see :cpp:enum:`StepsType`
+--- @param difficulty integer The difficulty - see :cpp:enum:`Difficulty`
+--- @param grade integer The grade - see :cpp:enum:`Grade`
 ---
---- @return int
+--- @return integer
 function Profile:GetTotalTrailsWithTopGrade(stepsType, difficulty, grade) end
 --- Returns the number of times a song has been played (and completed)
 ---
@@ -101,16 +101,16 @@ function Profile:GetTotalTrailsWithTopGrade(stepsType, difficulty, grade) end
 ---
 --- @param song Song The song
 ---
---- @return int
+--- @return integer
 function Profile:GetSongNumTimesPlayed(song) end
 
 --- Sets the profile's goal type
 ---
 --- |since_itg|
 ---
---- @param goalType int The goal type - see :cpp:enum:`GoalType`
+--- @param goalType integer The goal type - see :cpp:enum:`GoalType`
 ---
---- @return void
+--- @return nil
 function Profile:SetGoalType(goalType) end
 
 --- Returns the profile's goal type
@@ -119,39 +119,39 @@ function Profile:SetGoalType(goalType) end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function Profile:GetGoalType() end
 
 --- Sets a new goal, to ``calories``
 ---
 --- |since_itg|
 ---
---- @param seconds int The new goal to set, in calories
+--- @param seconds integer The new goal to set, in calories
 ---
---- @return void
+--- @return nil
 function Profile:SetGoalCalories(seconds) end
 
 --- Returns the number of calories needed to reach the goal
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function Profile:GetGoalCalories() end
 
 --- Sets a new goal, to ``seconds``
 ---
 --- |since_itg|
 ---
---- @param seconds int The new goal to set, in seconds
+--- @param seconds integer The new goal to set, in seconds
 ---
---- @return void
+--- @return nil
 function Profile:SetGoalSeconds(seconds) end
 
 --- Returns the number of seconds needed to reach the goal
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function Profile:GetGoalSeconds() end
 
 --- Returns the estimated number of calories burned today
@@ -165,16 +165,16 @@ function Profile:GetCaloriesBurnedToday() end
 ---
 --- |since_itg|
 ---
---- @param pounds int The new weight to set, in pounds
+--- @param pounds integer The new weight to set, in pounds
 ---
---- @return void
+--- @return nil
 function Profile:SetWeightPounds(pounds) end
 
 --- Returns the player's weight in pounds
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function Profile:GetWeightPounds() end
 
 --- ?
@@ -182,9 +182,9 @@ function Profile:GetWeightPounds() end
 --- |since_notitg_v3_1|
 ---
 --- @param song string The song name
---- @param steps int The steps difficulty - see :cpp:enum:`Difficulty`
+--- @param steps integer The steps difficulty - see :cpp:enum:`Difficulty`
 ---
---- @return void
+--- @return nil
 function Profile:GetHighScoreForSongAndSteps(song, steps) end
 
 --- Clears high scores for a song
@@ -193,7 +193,7 @@ function Profile:GetHighScoreForSongAndSteps(song, steps) end
 ---
 --- @param song string The song name
 ---
---- @return void
+--- @return nil
 function Profile:ClearHighScoresForSong(song) end
 
 --- Clears a step's high scores for a song
@@ -201,9 +201,9 @@ function Profile:ClearHighScoresForSong(song) end
 --- |since_notitg_v4|
 ---
 --- @param song string The song name
---- @param steps int The steps difficulty - see :cpp:enum:`Difficulty`
+--- @param steps integer The steps difficulty - see :cpp:enum:`Difficulty`
 ---
---- @return void
+--- @return nil
 function Profile:ClearHighScoresForSongAndSteps(song, steps) end
 
 --- Table of arbitrary data that persists between runs of the game
@@ -249,8 +249,8 @@ function Profile:IsCodeUnlocked(id) end
 --- |since_notitg_v4_2_0|
 ---
 --- @param course Course The course
---- @param stepsType int The steps type - see :cpp:enum:`StepsType`
---- @param difficulty int The difficulty - see :cpp:enum:`Difficulty`
+--- @param stepsType integer The steps type - see :cpp:enum:`StepsType`
+--- @param difficulty integer The difficulty - see :cpp:enum:`Difficulty`
 ---
 --- @return HighScore
 function Profile:GetHighScoreForCourseAndTrail(course, difficulty, stepsType) end
@@ -260,10 +260,10 @@ function Profile:GetHighScoreForCourseAndTrail(course, difficulty, stepsType) en
 --- |since_notitg_v4_2_0|
 ---
 --- @param course Course The course
---- @param stepsType int The steps type - see :cpp:enum:`StepsType`
---- @param difficulty int The difficulty - see :cpp:enum:`Difficulty`
+--- @param stepsType integer The steps type - see :cpp:enum:`StepsType`
+--- @param difficulty integer The difficulty - see :cpp:enum:`Difficulty`
 ---
---- @return void
+--- @return nil
 function Profile:ClearHighScoresForCourseAndTrail(course, difficulty, stepsType) end
 
 --- Clears scores for a course
@@ -272,7 +272,7 @@ function Profile:ClearHighScoresForCourseAndTrail(course, difficulty, stepsType)
 ---
 --- @param course Course The course
 ---
---- @return void
+--- @return nil
 function Profile:ClearHighScoresForCourse(course) end
 
 --- Tests for equality against another userdata object

@@ -66,7 +66,7 @@ function aftSpritePair(ctx, scope, recreate)
 end
 
 ---@param actor ActorFrame
----@param callback fun(dt: number): void
+---@param callback fun(dt: number): nil
 function setDrawFunctionWithDT(actor, callback)
   local lastT -- unset so the first tick is ignored
   actor:SetDrawFunction(function()

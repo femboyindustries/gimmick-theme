@@ -11,7 +11,7 @@ local HelpDisplay = {}
 --- @param tips table The new tips to set
 --- @param altTips table|nil The new alternate tips to set
 ---
---- @return void
+--- @return nil
 function HelpDisplay:settips(tips, altTips) end
 
 --- Returns two tables containing tips and alternate tips

@@ -31,7 +31,7 @@ function Course:GetCourseDir() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function Course:GetPlayMode() end
 
 --- Tests for equality against another userdata object

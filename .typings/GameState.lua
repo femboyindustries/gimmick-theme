@@ -22,7 +22,7 @@ function GameState:IsSyncDataChanged() end
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
 --- @return string
 function GameState:GetPlayerDisplayName(playerNumber) end
@@ -33,7 +33,7 @@ function GameState:GetPlayerDisplayName(playerNumber) end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GameState:GetSortOrder() end
 
 --- ?
@@ -42,7 +42,7 @@ function GameState:GetSortOrder() end
 ---
 --- |since_unk|
 ---
---- @return void
+--- @return nil
 function GameState:HideStageText(val) end
 
 --- Returns whether we're in edit mode
@@ -67,7 +67,7 @@ function GameState:Crash(message) end
 ---
 --- @param cmd string The command to execute
 ---
---- @return void
+--- @return nil
 function GameState:DelayedGameCommand(cmd) end
 
 --- Returns whether players can join the game
@@ -83,7 +83,7 @@ function GameState:PlayersCanJoin() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GameState:GetMasterPlayerNumber() end
 
 --- Returns a version date string (eg: ``20200126``)
@@ -106,7 +106,7 @@ function GameState:GetEditSourceSteps() end
 ---
 --- @param song Song The song to use
 ---
---- @return void
+--- @return nil
 function GameState:SetPreferredSong(song) end
 
 --- Returns the preferred song
@@ -126,7 +126,7 @@ function GameState:GetPreferredSong() end
 ---
 --- @param path string The path to get the "real" equivalent for
 ---
---- @return void
+--- @return nil
 function GameState:GetRealPath(path) end
 
 --- Returns the difficulty rating of a current player's steps
@@ -135,9 +135,9 @@ function GameState:GetRealPath(path) end
 ---
 --- |since_unk|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
---- @return int
+--- @return integer
 function GameState:PlayerDifficulty(playerNumber) end
 
 --- Returns the current play mode
@@ -146,14 +146,14 @@ function GameState:PlayerDifficulty(playerNumber) end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GameState:GetPlayMode() end
 
 --- Returns whether a given player has joined the game
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
 --- @return boolean
 function GameState:IsSideJoined(playerNumber) end
@@ -165,7 +165,7 @@ function GameState:IsSideJoined(playerNumber) end
 --- @param cmd string The command to execute
 --- @param playerNumber int|nil The player number to apply the command to (1 indexed - nil to apply it to both players)
 ---
---- @return void
+--- @return nil
 function GameState:ApplyGameCommand(cmd, playerNumber) end
 
 --- ?
@@ -174,7 +174,7 @@ function GameState:ApplyGameCommand(cmd, playerNumber) end
 ---
 --- @param num number Unknown
 ---
---- @return void
+--- @return nil
 function GameState:SetSRT(num) end
 
 --- Returns whether event mode is enabled
@@ -190,7 +190,7 @@ function GameState:IsEventMode() end
 ---
 --- @param enable boolean Whether tempoary event mode should be enabled or not
 ---
---- @return void
+--- @return nil
 function GameState:SetTemporaryEventMode(enable) end
 
 --- Returns the current premium mode
@@ -199,7 +199,7 @@ function GameState:SetTemporaryEventMode(enable) end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GameState:GetPremium() end
 
 --- An optimized shortcut for ``GameState.ApplyGameCommand("mod,...")``
@@ -211,25 +211,25 @@ function GameState:GetPremium() end
 --- @param mods string A mod string to apply
 --- @param playerNumber int|nil An optional player number to apply mods to (1 indexed)
 ---
---- @return void
+--- @return nil
 function GameState:ApplyModifiers(mods, playerNumber) end
 
 --- Simulates a key press
 ---
 --- |since_notitg_v1|
 ---
---- @param key int The key code
+--- @param key integer The key code
 ---
---- @return void
+--- @return nil
 function GameState:KeyPress(key) end
 
 --- Temporarily override a user's ``SmoothLines`` preference for one song
 ---
 --- |since_notitg_v4|
 ---
---- @param enable int 0 to force disable, 1 to force enable, -1 to reset
+--- @param enable integer 0 to force disable, 1 to force enable, -1 to reset
 ---
---- @return void
+--- @return nil
 function GameState:ForceSmoothLines(enable) end
 
 --- ?
@@ -238,7 +238,7 @@ function GameState:ForceSmoothLines(enable) end
 ---
 --- @param enable boolean Whether shaders should be recompiled on window resize??
 ---
---- @return void
+--- @return nil
 function GameState:RecompileShadersOnResize(enable) end
 
 --- Gets the X position of a note located in the column ``column``
@@ -247,8 +247,8 @@ function GameState:RecompileShadersOnResize(enable) end
 ---
 --- |since_notitg_v2|
 ---
---- @param playerNumber int Which playfield to use (0 indexed)
---- @param column int Which column to use (0 or greater)
+--- @param playerNumber integer Which playfield to use (0 indexed)
+--- @param column integer Which column to use (0 or greater)
 --- @param yOffset float The vertical offset of the note compared to the receptors
 ---
 --- @return float
@@ -260,8 +260,8 @@ function GameState:GetX(playerNumber, column, yOffset) end
 ---
 --- |since_notitg_v2|
 ---
---- @param playerNumber int Which playfield to use (0 indexed)
---- @param column int Which column to use (0 or greater)
+--- @param playerNumber integer Which playfield to use (0 indexed)
+--- @param column integer Which column to use (0 or greater)
 --- @param yOffset float The vertical offset of the note compared to the receptors
 ---
 --- @return float
@@ -273,8 +273,8 @@ function GameState:GetY(playerNumber, column, yOffset) end
 ---
 --- |since_notitg_v2|
 ---
---- @param playerNumber int Which playfield to use (0 indexed)
---- @param column int Which column to use (0 or greater)
+--- @param playerNumber integer Which playfield to use (0 indexed)
+--- @param column integer Which column to use (0 or greater)
 --- @param yOffset float The vertical offset of the note compared to the receptors
 ---
 --- @return float
@@ -284,7 +284,7 @@ function GameState:GetZ(playerNumber, column, yOffset) end
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 --- @param modifier string The modifier to check
 ---
 --- @return boolean
@@ -294,7 +294,7 @@ function GameState:PlayerIsUsingModifier(playerNumber, modifier) end
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
 --- @return boolean
 function GameState:IsDisqualified(playerNumber) end
@@ -305,9 +305,9 @@ function GameState:IsDisqualified(playerNumber) end
 ---
 --- See the :cpp:enum:`InputMode` enum
 ---
---- @param inputMode int The new input mode to set
+--- @param inputMode integer The new input mode to set
 ---
---- @return void
+--- @return nil
 function GameState:SetInputMode(inputMode) end
 
 --- Returns the current input mode
@@ -316,14 +316,14 @@ function GameState:SetInputMode(inputMode) end
 ---
 --- See the :cpp:enum:`InputMode` enum
 ---
---- @return int
+--- @return integer
 function GameState:GetInputMode() end
 
 --- Gets the short name for the player ``playerNumber``
 ---
 --- |since_notitg_v1|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
 --- @return string
 function GameState:GetPlayerNameFromNameEntry(playerNumber) end
@@ -332,7 +332,7 @@ function GameState:GetPlayerNameFromNameEntry(playerNumber) end
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
 --- @return boolean
 function GameState:IsHumanPlayer(playerNumber) end
@@ -341,7 +341,7 @@ function GameState:IsHumanPlayer(playerNumber) end
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
 --- @return boolean
 function GameState:IsPlayerEnabled(playerNumber) end
@@ -350,7 +350,7 @@ function GameState:IsPlayerEnabled(playerNumber) end
 ---
 --- |since_notitg_v1|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 function GameState:JoinPlayer(playerNumber) end
 
 --- Returns the current coin mode
@@ -359,14 +359,14 @@ function GameState:JoinPlayer(playerNumber) end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GameState:GetCoinMode() end
 
 --- Returns the number of remaining coins
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GameState:GetCoins() end
 
 --- Returns the easiest difficulty chosen by players
@@ -375,7 +375,7 @@ function GameState:GetCoins() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GameState:GetEasiestStepsDifficulty() end
 
 --- Registers an attack (some mod activations) to be launched at a specific moment
@@ -389,7 +389,7 @@ function GameState:GetEasiestStepsDifficulty() end
 --- @param mods string The mod string to apply
 --- @param playerNumber int|nil The player to apply the mods for (1 indexed) - if nil, apply to both players
 ---
---- @return void
+--- @return nil
 function GameState:LaunchAttack(startTime, length, mods, playerNumber) end
 
 --- Sets a number on a static external memory address
@@ -400,10 +400,10 @@ function GameState:LaunchAttack(startTime, length, mods, playerNumber) end
 ---
 --- |since_notitg_v3|
 ---
---- @param index int Index of the external (0 - 255)
---- @param flag int Index of the external
+--- @param index integer Index of the external (0 - 255)
+--- @param flag integer Index of the external
 ---
---- @return void
+--- @return nil
 function GameState:SetExternal(index, flag) end
 
 --- Gets a number on a static external memory address
@@ -412,9 +412,9 @@ function GameState:SetExternal(index, flag) end
 ---
 --- |since_notitg_v3|
 ---
---- @param index int Index of the external (0 - 255)
+--- @param index integer Index of the external (0 - 255)
 ---
---- @return void
+--- @return nil
 function GameState:GetExternal(index) end
 
 --- Sets the current playback position of the song
@@ -452,7 +452,7 @@ function GameState:GetSongBeatVisible() end
 ---
 --- @param position float The position to teleport to (in seconds)
 ---
---- @return void
+--- @return nil
 ---
 --- @see GameState#ReloadSteps
 function GameState:SetSongPosition(position) end
@@ -499,7 +499,7 @@ function GameState:GetCurBPM() end
 ---
 --- |since_notitg_v1|
 ---
---- @return void
+--- @return nil
 ---
 --- @see GameState#SetSongBeat
 --- @see GameState#SetSongPosition
@@ -509,9 +509,9 @@ function GameState:ReloadSteps() end
 ---
 --- |since_notitg_v2|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
---- @return void
+--- @return nil
 function GameState:UnloadSteps(playerNumber) end
 
 --- Finishes/ends a song
@@ -520,14 +520,14 @@ function GameState:UnloadSteps(playerNumber) end
 ---
 --- |since_notitg_v1|
 ---
---- @return void
+--- @return nil
 function GameState:FinishSong() end
 
 --- Returns whether the specified player has completed their current goal
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
 --- @return boolean
 function GameState:IsGoalComplete(playerNumber) end
@@ -536,7 +536,7 @@ function GameState:IsGoalComplete(playerNumber) end
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
 --- @return Steps
 function GameState:GetCurrentSteps(playerNumber) end
@@ -545,10 +545,10 @@ function GameState:GetCurrentSteps(playerNumber) end
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 --- @param steps Steps The steps to use
 ---
---- @return void
+--- @return nil
 function GameState:SetCurrentSteps(playerNumber, steps) end
 
 --- Sets the current song to ``song``
@@ -557,7 +557,7 @@ function GameState:SetCurrentSteps(playerNumber, steps) end
 ---
 --- @param song Song The song to use
 ---
---- @return void
+--- @return nil
 function GameState:SetCurrentSong(song) end
 
 --- Returns the current song
@@ -571,7 +571,7 @@ function GameState:GetCurrentSong() end
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
 --- @return Trail|nil
 function GameState:GetCurrentTrail(playerNumber) end
@@ -582,7 +582,7 @@ function GameState:GetCurrentTrail(playerNumber) end
 ---
 --- @param course Course The course to use
 ---
---- @return void
+--- @return nil
 function GameState:SetCurrentCourse(course) end
 
 --- Returns the current course
@@ -596,7 +596,7 @@ function GameState:GetCurrentCourse() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GameState:GetNumSidesJoined() end
 
 --- Returns names from files and directories that match path
@@ -620,7 +620,7 @@ function GameState:GetFileStructure(path) end
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
 --- @return boolean
 function GameState:IsWinner(playerNumber) end
@@ -636,16 +636,16 @@ function GameState:GetDerp() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GameState:GetNumPlayersEnabled() end
 
 --- Sets the screen's ID
 ---
 --- |since_notitg_v1|
 ---
---- @param id int The new ID
+--- @param id integer The new ID
 ---
---- @return void
+--- @return nil
 function GameState:SetScreenID(id) end
 
 --- Returns the current screen's ID
@@ -654,7 +654,7 @@ function GameState:SetScreenID(id) end
 ---
 --- |since_notitg_v1|
 ---
---- @return int
+--- @return integer
 function GameState:GetScreenID() end
 
 --- Returns a table of note skin names currenty in use
@@ -681,9 +681,9 @@ function GameState:AnyPlayerHasRankingFeats() end
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
---- @return int
+--- @return integer
 function GameState:GetPreferredDifficulty(playerNumber) end
 
 --- Gets the number of additional coins needed to join
@@ -692,14 +692,14 @@ function GameState:GetPreferredDifficulty(playerNumber) end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GameState:GetCoinsNeededToJoin() end
 
 --- Returns whether we're in double mode
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GameState:PlayerUsingBothSides() end
 
 --- Returns the current game
@@ -754,7 +754,7 @@ function GameState:GetEnv(key) end
 --- @param key string The key to store a value for
 --- @param value string The value to store
 ---
---- @return void
+--- @return nil
 ---
 --- @see GameState#Env
 --- @see GameState#GetEnv
@@ -782,14 +782,14 @@ function GameState:IsExtraStage2() end
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GameState:StageIndex() end
 
 --- Returns the index of the current song in the current course, starting at ``0``
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function GameState:GetCourseSongIndex() end
 
 --- Sets when the song should end
@@ -798,7 +798,7 @@ function GameState:GetCourseSongIndex() end
 ---
 --- @param seconds float The time the song should end, in seconds
 ---
---- @return void
+--- @return nil
 function GameState:SetSongEndTime(seconds) end
 
 --- Set whether the mod selection should be limited to just the ones available in OpenITG
@@ -809,7 +809,7 @@ function GameState:SetSongEndTime(seconds) end
 ---
 --- @param enable boolean Whether only OpenITG mods should be allowed or not
 ---
---- @return void
+--- @return nil
 function GameState:OnlyOpenITGMods(enable) end
 
 --- Check equality with another userdata object

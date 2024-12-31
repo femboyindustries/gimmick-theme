@@ -147,7 +147,7 @@ function judge_eyes:getBarLevel()
 end
 
 ---Gets How many bars there are
----@return int
+---@return integer
 function judge_eyes:getBarAmount()
   return math.floor(self.barlevel) + 1
 end
@@ -211,7 +211,7 @@ end
 
 ---Make the Bar smaller
 ---@param input number
----@return void
+---@return nil
 function judge_eyes:sub(input)
   if self:inbounds(input) then
     input = self:getBarLevel()

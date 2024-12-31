@@ -8,18 +8,18 @@ local UnlockManager = {}
 ---
 --- |since_itg|
 ---
---- @param unlockCode int The unlock code
+--- @param unlockCode integer The unlock code
 ---
---- @return void
+--- @return nil
 function UnlockManager:UnlockCode(unlockCode) end
 
 --- Sets the preferred song/course to the specified code
 ---
 --- |since_itg|
 ---
---- @param unlockCode int The unlock code
+--- @param unlockCode integer The unlock code
 ---
---- @return void
+--- @return nil
 function UnlockManager:PreferUnlockCode(unlockCode) end
 
 --- Returns a table of steps unlocked by ``unlockCode``
@@ -28,7 +28,7 @@ function UnlockManager:PreferUnlockCode(unlockCode) end
 ---
 --- |since_itg|
 ---
---- @param unlockCode int The unlock code
+--- @param unlockCode integer The unlock code
 ---
 --- @return table
 function UnlockManager:GetSongsUnlockedByCode(unlockCode) end
@@ -39,7 +39,7 @@ function UnlockManager:GetSongsUnlockedByCode(unlockCode) end
 ---
 --- |since_itg|
 ---
---- @param unlockCode int The unlock code
+--- @param unlockCode integer The unlock code
 ---
 --- @return table
 function UnlockManager:GetStepsUnlockedByCode(unlockCode) end
@@ -50,8 +50,27 @@ function UnlockManager:GetStepsUnlockedByCode(unlockCode) end
 ---
 --- @param name string The name
 ---
---- @return int|nil
+--- @return integer|nil
 function UnlockManager:FindCode(name) end
+
+--- Returns if a song is locked and inaccessible
+---
+--- |since_notitg_v4_9|
+---
+--- @param song Song
+---
+--- @return nil
+function UnlockManager:SongIsLocked(song) end
+
+--- Returns if a chart of a song is locked and inaccessible
+---
+--- |since_notitg_v4_9|
+---
+--- @param song Song
+--- @param steps Steps
+---
+--- @return nil
+function UnlockManager:StepsIsLocked(song, steps) end
 
 --- Tests for equality against another userdata object
 ---

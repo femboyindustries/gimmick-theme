@@ -12,7 +12,7 @@ local MessageManager = {}
 ---
 --- @param message string The message command to broadcast
 ---
---- @return int
+--- @return integer
 function MessageManager:Broadcast(message) end
 
 --- Check equality with another userdata object

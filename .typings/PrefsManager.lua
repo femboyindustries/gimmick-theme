@@ -11,7 +11,7 @@ local PrefsManager = {}
 --- @param pref string The preference to set
 --- @param value any The new value to set
 ---
---- @return void
+--- @return nil
 function PrefsManager:SetPreference(pref, value) end
 
 --- Returns the value of a preference

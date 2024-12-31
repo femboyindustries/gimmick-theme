@@ -12,6 +12,20 @@ Because I really don't know if any of what I'm doing is going to stick. The
 stuff presented here is highly experimental and prone to breaking under
 pressure!
 
+## Compatibility
+
+Gimmick will **only** run on **NotITG v4.3.0** or higher, due to many features
+making it possible having been introduced in NotITG. v4.3.0 was chosen because
+it was the latest version at the time of creation, but the minimum version may
+be bumped in the future.
+
+That being said, don't expect all features to work with an outdated NotITG
+version; legacy version support only goes as far as to guarantee no crashes or
+errors within the theme.
+
+Full support for Wine and native Windows installations is guaranteed, though
+there may be special features that are only possible on one or the other.
+
 ## Developer documentation
 
 Working with gimmick can be a doozy because of how far away it is from typical

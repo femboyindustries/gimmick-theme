@@ -139,53 +139,53 @@ function Song:GetSpellCards() end
 ---
 --- |since_notitg_v3|
 ---
---- @param count int The number of spell cards
+--- @param count integer The number of spell cards
 ---
---- @return void
+--- @return nil
 function Song:SetNumSpellCards(count) end
 
 --- Sets a spell card's start and end point
 ---
 --- |since_notitg_v3|
 ---
---- @param index int The spell card index (0 indexed)
+--- @param index integer The spell card index (0 indexed)
 --- @param startBeat float The beat to start the spell card
 --- @param endBeat float The beat to end the spell card
 ---
---- @return void
+--- @return nil
 function Song:SetSpellCardTiming(index, startBeat, endBeat) end
 
 --- Sets a spell card's name
 ---
 --- |since_notitg_v3|
 ---
---- @param index int The spell card index (0 indexed)
+--- @param index integer The spell card index (0 indexed)
 --- @param name string The new spell card name
 ---
---- @return void
+--- @return nil
 function Song:SetSpellCardName(index, name) end
 
 --- Sets a spell card's difficulty rating
 ---
 --- |since_notitg_v3|
 ---
---- @param index int The spell card index (0 indexed)
---- @param difficulty int The difficulty rating to set
+--- @param index integer The spell card index (0 indexed)
+--- @param difficulty integer The difficulty rating to set
 ---
---- @return void
+--- @return nil
 function Song:SetSpellCardDifficulty(index, difficulty) end
 
 --- Sets the color of a spell card
 ---
 --- |since_notitg_v3|
 ---
---- @param index int The spell card index (0 indexed)
+--- @param index integer The spell card index (0 indexed)
 --- @param r float The red value (0 - 1)
 --- @param g float The green value (0 - 1)
 --- @param b float The blue value (0 - 1)
 --- @param a float The alpha value (0 - 1)
 ---
---- @return void
+--- @return nil
 function Song:SetSpellCardColor(index, r, g, b, a) end
 
 --- Returns the directory where the song is stored
@@ -237,7 +237,7 @@ function Song:IsMarathon() end
 --- @param beat float The beat of the label
 --- @param name string The name of the label
 ---
---- @return void
+--- @return nil
 function Song:AddLabel(beat, name) end
 
 --- Returns a list of song labels
@@ -251,7 +251,7 @@ function Song:GetLabels() end
 ---
 --- |since_notitg_v3|
 ---
---- @return void
+--- @return nil
 function Song:ClearLabels() end
 
 --- Returns the path to the Lua unlock file
@@ -260,7 +260,7 @@ function Song:ClearLabels() end
 ---
 --- |since_notitg_v4|
 ---
---- @param difficulty int The step difficulty (see :cpp:enum:`Difficulty`)
+--- @param difficulty integer The step difficulty (see :cpp:enum:`Difficulty`)
 ---
 --- @return string
 function Song:GetUnlockMethod(difficulty) end
@@ -326,7 +326,7 @@ function Song:GetBeatFromElapsedTime(seconds) end
 ---
 --- |since_itg|
 ---
---- @param stepsType int The steps type - see :cpp:enum:`StepsType`
+--- @param stepsType integer The steps type - see :cpp:enum:`StepsType`
 ---
 --- @return Steps[]
 function Song:GetStepsByStepsType(stepsType) end

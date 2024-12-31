@@ -15,21 +15,21 @@ function HighScore:GetModifiers() end
 ---
 --- |since_itg|
 ---
---- @return float
+--- @return number
 function HighScore:GetPercentDP() end
 
 --- Returns the score
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function HighScore:GetScore() end
 
 --- Returns the number of seconds the player survived for
 ---
 --- |since_itg|
 ---
---- @return float
+--- @return number
 function HighScore:GetSurvivalSeconds() end
 
 --- Returns the name associated with the score

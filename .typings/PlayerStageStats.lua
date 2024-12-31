@@ -10,55 +10,55 @@ local PlayerStageStats = {}
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function PlayerStageStats:FullCombo() end
 
 --- Returns the highest combo the player achieved
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function PlayerStageStats:MaxCombo() end
 
 --- Sets the player's current combo
 ---
 --- |since_notitg_v3|
 ---
---- @param combo int The new combo to set
+--- @param combo integer The new combo to set
 ---
---- @return void
+--- @return nil
 function PlayerStageStats:SetCurrentCombo(combo) end
 
 --- Returns the player's current combo
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function PlayerStageStats:GetCurrentCombo() end
 
 --- Sets the player's score
 ---
 --- |since_notitg_v1|
 ---
---- @param score int The new score to set
+--- @param score integer The new score to set
 ---
---- @return void
+--- @return nil
 function PlayerStageStats:SetScore(score) end
 
 --- Returns the player's score
 ---
 --- |since_itg|
 ---
---- @return int
+--- @return integer
 function PlayerStageStats:GetScore() end
 
 --- Sets the player's dance points to ``amount``
 ---
 --- |since_notitg_v1|
 ---
---- @param amount int The new dance points value to set
+--- @param amount integer The new dance points value to set
 ---
---- @return void
+--- @return nil
 function PlayerStageStats:SetActualDancePoints(amount) end
 
 --- Returns the player's actual dance points
@@ -72,9 +72,9 @@ function PlayerStageStats:GetActualDancePoints() end
 ---
 --- |since_notitg_v1|
 ---
---- @param amount int The new possible dance points value to set
+--- @param amount integer The new possible dance points value to set
 ---
---- @return void
+--- @return nil
 function PlayerStageStats:SetPossibleDancePoints(amount) end
 
 --- Returns the player's possible dance points
@@ -83,6 +83,20 @@ function PlayerStageStats:SetPossibleDancePoints(amount) end
 ---
 --- @retrun int
 function PlayerStageStats:GetPossibleDancePoints() end
+
+--- Get the possible amount of dance points for a specific player on 192nd separated couples charts
+---
+--- |since_notitg_v4_9|
+---
+--- @retrun int
+function PlayerStageStats:GetPossibleDancePointsCouplesP1() end
+
+--- Get the possible amount of dance points for a specific player on 192nd separated couples charts
+---
+--- |since_notitg_v4_9|
+---
+--- @retrun int
+function PlayerStageStats:GetPossibleDancePointsCouplesP2() end
 
 --- Returns the player's dance points as a percentage (0 - 1)
 ---
@@ -97,17 +111,17 @@ function PlayerStageStats:GetPercentDancePoints() end
 ---
 --- See :cpp:enum:`Grade`
 ---
---- @return int
+--- @return integer
 function PlayerStageStats:GetGrade() end
 
 --- Sets the number of judgments obtained with the given ``tapNoteScore``
 ---
 --- |since_notitg_v3|
 ---
---- @param tapNoteScore int The judgment - see :cpp:enum:`TapNoteScore`
---- @param count int The new number of judgments to set
+--- @param tapNoteScore integer The judgment - see :cpp:enum:`TapNoteScore`
+--- @param count integer The new number of judgments to set
 ---
---- @return int
+--- @return integer
 function PlayerStageStats:SetTapNoteScores(tapNoteScore, count) end
 
 --- Returns the number of judgments obtained with the given ``tapNoteScore``
@@ -116,19 +130,19 @@ function PlayerStageStats:SetTapNoteScores(tapNoteScore, count) end
 ---
 --- |since_itg|
 ---
---- @param tapNoteScore int The judgment - see :cpp:enum:`TapNoteScore`
+--- @param tapNoteScore integer The judgment - see :cpp:enum:`TapNoteScore`
 ---
---- @return int
+--- @return integer
 function PlayerStageStats:GetTapNoteScores(tapNoteScore) end
 
 --- Sets the number of judgments obtained with the given ``holdNoteScore``
 ---
 --- |since_notitg_v3|
 ---
---- @param holdNoteScore int The judgment - see :cpp:enum:`HoldNoteScore`
---- @param count int The new number of judgments to set
+--- @param holdNoteScore integer The judgment - see :cpp:enum:`HoldNoteScore`
+--- @param count integer The new number of judgments to set
 ---
---- @return int
+--- @return integer
 function PlayerStageStats:SetHoldNoteScores(holdNoteScore, count) end
 
 --- Returns the number of judgments obtained with the given ``holdNoteScore``
@@ -137,51 +151,51 @@ function PlayerStageStats:SetHoldNoteScores(holdNoteScore, count) end
 ---
 --- |since_itg|
 ---
---- @param holdNoteScore int The judgment - see :cpp:enum:`HoldNoteScore`
+--- @param holdNoteScore integer The judgment - see :cpp:enum:`HoldNoteScore`
 ---
---- @return int
+--- @return integer
 function PlayerStageStats:GetHoldNoteScores(holdNoteScore) end
 
 --- Sets the number of judgments obtained with the given ``holdNoteScore`` for a given player
 ---
 --- |since_notitg_v3|
 ---
---- @param playerNumber int The player number (1 indexed)
---- @param tapNoteScore int The judgment - see :cpp:enum:`HoldNoteScore`
---- @param count int The new number of judgments to set
+--- @param playerNumber integer The player number (1 indexed)
+--- @param tapNoteScore integer The judgment - see :cpp:enum:`HoldNoteScore`
+--- @param count integer The new number of judgments to set
 ---
---- @return void
+--- @return nil
 function PlayerStageStats:SetTapNoteScoresForPlayer(playerNumber, tapNoteScore, count) end
 
 --- Returns the number of judgments obtained with the given ``tapNoteScore`` for a given player
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (1 indexed)
---- @param tapNoteScore int The judgment - see :cpp:enum:`TapNoteScore`
+--- @param playerNumber integer The player number (1 indexed)
+--- @param tapNoteScore integer The judgment - see :cpp:enum:`TapNoteScore`
 ---
---- @return int
+--- @return integer
 function PlayerStageStats:GetTapNoteScoresForPlayer(playerNumber, tapNoteScore) end
 
 --- Returns the number of judgments obtained with the given ``holdNoteScore`` for a given player
 ---
 --- |since_itg|
 ---
---- @param playerNumber int The player number (1 indexed)
---- @param holdNoteScore int The judgment - see :cpp:enum:`HoldNoteScore`
+--- @param playerNumber integer The player number (1 indexed)
+--- @param holdNoteScore integer The judgment - see :cpp:enum:`HoldNoteScore`
 ---
---- @return int
+--- @return integer
 function PlayerStageStats:GetHoldNoteScoresForPlayer(playerNumber, holdNoteScore) end
 
 --- Sets the number of judgments obtained with the given ``holdNoteScore`` for a given player
 ---
 --- |since_notitg_v3|
 ---
---- @param playerNumber int The player number (1 indexed)
---- @param holdNoteScore int The judgment - see :cpp:enum:`HoldNoteScore`
---- @param count int The new number of judgments to set
+--- @param playerNumber integer The player number (1 indexed)
+--- @param holdNoteScore integer The judgment - see :cpp:enum:`HoldNoteScore`
+--- @param count integer The new number of judgments to set
 ---
---- @return void
+--- @return nil
 function PlayerStageStats:SetHoldNoteScoresForPlayer(playerNumber, holdNoteScore, count) end
 
 --- Returns the player's current life as a percentage betwen 0 - 1
@@ -223,14 +237,14 @@ function PlayerStageStats:GetPossibleSteps() end
 ---
 --- |since_notitg_v3|
 ---
---- @return int[]
+--- @return integer[]
 function PlayerStageStats:GetNoteRowVector() end
 
 --- ?
 ---
 --- |since_notitg_v3|
 ---
---- @return int[]
+--- @return integer[]
 function PlayerStageStats:GetNoteSongVector() end
 
 --- ?
@@ -262,7 +276,7 @@ function PlayerStageStats:GetCaloriesBurned() end
 ---
 --- |since_notitg_v4_2_0|
 ---
---- @return int
+--- @return integer
 function PlayerStageStats:GetCurPossibleDancePoints() end
 
 --- Tests for equality against another userdata object

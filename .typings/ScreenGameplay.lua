@@ -10,7 +10,7 @@ local ScreenGameplay = {}
 ---
 --- @param pause boolean ``true`` to pause, ``false`` to unpause
 ---
---- @return void
+--- @return nil
 function ScreenGameplay:PauseGame(pause) end
 
 --- Returns the amount of life remaining for a player
@@ -19,7 +19,7 @@ function ScreenGameplay:PauseGame(pause) end
 ---
 --- |since_notitg_v1|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 ---
 --- @return float
 function ScreenGameplay:GetLife(playerNumber) end
@@ -28,10 +28,10 @@ function ScreenGameplay:GetLife(playerNumber) end
 ---
 --- |since_notitg_v1|
 ---
---- @param playerNumber int The player number (0 indexed)
+--- @param playerNumber integer The player number (0 indexed)
 --- @param life float The new life percentage to set (0 - 1)
 ---
---- @return void
+--- @return nil
 function ScreenGameplay:SetLife(playerNumber, life) end
 
 --- Returns a ``ScreenGameplay (MemoryAddress)`` string

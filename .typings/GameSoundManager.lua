@@ -12,17 +12,17 @@ local GameSoundManager = {}
 ---
 --- @param path string The path to the audio file to play
 ---
---- @return void
+--- @return nil
 function GameSoundManager:PlayOnce(path) end
 
 --- Sets the music volume for a specified duration
 ---
 --- |since_itg|
 ---
---- @param volume float The target volume (between ``0`` and ``1``)
---- @param duration float How long to keep the music at the specified volume, in seconds
+--- @param volume number The target volume (between ``0`` and ``1``)
+--- @param duration number How long to keep the music at the specified volume, in seconds
 ---
---- @return void
+--- @return nil
 function GameSoundManager:DimMusic(volume, duration) end
 
 --- Tests for equality against another userdata object

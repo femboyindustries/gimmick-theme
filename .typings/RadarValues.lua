@@ -8,7 +8,7 @@ local RadarValues = {}
 ---
 --- |since_itg|
 ---
---- @param category int The radar category to get a value for - see :cpp:enum:`RadarCategory`
+--- @param category integer The radar category to get a value for - see :cpp:enum:`RadarCategory`
 function RadarValues:GetValue(category) end
 
 --- Tests for equality against another userdata object

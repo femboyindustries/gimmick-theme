@@ -8,9 +8,9 @@ local ActorScroller = {}
 ---
 --- |since_itg|
 ---
---- @param index float The index of the targetted item
+--- @param index number The index of the targetted item
 ---
---- @return void
+--- @return nil
 function ActorScroller:SetCurrentAndDestinationItem(index) end
 
 --- Returns an ``ActorScroller (MemoryAddress)`` string
