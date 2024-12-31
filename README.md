@@ -234,10 +234,12 @@ be shown to the user later on.
 passed through `pretty`. It also calls `Debug` with the results, which means
 it'll show up in stdout without `ShowLogOutput=1`; useful for decluttering the
 NotITG logs during debugging.
+  - On Wine, this will use ANSI escape codes to color the output.
 - `warn(msg: string)` displays a message in the console.
-- `pretty(a: any)` is our in-house Lua pretty-printer. Also handles actors.
-- `actorToString(a: Actor)` tries to give a fairly accurate XML representation
-of an actor tree.
+- `pretty(a: any, config: PrettyConfig)` is our in-house Lua pretty-printer.
+Also handles actors.
+- `actorToString(a: Actor, hideChildren: boolean?)` tries to give a fairly'
+accurate XML representation of an actor tree.
 - `introduceEntropyIntoUniverse()` introduces entropy into the universe. Feel
 free to call this at any point if you wish for that to happen.
 
