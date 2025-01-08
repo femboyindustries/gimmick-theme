@@ -1,0 +1,4 @@
+
+<ActorFrame InitCommand="%gimmick.s.ScreenPlayerOptions.overlay.init"><children>
+	<Layer File="../actors.xml" InitCommand="%gimmick.s.ScreenPlayerOptions.overlay.initEnd"/>
+</children></ActorFrame>

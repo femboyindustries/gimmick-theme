@@ -107,7 +107,7 @@ end
 local modRegistry = {}
 
 ---@param modName string
-local function modOptionRow(modName)
+function M.option.mod(modName)
   local origModName = modName
   modName = string.lower(modName)
   local entry = modRegistry[modName]
@@ -141,7 +141,8 @@ local function modOptionRow(modName)
   end
 end
 
----@alias Option { type: 'lua', optionRow: OptionRow, y: number? } | { type: 'conf', pref: string, y: number? } | { type: 'list', list: string, y: number? } | { type: 'mod', modName: string, y: number? }
+-- todo: `stepstype` and `steps`
+---@alias Option { type: 'lua', optionRow: OptionRow, y: number? } | { type: 'conf', pref: string, y: number? } | { type: 'list', list: string, y: number? }
 
 local ROWS_SHOWN = 10
 local HEIGHT = 300
@@ -159,8 +160,6 @@ function M.LineProvider(screenName, optionsGetter)
       return 'conf,' .. opt.pref
     elseif opt.type == 'list' then
       return 'list,' .. opt.list
-    elseif opt.type == 'mod' then
-      return 'lua,gimmick.s.' .. screenName .. '.lines.mod(' .. n .. ')'
     end
   end)
 
@@ -174,12 +173,6 @@ function M.LineProvider(screenName, optionsGetter)
       local option = optionsGetter()[n]
       assert(option.optionRow, 'option #' .. n .. ' type specified to be \'option\', but no \'optionRow\' exists!')
       return option.optionRow
-    end,
-    mod = function(n)
-      local option = optionsGetter()[n]
-      print(option)
-      assert(option.modName, 'option #' .. n .. ' type specified to be \'mod\', but no \'modName\' exists!')
-      return modOptionRow(option.modName)
     end,
     NumRowsShown = function()
       return ROWS_SHOWN

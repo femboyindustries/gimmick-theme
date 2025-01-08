@@ -1254,7 +1254,7 @@ function Actor:diffuse(r, g, b, a) end
 ---
 --- |since_notitg_v3|
 ---
---- @return multiple
+--- @return number, number, number, number
 function Actor:getdiffuse() end
 
 --- Sets the actor's color/tint - ignores alpha

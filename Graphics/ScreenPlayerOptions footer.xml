@@ -1,0 +1,4 @@
+
+<ActorFrame InitCommand="%gimmick.s.ScreenPlayerOptions.footer.init"><children>
+	<Layer File="../actors.xml" InitCommand="%gimmick.s.ScreenPlayerOptions.footer.initEnd"/>
+</children></ActorFrame>

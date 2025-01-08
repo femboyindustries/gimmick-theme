@@ -363,7 +363,7 @@ function prettyColored(o, config, depth, indent, seen)
       local str = {
         { type, type = TokenType.Plain },
         { '[', type = TokenType.Parens },
-        { o.getName and o:getName() or '', type = TokenType.Value },
+        { o.GetName and o:GetName() or '', type = TokenType.Value },
         { ']', type = TokenType.Parens }
       }
 

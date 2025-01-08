@@ -1,0 +1,116 @@
+screenoptions structure
+
+ActorFrame[Frame]: {        // m_framePage (Frame)
+  ActorScroller[Page]: {    // m_sprPage
+    ActorFrame[]: {
+      Sprite[]
+    }, 
+    ActorFrame[]: {
+      Sprite[]
+    }
+  }, 
+
+  Sprite[LineHighlight],    // m_sprLineHighlight[0]
+  Sprite[LineHighlight],    // m_sprLineHighlight[1]
+  ActorFrame[]: {           // m_Cursor[0] : OptionsCursor
+    Sprite[],               // m_sprMiddle
+    Sprite[],               // m_sprLeft
+    Sprite[]                // m_sprRight
+  }, 
+  ActorFrame[]: {           // m_Cursor[1] : OptionsCursor
+    Sprite[],               // m_sprMiddle
+    Sprite[],               // m_sprLeft
+    Sprite[]                // m_sprRight
+  }, 
+
+  ActorFrame[]: {           // m_Rows[0] : OptionRow [OptionRow::ROW_NORMAL]
+    ActorFrame[]: {         // m_Frame
+      // OptionIcons seem entirely useless to us
+      ActorFrame[]: {       // m_OptionIcons[0] : OptionIcon
+        Sprite[],           // m_spr
+        // this seems to change to "MULTI" when != SELECT_ONE
+        BitmapText[]: ""    // m_text
+      }, 
+      ActorFrame[]: {       // m_OptionIcons[1] : OptionIcon
+        Sprite[],
+        BitmapText[]: ""
+      }, 
+      Sprite[],             // m_sprBullet
+      BitmapText[]: "Flip", // m_textTitle
+      // this all depends on the options render type
+
+      // LAYOUT_SHOW_ALL_IN_ROW
+      BitmapText[]: "ON",   // m_textItems[0]
+      BitmapText[]: "OFF",  // m_textItems[1]
+      // each option will have one underline for each player, so 2x2=4 here
+      ActorFrame[]: {       // m_Underline[0][0] : OptionsCursor [OptionsCursor::underline]
+        Sprite[],           // m_sprMiddle
+        Sprite[],           // m_sprLeft
+        Sprite[]            // m_sprRight
+      }, 
+      ActorFrame[]: {       // m_Underline[0][1] : OptionsCursor [OptionsCursor::underline]
+        Sprite[], 
+        Sprite[], 
+        Sprite[]
+      }, 
+      ActorFrame[]: {       // m_Underline[1][0] : OptionsCursor [OptionsCursor::underline]
+        Sprite[], 
+        Sprite[], 
+        Sprite[]
+      }, 
+      ActorFrame[]: {       // m_Underline[1][1] : OptionsCursor [OptionsCursor::underline]
+        Sprite[], 
+        Sprite[], 
+        Sprite[]
+      }
+
+      // LAYOUT_SHOW_ONE_IN_ROW
+      // the selected item is duplicated, once for each player
+      BitmapText[]: "ON",   // m_textItems[0]
+      BitmapText[]: "ON",   // m_textItems[1]
+      // one underline for each player
+      ActorFrame[]: {       // m_Underline[0][0] : OptionsCursor [OptionsCursor::underline]
+        Sprite[],           // m_sprMiddle
+        Sprite[],           // m_sprLeft
+        Sprite[]            // m_sprRight
+      }, 
+      ActorFrame[]: {       // m_Underline[1][0] : OptionsCursor [OptionsCursor::underline]
+        Sprite[], 
+        Sprite[], 
+        Sprite[]
+      }, 
+    }
+  }, 
+  ActorFrame[]: {          // m_Rows[1] : OptionRow [OptionRow::ROW_EXIT]
+    ActorFrame[]: {        // m_Frame
+      ActorFrame[]: {      // m_OptionIcons[0]
+        Sprite[], 
+        BitmapText[]: ""
+      }, 
+      ActorFrame[]: {      // m_OptionIcons[1]
+        Sprite[], 
+        BitmapText[]: ""
+      }, 
+      Sprite[],            // m_sprBullet
+      BitmapText[]: "",    // m_textTitle
+      // this is all initialized in LoadExit()
+      BitmapText[]: "EXIT" // m_textItems[0]
+    }
+  }, 
+
+  BitmapText[]: "",        // m_textExplanation[0]
+  BitmapText[]: "",        // m_textExplanation[1]
+  ActorScroller[More]: {
+    ActorFrame[]: {
+      Sprite[]
+    }, 
+    ActorFrame[]: {
+      Sprite[]
+    }, 
+    ActorFrame[]: {
+      Sprite[]
+    }
+  }, 
+  BitmapText[DisqualifyP1]: "Will Disqualify for Ranking", 
+  BitmapText[DisqualifyP2]: "Will Disqualify for Ranking"
+}
