@@ -40,10 +40,10 @@ local optionsTable = {
     {
       type = 'lua',
       optionRow = {
-        Name = 'ShowAllInRow SelectOne',
+        Name = 'bwaaa',
         LayoutType = 'ShowAllInRow',
         SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
+        Choices = { 'bingus', 'bongus', 'awawa', },
         LoadSelections = function(self, selected) selected[1] = true end,
         SaveSelections = function() end,
       },
@@ -51,390 +51,41 @@ local optionsTable = {
     {
       type = 'lua',
       optionRow = {
-        Name = 'ShowOneInRow SelectOne',
+        Name = 'Bumpscosity',
         LayoutType = 'ShowOneInRow',
         SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
+        Choices = { '1.00', '1.05', '1.10', '1.15', '1.20', '1.25', },
         LoadSelections = function(self, selected) selected[1] = true end,
         SaveSelections = function() end,
       },
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectMultiple',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.mods('Perspective', {'Overhead','Hallway','Distant','Incoming','Space'}, true)
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectMultiple',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.mods('Turn', {'Mirror','SoftShuffle','SmartBlender','Blender'})
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectNone',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.mods('Accel', {'Accel','Decel','Wave','Boomerang','Expand','Bump'}),
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectNone',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.mods('Scroll', {'Reverse','Split','Alternate','Cross','Centered'}),
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectOne',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectOne',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectMultiple',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectMultiple',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectNone',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectNone',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectOne',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectOne',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectMultiple',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectMultiple',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectNone',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectNone',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectOne',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectOne',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectMultiple',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectMultiple',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectNone',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectNone',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectOne',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectOne',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectMultiple',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectMultiple',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectNone',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectNone',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectOne',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectOne',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectMultiple',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectMultiple',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectNone',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectNone',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.mods('Swaps', {'Flip', 'Invert'}),
     },
   },
 }
+
+-- todo move this somewhere more global
+local function getPlayerColor(pn)
+  return pn == 1 and rgb(1, 0.3, 0.4) or rgb(0.2, 0.3, 1)
+end
 
 local optionsFrameDrawfunc
 
@@ -460,7 +111,7 @@ return {
     --local testText = ctx:BitmapText('common','Fart')
 
     local firstFrame = true
-    ---@type {actor: ActorFrame, layoutType: LayoutType, name: string, choices: string[]?}[]
+    ---@type {actor: ActorFrame, layoutType: LayoutType, name: string, choices: string[]?, underlines: table<number, ActorFrame[]>, selected: table<number, boolean[]>, isExit: boolean, widths: number[]}[]
     local optionRows = {}
 
     ---@type ActorFrame[]
@@ -474,20 +125,21 @@ return {
       cursorEases[pn] = {scope.tick:easable(0, 25), scope.tick:easable(0, 25), scope.tick:easable(0, 25)}
     end
 
-    local LABEL_LEFT_X = 230
-    local LABEL_MARGIN = 20
-    local OPTION_GAP = 64
+    local WIDTH = math.min(sw - 64, 640)
+    local LABEL_LEFT_X = scx - WIDTH/2 + 230
+    local OPTION_GAP = 10
     local ROWS_TOP_Y = 32
-    local ROW_HEIGHT = 32
+    local ROW_HEIGHT = 28
+    local SKEW = 0.4
 
     local quad = ctx:Quad()
     local text = ctx:BitmapText(FONTS.sans_serif, '')
     text:halign(1)
     text:shadowlength(0)
-    text:zoom(0.25)
+    text:zoom(0.3)
     local optText = ctx:BitmapText(FONTS.sans_serif, '')
     optText:shadowlength(0)
-    optText:zoom(0.3)
+    optText:zoom(0.35)
 
     self:SetDrawFunction(function()
       if drawOverlay then drawOverlay() end
@@ -519,12 +171,39 @@ return {
             child:zoomx(1)
           end
 
+          local underlines = {{}, {}}
+          local underlineBuffer = {}
+
+          local subOptIndex = #row:GetChildren()
+          while row(subOptIndex).GetChildren do
+            table.insert(underlineBuffer, 1, row(subOptIndex))
+            subOptIndex = subOptIndex - 1
+          end
+          for i = 1, #underlineBuffer/2 do
+            table.insert(underlines[1], underlineBuffer[i])
+          end
+          for i = #underlineBuffer/2+1, #underlineBuffer do
+            table.insert(underlines[2], underlineBuffer[i])
+          end
+
+          local isExit = not row:GetChildAt(5)
+          local choices = isExit and ({ 'EXIT' }) or (luaDef and luaDef.Choices or {})
+          local widths = {}
+
+          for i, choice in ipairs(choices) do
+            optText:settext(choice)
+            widths[i] = optText:GetWidth() * 0.35
+          end
+
           optionRows[optIndex] = {
             actor = row,
             layoutType = isShowAllInRow and 'ShowAllInRow' or 'ShowOneInRow',
             name = luaDef and luaDef.Name or row:GetChildAt(3):GetText(),
-            choices = luaDef and luaDef.Choices,
-            selected = {},
+            choices = choices,
+            widths = widths,
+            selected = { {}, {} },
+            underlines = underlines,
+            isExit = isExit,
           }
           
           optIndex = optIndex + 1
@@ -563,68 +242,151 @@ return {
         firstFrame = false
       end
 
-      local yOff = 0
+      local yOff = cursorEases[1][2].eased - scy
 
-      yOff = math.max(cursorEases[1][2].eased - scy, 0)
       yOff = math.min(yOff, ROW_HEIGHT * #optionRows - (sh - ROWS_TOP_Y))
+      yOff = math.max(yOff, 0)
       yOff = -yOff
+
+      for rowIndex, row in ipairs(optionRows) do
+        local opt = optionRows[rowIndex]
+        local y = ROWS_TOP_Y + (rowIndex - 1) * ROW_HEIGHT
+
+        quad:diffuse(0.2, 0.2, 0.2, 1)
+        quad:skewx(-SKEW/WIDTH*ROW_HEIGHT)
+        quad:zoomto(WIDTH, ROW_HEIGHT)
+        quad:xy(scx, y)
+        quad:Draw()
+        quad:diffuse(0.17, 0.17, 0.17, 1)
+        quad:skewx(-SKEW/WIDTH*(ROW_HEIGHT/2))
+        quad:zoomto(WIDTH, ROW_HEIGHT/2)
+        quad:xy(scx, y+ROW_HEIGHT/4)
+        quad:Draw()
+        quad:diffuse(0, 0, 0, 0.2)
+        quad:skewx(-SKEW/(LABEL_LEFT_X - (scx - WIDTH/2))*ROW_HEIGHT)
+        quad:zoomto(LABEL_LEFT_X - (scx - WIDTH/2), ROW_HEIGHT)
+        quad:xy(scx - WIDTH/2 + (LABEL_LEFT_X - (scx - WIDTH/2))/2, y)
+        quad:Draw()
+        quad:skewx(0)
+
+        if opt then
+          if opt.layoutType == 'ShowAllInRow' then
+            local x = 0
+            for i, option in ipairs(opt.choices) do
+              local width = opt.widths[i] + OPTION_GAP*2
+              if i % 2 == 0 then
+                quad:diffuse(0, 0, 0, 0.2)
+                quad:skewx(-SKEW/width*ROW_HEIGHT)
+                quad:zoomto(width, ROW_HEIGHT)
+                quad:xy(LABEL_LEFT_X + x + width/2, y + yOff)
+                quad:Draw()
+              end
+              x = x + width
+            end
+          else
+          end
+        end
+      end
 
       for pn, cursor in ipairs(cursors) do
         local eases = cursorEases[pn]
 
         cursor:finishtweening()
 
-        local color = pn == 1 and rgb(1, 0.3, 0.4) or rgb(0.2, 0.3, 1)
-        local x, y = LABEL_LEFT_X + LABEL_MARGIN + (selectedOption[pn] - 1 + 0.5) * OPTION_GAP, ROWS_TOP_Y + (selectedRow[pn] - 1) * ROW_HEIGHT
+        local color = getPlayerColor(pn)
+        local x
+        local y = ROWS_TOP_Y + (selectedRow[pn] - 1) * ROW_HEIGHT
         if optionRows[selectedRow[pn]] and optionRows[selectedRow[pn]].layoutType == 'ShowOneInRow' then
-          x = LABEL_LEFT_X + LABEL_MARGIN + OPTION_GAP*0.5
+          x = LABEL_LEFT_X + (optionRows[selectedRow[pn]].widths[selectedOption[pn]] + OPTION_GAP*2)/2
+        else
+          x = LABEL_LEFT_X
+          for i = 1, selectedOption[pn] do
+            x = x + optionRows[selectedRow[pn]].widths[i] + OPTION_GAP*2
+          end
+          x = x - (optionRows[selectedRow[pn]].widths[selectedOption[pn]] + OPTION_GAP*2)/2
         end
         eases[1]:set(x) eases[2]:set(y)
-        quad:xy(eases[1].eased, eases[2].eased + yOff)
-        local zoomX = cursor(1):GetZoomX()
-        local frameWidth = cursor(2):GetWidth()
-        local barWidth = frameWidth * zoomX
-        eases[3]:set(barWidth)
-        quad:zoomto(eases[3].eased + 16, 20)
-        quad:diffuse(color:alpha(0.5):unpack())
-        quad:skewx(-0.4)
+        local offset = (pn % 2 * 2 - 1) * 4
+        quad:xy(eases[1].eased + offset, eases[2].eased + yOff)
+        eases[3]:set((optionRows[selectedRow[pn]].widths[selectedOption[pn]] + OPTION_GAP*2))
+        quad:zoomto(eases[3].eased, ROW_HEIGHT)
+        quad:diffuse(color:unpack())
+        quad:skewx(-SKEW/eases[3].eased*ROW_HEIGHT)
         quad:Draw()
+        quad:skewx(0)
       end
 
-      for i, row in ipairs(optionRows) do
-        --local rowFrame = row:GetChildAt(0) --[[@as ActorFrame]]
-        --local title = rowFrame(4) --[[@as BitmapText]]
-        --[[text:settext(title:GetText())
-        text:xy(rowFrame:GetX() + title:GetX(), rowFrame:GetY() + title:GetY())
-        text:diffuse(title:getdiffuse())
-        text:Draw()]]
-        --for i = 5, rowFrame:GetNumChildren() do
-        --  rowFrame(i):Draw()
-        --end
-        --rowFrame:Draw()
-
-        local opt = optionRows[i]
-        local y = ROWS_TOP_Y + (i - 1) * ROW_HEIGHT
+      for rowIndex, row in ipairs(optionRows) do
+        local opt = optionRows[rowIndex]
+        local y = ROWS_TOP_Y + (rowIndex - 1) * ROW_HEIGHT
 
         if opt then
           text:settext(opt.name)
-          text:xy(LABEL_LEFT_X, y + yOff)
+          text:xy(LABEL_LEFT_X - 10, y + yOff)
           text:Draw()
 
           if opt.layoutType == 'ShowAllInRow' then
+            local x = 0
+            for pn, underlines in ipairs(opt.underlines) do
+              for i, underline in ipairs(underlines) do
+                opt.selected[pn][i] = not underline:GetHidden()
+              end
+            end
             for i, option in ipairs(opt.choices) do
+              local width = opt.widths[i] + OPTION_GAP*2
+              local hovered =
+                (selectedRow[1] == rowIndex and selectedOption[1] == i) or
+                (selectedRow[2] == rowIndex and selectedOption[2] == i)
+              for pn = 1, 2 do
+                local selected = opt.selected[pn][i]
+                if selected then
+                  quad:zoomto(opt.widths[i] * 0.9, 1)
+                  quad:xy(LABEL_LEFT_X + x + width/2, y + yOff + 10 * (pn%2*2-1))
+                  quad:diffuse((hovered and rgb(1, 1, 1) or getPlayerColor(pn)):unpack())
+                  quad:Draw()
+                end
+              end
+              if hovered then
+                optText:diffuse(1, 1, 1, 1)
+              else
+                optText:diffuse(0.8, 0.8, 0.8, 1)
+              end
               optText:settext(option)
-              optText:xy(LABEL_LEFT_X + LABEL_MARGIN + (i - 1 + 0.5) * OPTION_GAP, y + yOff)
+              optText:xy(LABEL_LEFT_X + x + width/2, y + yOff)
               optText:Draw()
+              x = x + width
             end
           else
+            -- temp while i figure out how 2p rendering for this should go
+            -- or rather if it should i guess
             local pn = 1
             if opt.choices then
               local foundChoice = opt.actor:GetChildAt(4 + (pn - 1))
               for i, choice in ipairs(opt.choices) do
+                local width = opt.widths[i] + OPTION_GAP*2
                 if foundChoice and foundChoice.GetText and choice == foundChoice:GetText() then
+                  if not opt.isExit then
+                    opt.selected[pn][i] = not opt.underlines[pn][1]:GetHidden()
+                  end
+                  local hovered = 
+                    (selectedRow[1] == rowIndex) or
+                    (selectedRow[2] == rowIndex)
+                  for pn = 1, 2 do
+                    local selected = opt.selected[pn][i]
+                    if selected then
+                      quad:zoomto(opt.widths[i]*0.9, 1)
+                      quad:xy(LABEL_LEFT_X + width * 0.5, y + yOff + 10 * (pn%2*2-1))
+                      quad:diffuse((hovered and rgb(1, 1, 1) or getPlayerColor(pn)):unpack())
+                      quad:Draw()
+                    end
+                  end
+                  if hovered then
+                    optText:diffuse(1, 1, 1, 1)
+                  else
+                    optText:diffuse(0.8, 0.8, 0.8, 1)
+                  end
                   optText:settext(choice)
-                  optText:xy(LABEL_LEFT_X + LABEL_MARGIN + OPTION_GAP*0.5, y + yOff)
+                  optText:xy(LABEL_LEFT_X + width*0.5, y + yOff)
                   optText:Draw()
                   break
                 end

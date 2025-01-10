@@ -24,13 +24,16 @@ M.option = {}
 ---@param selectType SelectType
 ---@param choices string[]
 ---@return OptionRow
-function M.option.base(name, layoutType, selectType, choices, load, save)
+function M.option.base(name, layoutType, selectType, choices, oneChoiceForAllPlayers, load, save)
+  if oneChoiceForAllPlayers == nil then
+    oneChoiceForAllPlayers = true
+  end
   return {
     Name = name,
     LayoutType = layoutType,
     SelectType = selectType,
     Choices = choices,
-    OneChoiceForAllPlayers = true,
+    OneChoiceForAllPlayers = oneChoiceForAllPlayers,
     ExportOnChange = true,
     LoadSelections = load,
     SaveSelections = save,
@@ -40,16 +43,18 @@ end
 ---@param name string
 ---@param choices string[]
 ---@param showAll boolean?
+---@param oneChoiceForAllPlayers boolean?
 ---@return OptionRow
-function M.option.choice(name, choices, load, save, showAll)
+function M.option.choice(name, choices, load, save, showAll, oneChoiceForAllPlayers)
   if showAll == nil then showAll = true end
-  return M.option.base(name, showAll and 'ShowAllInRow' or 'ShowOneInRow', 'SelectOne', choices, load, save)
+  return M.option.base(name, showAll and 'ShowAllInRow' or 'ShowOneInRow', 'SelectOne', choices, oneChoiceForAllPlayers, load, save)
 end
 
 ---@param name string
+---@param oneChoiceForAllPlayers boolean?
 ---@return OptionRow
-function M.option.toggle(name, load, save)
-  return M.option.base(name, 'ShowAllInRow', 'SelectOne', {'ON', 'OFF'}, load, save)
+function M.option.toggle(name, load, save, oneChoiceForAllPlayers)
+  return M.option.base(name, 'ShowAllInRow', 'SelectOne', {'ON', 'OFF'}, oneChoiceForAllPlayers, load, save)
 end
 
 ---@param name string
@@ -62,7 +67,7 @@ function M.option.settingToggle(name, key)
   end, function(self, selected, pn)
     save.data.settings[key] = selected[1] -- 'ON'
     save.maskAsDirty()
-  end)
+  end, true)
 end
 ---@param name string
 ---@param key string
@@ -78,14 +83,14 @@ function M.option.settingChoice(name, key, choices, showAll)
     local optI = search(selected, true) or default
     save.data.settings[key] = choices[optI]
     save.maskAsDirty()
-  end, showAll)
+  end, showAll, true)
 end
 ---@param name string
 ---@param value string
 ---@param onPress fun(pn: number)
 ---@return OptionRow
 function M.option.button(name, value, onPress)
-  return M.option.base(name, 'ShowAllInRow', 'SelectNone', {value}, function() end, function(self, selected, pn)
+  return M.option.base(name, 'ShowAllInRow', 'SelectNone', {value}, true, function() end, function(self, selected, pn)
     if selected[1] then
       onPress(pn)
     end
@@ -133,12 +138,42 @@ function M.option.mod(modName)
         applyMod('no ' .. modName, pn+5)
         applyMod('no ' .. modName, pn+7)
       end
-    end)
+    end, false)
   elseif entry.type == 'float' then
 
   elseif entry.type == 'select' then
 
   end
+end
+---@param name string
+---@param modNames string[]
+---@param onlyOne boolean?
+function M.option.mods(name, modNames, onlyOne)
+  return M.option.base(name, 'ShowAllInRow', onlyOne and 'SelectOne' or 'SelectMultiple', modNames, false, function(self, selected, pn)
+    local isAnySelected = false
+    for i, mod in ipairs(modNames) do
+      local enabled = GAMESTATE:PlayerIsUsingModifier(pn, mod)
+      selected[i] = enabled
+      isAnySelected = isAnySelected or enabled
+    end
+    if onlyOne and not isAnySelected then
+      selected[1] = true
+    end
+  end, function(self, selected, pn)
+    for i, mod in ipairs(modNames) do
+      if selected[i] then
+        applyMod(mod, pn+1)
+        applyMod(mod, pn+3)
+        applyMod(mod, pn+5)
+        applyMod(mod, pn+7)
+      else
+        applyMod('no ' .. mod, pn+1)
+        applyMod('no ' .. mod, pn+3)
+        applyMod('no ' .. mod, pn+5)
+        applyMod('no ' .. mod, pn+7)
+      end
+    end
+  end)
 end
 
 -- todo: `stepstype` and `steps`
