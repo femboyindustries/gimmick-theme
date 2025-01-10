@@ -165,6 +165,7 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
                   end
                 end
               end
+              selectedOption[pn] = 1
             end
           end
         end)
