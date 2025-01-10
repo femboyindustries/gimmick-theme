@@ -81,8 +81,9 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
       local sprHightlightP1 = frame(2)
       local sprHightlightP2 = frame(3)
 
-      cursors[1] = frame(4)
-      if players == 2 then cursors[2] = frame(5) end
+      for pn = 1, players do
+        cursors[pn] = frame(4 + pn - 1)
+      end
 
       local optIndex = 1
       while not frame(6 + optIndex - 1).GetText do
@@ -118,7 +119,18 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
         end
 
         local isExit = not row:GetChildAt(5)
-        local choices = isExit and ({ 'EXIT' }) or (luaDef and luaDef.Choices or {})
+        local choices = isExit and ({ 'EXIT' }) or (luaDef and luaDef.Choices)
+        if not choices then
+          choices = {}
+          if not isShowAllInRow then
+            error('don\'t know how to generically get choices from ShowOneInRow. sorry!!!')
+          end
+          subOptIndex = 4
+          while row:GetChildAt(subOptIndex).GetText do
+            table.insert(choices, row:GetChildAt(subOptIndex):GetText())
+            subOptIndex = subOptIndex + 1
+          end
+        end
         local widths = {}
 
         for i, choice in ipairs(choices) do
@@ -238,7 +250,10 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
         x = x - (optionRows[selectedRow[pn]].widths[selectedOption[pn]] + OPTION_GAP*2)/2
       end
       eases[1]:set(x) eases[2]:set(y)
-      local offset = (pn % 2 * 2 - 1) * 4
+      local offset = 0
+      if players > 1 then
+        offset = (pn % 2 * 2 - 1) * 4
+      end
       quad:xy(eases[1].eased + offset, eases[2].eased + yOff)
       eases[3]:set((optionRows[selectedRow[pn]].widths[selectedOption[pn]] + OPTION_GAP*2))
       quad:zoomto(eases[3].eased, ROW_HEIGHT)

@@ -231,7 +231,7 @@ return {
       if drawOverlay then drawOverlay() end
     end)
 
-    OptionsRenderer.init(ctx, scope, optionsGetter)
+    OptionsRenderer.init(ctx, scope, optionsGetter, 1)
 
     scope.event:on('press', function(pn, btn)
       -- hacky workaround to esc being broken
