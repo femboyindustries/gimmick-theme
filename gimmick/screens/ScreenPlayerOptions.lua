@@ -1,6 +1,5 @@
 local options = require 'gimmick.options'
 local stack   = require 'gimmick.stack'
-local easable = require 'gimmick.lib.easable'
 
 local optionsStack = stack.new()
 local stackLocked = true
@@ -461,24 +460,34 @@ return {
     --local testText = ctx:BitmapText('common','Fart')
 
     local firstFrame = true
-    ---@type ActorFrame[]
+    ---@type {actor: ActorFrame, layoutType: LayoutType, name: string, choices: string[]?}[]
     local optionRows = {}
 
-    ---@type ActorFrame
-    local cursorP1
-    ---@type ActorFrame
-    local cursorP2
+    ---@type ActorFrame[]
+    local cursors = {}
+
+    local selectedRow = { 1, 1 }
+    local selectedOption = { 1, 1 }
 
     local cursorEases = {}
     for pn = 1, 2 do
       cursorEases[pn] = {scope.tick:easable(0, 25), scope.tick:easable(0, 25), scope.tick:easable(0, 25)}
     end
 
+    local LABEL_LEFT_X = 230
+    local LABEL_MARGIN = 20
+    local OPTION_GAP = 64
+    local ROWS_TOP_Y = 32
+    local ROW_HEIGHT = 32
+
     local quad = ctx:Quad()
     local text = ctx:BitmapText(FONTS.sans_serif, '')
     text:halign(1)
     text:shadowlength(0)
-    text:zoom(0.3)
+    text:zoom(0.25)
+    local optText = ctx:BitmapText(FONTS.sans_serif, '')
+    optText:shadowlength(0)
+    optText:zoom(0.3)
 
     self:SetDrawFunction(function()
       if drawOverlay then drawOverlay() end
@@ -489,16 +498,34 @@ return {
         local sprHightlightP1 = frame(2)
         local sprHightlightP2 = frame(3)
 
-        cursorP1 = frame(4)
-        cursorP2 = frame(5)
-
-        CursorP1 = cursorP1
+        cursors[1] = frame(4)
+        cursors[2] = frame(5)
 
         local optIndex = 1
         while not frame(6 + optIndex - 1).GetText do
-          local row = frame(6 + optIndex - 1)
-          optionRows[optIndex] = row
-          print(row:GetChildAt(0):GetChildAt(3))
+          local row = frame(6 + optIndex - 1):GetChildAt(0)
+          print(row:GetChildAt(3))
+          local isShowAllInRow = false
+          local opt1 = row:GetChildAt(4)
+
+          if opt1 and opt1:GetX() ~= -1 then
+            isShowAllInRow = true
+          end
+
+          local def = optionsTable[optionsStack:top()][optIndex]
+          local luaDef = def and def.optionRow
+
+          for _, child in ipairs(row:GetChildren()) do
+            child:zoomx(1)
+          end
+
+          optionRows[optIndex] = {
+            actor = row,
+            layoutType = isShowAllInRow and 'ShowAllInRow' or 'ShowOneInRow',
+            name = luaDef and luaDef.Name or row:GetChildAt(3):GetText(),
+            choices = luaDef and luaDef.Choices,
+            selected = {},
+          }
           
           optIndex = optIndex + 1
         end
@@ -507,33 +534,66 @@ return {
         -- of if P1 or P2 moves
         sprHightlightP1:addcommand('Change', function()
           print('something just happened')
-          print(cursorP1:GetX(), cursorP1:GetY())
+          scope.tick:func(0, function()
+            print('(...contd)')
+            for pn, cursor in ipairs(cursors) do
+              print('p' .. pn)
+              cursor:finishtweening()
+              print(cursor:GetX(), cursor:GetY())
+              local row = cursor:GetY()
+              selectedRow[pn] = row
+              if optionRows[row] and optionRows[row].layoutType == 'ShowAllInRow' then
+                selectedOption[pn] = cursor:GetX() + 1
+              else
+                if optionRows[row].choices then
+                  local foundChoice = optionRows[row].actor:GetChildAt(4 + (pn - 1))
+                  for i, choice in ipairs(optionRows[row].choices) do
+                    if foundChoice and foundChoice.GetText and choice == foundChoice:GetText() then
+                      print(choice)
+                      selectedOption[pn] = i
+                      break
+                    end
+                  end
+                end
+              end
+            end
+          end)
         end)
 
         firstFrame = false
       end
 
-      for pn, cursor in ipairs({cursorP1, cursorP2}) do
+      local yOff = 0
+
+      yOff = math.max(cursorEases[1][2].eased - scy, 0)
+      yOff = math.min(yOff, ROW_HEIGHT * #optionRows - (sh - ROWS_TOP_Y))
+      yOff = -yOff
+
+      for pn, cursor in ipairs(cursors) do
         local eases = cursorEases[pn]
 
         cursor:finishtweening()
+
         local color = pn == 1 and rgb(1, 0.3, 0.4) or rgb(0.2, 0.3, 1)
-        local x, y = cursor:GetX(), cursor:GetY()
+        local x, y = LABEL_LEFT_X + LABEL_MARGIN + (selectedOption[pn] - 1 + 0.5) * OPTION_GAP, ROWS_TOP_Y + (selectedRow[pn] - 1) * ROW_HEIGHT
+        if optionRows[selectedRow[pn]] and optionRows[selectedRow[pn]].layoutType == 'ShowOneInRow' then
+          x = LABEL_LEFT_X + LABEL_MARGIN + OPTION_GAP*0.5
+        end
         eases[1]:set(x) eases[2]:set(y)
-        quad:xy(eases[1].eased, eases[2].eased)
+        quad:xy(eases[1].eased, eases[2].eased + yOff)
         local zoomX = cursor(1):GetZoomX()
         local frameWidth = cursor(2):GetWidth()
         local barWidth = frameWidth * zoomX
         eases[3]:set(barWidth)
         quad:zoomto(eases[3].eased + 16, 20)
-        quad:diffuse(color:unpack())
+        quad:diffuse(color:alpha(0.5):unpack())
         quad:skewx(-0.4)
         quad:Draw()
       end
 
-      for _, row in ipairs(optionRows) do
-        local rowFrame = row:GetChildAt(0) --[[@as ActorFrame]]
-        local title = rowFrame(4) --[[@as BitmapText]]
+      for i, row in ipairs(optionRows) do
+        --local rowFrame = row:GetChildAt(0) --[[@as ActorFrame]]
+        --local title = rowFrame(4) --[[@as BitmapText]]
         --[[text:settext(title:GetText())
         text:xy(rowFrame:GetX() + title:GetX(), rowFrame:GetY() + title:GetY())
         text:diffuse(title:getdiffuse())
@@ -541,7 +601,37 @@ return {
         --for i = 5, rowFrame:GetNumChildren() do
         --  rowFrame(i):Draw()
         --end
-        rowFrame:Draw()
+        --rowFrame:Draw()
+
+        local opt = optionRows[i]
+        local y = ROWS_TOP_Y + (i - 1) * ROW_HEIGHT
+
+        if opt then
+          text:settext(opt.name)
+          text:xy(LABEL_LEFT_X, y + yOff)
+          text:Draw()
+
+          if opt.layoutType == 'ShowAllInRow' then
+            for i, option in ipairs(opt.choices) do
+              optText:settext(option)
+              optText:xy(LABEL_LEFT_X + LABEL_MARGIN + (i - 1 + 0.5) * OPTION_GAP, y + yOff)
+              optText:Draw()
+            end
+          else
+            local pn = 1
+            if opt.choices then
+              local foundChoice = opt.actor:GetChildAt(4 + (pn - 1))
+              for i, choice in ipairs(opt.choices) do
+                if foundChoice and foundChoice.GetText and choice == foundChoice:GetText() then
+                  optText:settext(choice)
+                  optText:xy(LABEL_LEFT_X + LABEL_MARGIN + OPTION_GAP*0.5, y + yOff)
+                  optText:Draw()
+                  break
+                end
+              end
+            end
+          end
+        end
       end
     end
 

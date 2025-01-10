@@ -169,8 +169,8 @@ end
 ---@param func fun(time: number)
 function tick:func(delay, func)
   if self.locked then error('this tick instance is locked, no new functions can be scheduled', 2) end
-  insertSorted({
-    time = delay,
+  insertSorted(self.funcs, {
+    time = self.time + delay,
     func = func,
   })
 end
@@ -180,8 +180,8 @@ end
 ---@param func fun(time: number)
 function tick:perframe(delay, dur, func)
   if self.locked then error('this tick instance is locked, no new functions can be scheduled', 2) end
-  insertSorted({
-    time = delay,
+  insertSorted(self.perframes, {
+    time = self.time + delay,
     dur = dur,
     func = func,
   })
@@ -195,8 +195,8 @@ end
 ---@param func fun(time: number)
 function tick:ease(delay, dur, ease, from, to, func)
   if self.locked then error('this tick instance is locked, no new functions can be scheduled', 2) end
-  insertSorted({
-    time = delay,
+  insertSorted(self.eases, {
+    time = self.time + delay,
     dur = dur,
     ease = ease,
     from = from,

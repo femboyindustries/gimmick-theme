@@ -83,7 +83,7 @@ function gimmick.ActorScreen(initFunc)
         local t = os.clock()
         local dt = t - lastT
         lastT = t
-        scope.tick:update(dt)
+        scope:update(dt)
       end)
 
       self:luaeffect('Update')

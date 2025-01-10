@@ -144,9 +144,6 @@ end
 -- todo: `stepstype` and `steps`
 ---@alias Option { type: 'lua', optionRow: OptionRow, y: number? } | { type: 'conf', pref: string, y: number? } | { type: 'list', list: string, y: number? }
 
-local ROWS_SHOWN = 10
-local HEIGHT = 300
-
 ---@param screenName string
 ---@param optionsGetter fun(): Option[]
 function M.LineProvider(screenName, optionsGetter)
@@ -175,24 +172,9 @@ function M.LineProvider(screenName, optionsGetter)
       return option.optionRow
     end,
     NumRowsShown = function()
-      return ROWS_SHOWN
+      return (#optionsGetter()) + 1
     end,
   }
-
-  -- todo this is ugly
-  for i = 1, 99 do
-    local i = i
-    t['Row' .. i .. 'Y'] = function()
-      local opt = optionsGetter()[i]
-      if opt and opt.y then
-        return opt.y
-      end
-
-      local rowHeight = HEIGHT / ROWS_SHOWN
-
-      return scy - (rowHeight * math.min(#optionsGetter(), ROWS_SHOWN))/2 + rowHeight * (i - 1)
-    end
-  end
 
   return t
 end
