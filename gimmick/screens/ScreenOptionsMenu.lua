@@ -1,6 +1,7 @@
 local options = require 'gimmick.options'
 local stack   = require 'gimmick.stack'
 local mascots = require 'gimmick.mascots'
+local OptionsRenderer = require 'gimmick.optionsRenderer'
 
 local optionsStack = stack.new()
 local stackLocked = true
@@ -193,7 +194,27 @@ local optionsTable = {
 
 }
 
+local function optionsGetter()
+  local opts = optionsStack:top()
+  if not opts then
+    print('Initializing options stack')
+    opts = 'root'
+    optionsStack:push(opts)
+  end
+  local res = optionsTable[opts]
+  if not res then
+    print('Invalid options screen: ' .. opts)
+    optionsStack:clear()
+    opts = 'root'
+    optionsStack:push(opts)
+    res = optionsTable[opts]
+  end
+  return res
+end
+
 return {
+  options = OptionsRenderer.OptionsRenderer(),
+
   overlay = gimmick.ActorScreen(function(self, ctx, scope)
     local opts = optionsStack:top()
     local res = optionsTable[opts]
@@ -206,10 +227,11 @@ return {
 
     --local testText = ctx:BitmapText('common','Fart')
 
-
     self:SetDrawFunction(function()
       if drawOverlay then drawOverlay() end
     end)
+
+    OptionsRenderer.init(ctx, scope, optionsGetter)
 
     scope.event:on('press', function(pn, btn)
       -- hacky workaround to esc being broken
@@ -254,22 +276,6 @@ return {
   end,
 
   --- El soyjak
-  lines = options.LineProvider('ScreenOptionsMenu', function()
-    local opts = optionsStack:top()
-    if not opts then
-      print('Initializing options stack')
-      opts = 'root'
-      optionsStack:push(opts)
-    end
-    local res = optionsTable[opts]
-    if not res then
-      print('Invalid options screen: ' .. opts)
-      optionsStack:clear()
-      opts = 'root'
-      optionsStack:push(opts)
-      res = optionsTable[opts]
-    end
-    return res
-  end),
+  lines = options.LineProvider('ScreenOptionsMenu', optionsGetter),
 
 }
