@@ -41,17 +41,6 @@ local optionsTable = {
     {
       type = 'lua',
       optionRow = {
-        Name = 'bwaaa',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'bingus', 'bongus', 'awawa', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
         Name = 'Bumpscosity',
         LayoutType = 'ShowOneInRow',
         SelectType = 'SelectOne',
@@ -59,6 +48,22 @@ local optionsTable = {
         LoadSelections = function(self, selected) selected[1] = true end,
         SaveSelections = function() end,
       },
+    },
+    {
+      type = 'lua',
+      optionRow = options.option.mods('Columnswaps', {'MetaFlip', 'MetaInvert', 'MetaVideogames', 'MetaMonocolumn'}),
+    },
+    {
+      type = 'lua',
+      optionRow = options.option.mods('Arrows', {'MetaReverse', 'MetaDizzy', 'MetaOrient', 'MetaBrake'}),
+    },
+    {
+      type = 'lua',
+      optionRow = options.option.mods('Appear', {'MetaHidden'}),
+    },
+    {
+      type = 'lua',
+      optionRow = options.option.mod('MetaStealth'),
     },
     {
       type = 'lua',

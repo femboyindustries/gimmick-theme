@@ -109,13 +109,16 @@ end
 
 ---@alias ModEntry { name?: string } | ({ type: 'bool' } | { type: 'float', step?: number } | { type: 'select', values: number[] })
 ---@type table<string, ModEntry>
-local modRegistry = {}
+local m = {}
+
+m.stealth = { type = 'float', step = 25 }
+m.metastealth = m.stealth
 
 ---@param modName string
 function M.option.mod(modName)
   local origModName = modName
   modName = string.lower(modName)
-  local entry = modRegistry[modName]
+  local entry = m[modName]
 
   if not entry then
     entry = { type = 'bool' }
@@ -140,7 +143,25 @@ function M.option.mod(modName)
       end
     end, false)
   elseif entry.type == 'float' then
-
+    local options = {}
+    for p = 0, 100, (entry.step or 25) do
+      table.insert(options, p .. '%')
+    end
+    return M.option.choice(entry.name or origModName, options, function(self, selected, pn)
+      local enabled = GAMESTATE:PlayerIsUsingModifier(pn, modName)
+      -- todo: does not account for partial percentages (eg. 50% of a mod)
+      selected[enabled and #options or 1] = true
+    end, function(self, selected, pn)
+      for i, sel in ipairs(selected) do
+        if sel then
+          local percentage = options[i]
+          applyMod(percentage .. ' ' .. modName, pn+1)
+          applyMod(percentage .. ' ' .. modName, pn+3)
+          applyMod(percentage .. ' ' .. modName, pn+5)
+          applyMod(percentage .. ' ' .. modName, pn+7)
+        end
+      end
+    end, false)
   elseif entry.type == 'select' then
 
   end
