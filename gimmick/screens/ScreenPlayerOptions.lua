@@ -46,6 +46,7 @@ local optionsTable = {
     {
       type = 'lua',
       optionRow = options.option.mod('xmusic'),
+      marginTop = 1,
     },
     {
       type = 'lua',
@@ -57,6 +58,7 @@ local optionsTable = {
         LoadSelections = function(self, selected) selected[1] = true end,
         SaveSelections = function() end,
       },
+      marginTop = 1,
     },
     {
       type = 'lua',
@@ -76,7 +78,8 @@ local optionsTable = {
     },
     {
       type = 'lua',
-      optionRow = options.option.mods('Noteskin', NOTESKIN:GetNoteSkinNames(), true, true)
+      optionRow = options.option.mods('Noteskin', NOTESKIN:GetNoteSkinNames(), true, true),
+      marginTop = 1,
     },
     -- todo make some like option.choice equivalent that doesn't need you to
     -- specify save/load with such utter verbosity
@@ -100,7 +103,48 @@ local optionsTable = {
           end
         end
         data.judgment_skin = self.Choices[1]
-      end, false, false)
+      end, false, false),
+      marginTop = 1,
+      ---@param ctx Context
+      ---@param scope Scope
+      overlay = function(ctx, scope)
+        local containers = {}
+        local judgments = {}
+        for pn = 1, 2 do
+          local container = ctx:ActorFrame()
+          table.insert(containers, container)
+          local judgment = ctx:Sprite('Graphics/_missing')
+          table.insert(judgments, judgment)
+          ctx:addChild(container, judgment)
+        end
+        local shownJudge = { '', '' }
+
+        scope.event:on('judge', function(pn, judge)
+          judgments[pn]:finishtweening()
+          local off = math.random(0, 1)
+          judgments[pn]:setstate((5 - (judge - 3)) * 2 + off)
+          player.onJudgment(judgments[pn], judge, pn)
+        end)
+
+        return function(self, selected, pn, x, y)
+          elemPn = pn
+
+          local data = save.getPlayerData(pn)
+          local judge = data.judgment_skin
+
+          if judge ~= shownJudge[pn] then
+            judgments[pn]:Load(
+              THEME:GetPath(EC_GRAPHICS, '' , '_Judgments/' .. judge)
+            )
+            judgments[pn]:animate(0)
+            shownJudge[pn] = judge
+          end
+
+          containers[pn]:xy(x, y - 28)
+          containers[pn]:zoom(0.65)
+          containers[pn]:Draw()
+        end
+      end,
     },
     {
       type = 'lua',
@@ -122,7 +166,7 @@ local optionsTable = {
           end
         end
         data.judgment_tween = self.Choices[1]
-      end, false, false)
+      end, false, false),
     },
     {
       type = 'lua',
@@ -144,7 +188,114 @@ local optionsTable = {
           end
         end
         data.combo_tween = self.Choices[1]
-      end, false, false)
+      end, false, false),
+      marginTop = 1,
+      ---@param ctx Context
+      ---@param scope Scope
+      overlay = function(ctx, scope)
+        local containers = {}
+        local combos = {}
+        local comboNum = { 6, 6 }
+        for pn = 1, 2 do
+          local container = ctx:ActorFrame()
+          table.insert(containers, container)
+          local combo = ctx:BitmapText('Numbers/Combo numbers', '00')
+          player.initCombo(combo, true)
+          table.insert(combos, combo)
+          ctx:addChild(container, combo)
+        end
+
+        scope.event:on('judge', function(pn, judge)
+          if judge == MISS or judge == DECENT or judge == WAYOFF then
+            comboNum[pn] = 0
+          else
+            comboNum[pn] = comboNum[pn] + 1
+          end
+
+          local combo = comboNum[pn]
+          if combo >= 1 then
+            combos[pn]:hidden(0)
+            combos[pn]:settext(lpad(tostring(combo), 2, '0'))
+            player.onCombo(combos[pn], pn, combo)
+          else
+            combos[pn]:hidden(1)
+          end
+        end)
+
+        return function(self, selected, pn, x, y)
+          elemPn = pn
+
+          containers[pn]:xy(x, y - 28)
+          containers[pn]:zoom(0.6)
+          containers[pn]:Draw()
+        end
+      end,
+    },
+    {
+      type = 'lua',
+      optionRow = options.option.choice('Hold Judgments', player.getHoldJudgements(), function(self, selected, pn)
+        local data = save.getPlayerData(pn + 1)
+        print(self.Choices)
+        print(data.hold_judgment_skin)
+        for i, judge in ipairs(self.Choices) do
+          print(judge, data.hold_judgment_skin)
+          if judge == data.hold_judgment_skin then
+            selected[i] = true
+            return
+          end
+        end
+        selected[1] = true
+      end, function(self, selected, pn)
+        local data = save.getPlayerData(pn + 1)
+        for i, sel in ipairs(selected) do
+          if sel then
+            data.hold_judgment_skin = self.Choices[i]
+            return
+          end
+        end
+        data.hold_judgment_skin = self.Choices[1]
+      end, false, false),
+      marginTop = 1,
+      ---@param ctx Context
+      ---@param scope Scope
+      overlay = function(ctx, scope)
+        local containers = {}
+        local shownJudge = { '', '' }
+        local judges = {}
+        for pn = 1, 2 do
+          local container = ctx:ActorFrame()
+          table.insert(containers, container)
+          local judge = ctx:Sprite('Graphics/_missing')
+          judge:animate(0)
+          table.insert(judges, judge)
+          ctx:addChild(container, judge)
+        end
+
+        scope.event:on('judge', function(pn, judge)
+          local miss = judge == MISS or judge == DECENT or judge == WAYOFF
+          judges[pn]:setstate(miss and 1 or 0)
+          player.onHoldJudgment(judges[pn], miss and HNS_NG or HNS_OK, pn)
+        end)
+  
+        return function(self, selected, pn, x, y)
+          elemPn = pn
+
+          local data = save.getPlayerData(pn)
+          local judge = data.hold_judgment_skin
+
+          if judge ~= shownJudge[pn] then
+            judges[pn]:Load(
+              THEME:GetPath(EC_GRAPHICS, '' , '_HoldJudgments/' .. judge)
+            )
+            judges[pn]:animate(0)
+            shownJudge[pn] = judge
+          end
+
+          containers[pn]:xy(x, y - 28)
+          containers[pn]:zoom(0.65)
+          containers[pn]:Draw()
+        end
+      end,
     },
     {
       type = 'lua',
@@ -166,11 +317,12 @@ local optionsTable = {
           end
         end
         data.hold_judgment_tween = self.Choices[1]
-      end, false, false)
+      end, false, false),
     },
     {
       type = 'lua',
       optionRow = options.option.mod('XMod'),
+      marginTop = 1,
     },
     {
       type = 'lua',
@@ -214,7 +366,23 @@ return {
       drawOverlay = res.overlay(self, ctx)
     end
 
-    self:SetDrawFunction(function()
+    local hitTimer = 0
+    setDrawFunctionWithDT(self, function(dt)
+      hitTimer = hitTimer - dt
+      if hitTimer < 0 then
+        hitTimer = hitTimer + 1
+        for pn = 1, 2 do
+          local judge = pickWeighted({
+            [FANTASTIC] = 1,
+            [EXCELLENT] = 0.8,
+            [GREAT] = 0.5,
+            [WAYOFF] = 0.1,
+            [DECENT] = 0.15,
+            [MISS] = 0.3,
+          })
+          scope.event:call('judge', pn, judge)
+        end
+      end
       if drawOverlay then
         drawOverlay()
       end

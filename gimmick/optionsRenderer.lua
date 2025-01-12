@@ -46,8 +46,23 @@ end
 function OptionsRenderer.init(ctx, scope, optionsGetter, players)
   players = players or 2
   local firstFrame = true
-  ---@type {actor: ActorFrame, layoutType: LayoutType, name: string, choices: string[]?, underlines: table<number, ActorFrame[]>, selected: table<number, boolean[]>, selectedX: easable, isExit: boolean, widths: number[], oneChoiceForAllPlayers: boolean}[]
+  ---@type {idx: number?, actor: ActorFrame, layoutType: LayoutType, name: string, choices: string[]?, underlines: table<number, ActorFrame[]>, selected: table<number, boolean[]>, selectedX: easable, isExit: boolean, widths: number[], oneChoiceForAllPlayers: boolean, opt: Option}[]
   local optionRows = {}
+  local optionRowOverlays = {}
+
+  for i, opt in ipairs(optionsGetter()) do
+    if opt.overlay then
+      optionRowOverlays[i] = opt.overlay(ctx, scope)
+    end
+  end
+
+  local function getRow(idx)
+    for _, row in ipairs(optionRows) do
+      if idx == row.idx then
+        return row
+      end
+    end
+  end
 
   ---@type ActorFrame[]
   local cursors = {}
@@ -88,7 +103,7 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
       local optIndex = 1
       while not frame(6 + optIndex - 1).GetText do
         local row = frame(6 + optIndex - 1):GetChildAt(0)
-        print(row:GetChildAt(3))
+        --print(row:GetChildAt(3))
         local isShowAllInRow = false
         local opt1 = row:GetChildAt(4)
 
@@ -153,7 +168,14 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
           end
         end
 
-        optionRows[optIndex] = {
+        if def and def.marginTop then
+          for _ = 1, def.marginTop do
+            table.insert(optionRows, {})
+          end
+        end
+
+        table.insert(optionRows, {
+          idx = optIndex,
           actor = row,
           layoutType = isShowAllInRow and 'ShowAllInRow' or 'ShowOneInRow',
           name = luaDef and luaDef.Name or row:GetChildAt(3):GetText(),
@@ -164,7 +186,14 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
           isExit = isExit,
           selectedX = scope.tick:easable(0, 25),
           oneChoiceForAllPlayers = oneChoiceForAllPlayers,
-        }
+          opt = def,
+        })
+
+        if def and def.marginBottom then
+          for _ = 1, def.marginBottom do
+            table.insert(optionRows, {})
+          end
+        end
         
         optIndex = optIndex + 1
       end
@@ -174,22 +203,23 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
       sprHightlightP1:addcommand('Change', function()
         scope.tick:func(0, function()
           for pn, cursor in ipairs(cursors) do
-            print('p' .. pn)
+            --print('p' .. pn)
             cursor:finishtweening()
-            print(cursor:GetX(), cursor:GetY())
-            local row = cursor:GetY()
-            selectedRow[pn] = row
-            if optionRows[row] and optionRows[row].layoutType == 'ShowAllInRow' then
+            --print(cursor:GetX(), cursor:GetY())
+            local rowIdx = cursor:GetY()
+            selectedRow[pn] = rowIdx
+            local row = getRow(rowIdx)
+            if row and row.layoutType == 'ShowAllInRow' then
               selectedOption[pn] = cursor:GetX() + 1
             else
               local foundOpt = false
-              if optionRows[row].choices then
+              if row.choices then
                 local idx = 4 + (pn - 1)
-                if optionRows[row].oneChoiceForAllPlayers then
+                if row.oneChoiceForAllPlayers then
                   idx = 4
                 end
-                local foundChoice = optionRows[row].actor:GetChildAt(idx)
-                for i, choice in ipairs(optionRows[row].choices) do
+                local foundChoice = row.actor:GetChildAt(idx)
+                for i, choice in ipairs(row.choices) do
                   if foundChoice and foundChoice.GetText and choice == foundChoice:GetText() then
                     selectedOption[pn] = i
                     foundOpt = true
@@ -212,7 +242,7 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
 
     for rowIndex, row in ipairs(optionRows) do
       local opt = optionRows[rowIndex]
-      local y = ROWS_TOP_Y + (rowIndex - 1) * ROW_HEIGHT
+      local y = ROWS_TOP_Y + (rowIndex - 1) * ROW_HEIGHT + yOff
 
       -- todo this is a fucking disaster
 
@@ -274,7 +304,7 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
               quad:diffuse(0, 0, 0, 0.2)
               quad:skewx(-SKEW/width*ROW_HEIGHT)
               quad:zoomto(width, ROW_HEIGHT)
-              quad:xy(LABEL_LEFT_X + x + width/2, y + yOff)
+              quad:xy(LABEL_LEFT_X + x + width/2, y)
               quad:ztest(1)
               quad:ztestmode('writeonfail')
               quad:Draw()
@@ -308,7 +338,7 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
         x = x - cut/2
       end
       quad:xy(x, eases[2].eased + yOff)
-      eases[3]:set((optionRows[selectedRow[pn]].widths[selectedOption[pn]] + OPTION_GAP*2))
+      eases[3]:set((getRow(selectedRow[pn]).widths[selectedOption[pn]] + OPTION_GAP*2))
       quad:zoomto(width, ROW_HEIGHT)
       quad:diffuse(color:unpack())
       quad:skewx(-SKEW/width*ROW_HEIGHT)
@@ -346,148 +376,163 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
     end
 
     for rowIndex, row in ipairs(optionRows) do
-      local opt = optionRows[rowIndex]
-      local y = ROWS_TOP_Y + (rowIndex - 1) * ROW_HEIGHT
-      local enabledPlayers = players
-      local players = players
-      if opt.oneChoiceForAllPlayers then
-        players = 1
-      end
+      local optIdx = row.idx
 
-      if opt then
-        text:settext(opt.name)
-        text:xy(LABEL_LEFT_X - 10, y + yOff)
-        text:Draw()
+      if optIdx then
+        local opt = row
+        local y = ROWS_TOP_Y + (rowIndex - 1) * ROW_HEIGHT
+        local enabledPlayers = players
+        local players = players
+        if opt.oneChoiceForAllPlayers then
+          players = 1
+        end
 
-        if opt.layoutType == 'ShowAllInRow' then
-          local x = 0
-          for pn, underlines in ipairs(opt.underlines) do
-            for i, underline in ipairs(underlines) do
-              opt.selected[pn][i] = not underline:GetHidden()
-            end
-          end
+        if opt then
+          text:settext(opt.name)
+          text:xy(LABEL_LEFT_X - 10, y + yOff)
+          text:Draw()
 
-          -- todo: switch followed pn based on which one moved last
-          local followPn = 1
-
-          local optsWidth = 0
-          for i, option in ipairs(opt.choices) do
-            local width = opt.widths[i] + OPTION_GAP*2
-            if selectedRow[followPn] == rowIndex and selectedOption[followPn] == i then
-              opt.selectedX:set(optsWidth + width/2)
-            end
-            optsWidth = optsWidth + width
-          end
-          local totalWidth = WIDTH - (LABEL_LEFT_X - (scx-WIDTH/2))
-          x = -math.max(opt.selectedX.eased - totalWidth/2, 0)
-          x = math.max(x, -optsWidth + totalWidth)
-
-          if optsWidth < totalWidth then
-            x = 0
-          end
-
-          for i, option in ipairs(opt.choices) do
-            local width = opt.widths[i] + OPTION_GAP*2
-            local hovered =
-              (selectedRow[1] == rowIndex and selectedOption[1] == i) or
-              (selectedRow[2] == rowIndex and selectedOption[2] == i)
-            for pn = 1, players do
-              local selected = opt.selected[pn][i]
-              if selected then
-                quad:zoomto(opt.widths[i] * 0.9, 1)
-                quad:xy(LABEL_LEFT_X + x + width/2, y + yOff + 10 * (pn%2*2-1))
-                quad:diffuse((hovered and rgb(1, 1, 1) or getPlayerColor(pn)):unpack())
-                quad:ztest(1)
-                quad:ztestmode('writeonfail')
-                quad:Draw()
-                quad:ztest(0)
-                quad:ztestmode('off')
+          if opt.layoutType == 'ShowAllInRow' then
+            local x = 0
+            for pn, underlines in ipairs(opt.underlines) do
+              for i, underline in ipairs(underlines) do
+                opt.selected[pn][i] = not underline:GetHidden()
               end
             end
-            if hovered then
-              optText:diffuse(1, 1, 1, 1)
-            else
-              optText:diffuse(0.8, 0.8, 0.8, 1)
-            end
-            for pn = 1, enabledPlayers do
-              if selectedRow[pn] == rowIndex and selectedOption[pn] == i then
-                cursorEases[pn][1]:set(LABEL_LEFT_X + x + width/2)
-                cursorEases[pn][2]:set(y)
+
+            -- todo: switch followed pn based on which one moved last
+            local followPn = 1
+
+            local optsWidth = 0
+            for i, option in ipairs(opt.choices) do
+              local width = opt.widths[i] + OPTION_GAP*2
+              if selectedRow[followPn] == optIdx and selectedOption[followPn] == i then
+                opt.selectedX:set(optsWidth + width/2)
               end
+              optsWidth = optsWidth + width
             end
-            optText:settext(option)
-            optText:xy(LABEL_LEFT_X + x + width/2, y + yOff)
-            optText:ztest(1)
-            optText:ztestmode('writeonfail')
-            optText:Draw()
-            optText:ztest(0)
-            optText:ztestmode('off')
-            x = x + width
-          end
-        else
-          for pn = 1, players do
-            local baseX = LABEL_LEFT_X
             local totalWidth = WIDTH - (LABEL_LEFT_X - (scx-WIDTH/2))
-            local segmentWidth = totalWidth/players
+            x = -math.max(opt.selectedX.eased - totalWidth/2, 0)
+            x = math.max(x, -optsWidth + totalWidth)
 
-            local x = baseX + segmentWidth * (pn-0.5)
-            local align = 0
+            if optsWidth < totalWidth then
+              x = 0
+            end
 
-            if opt.choices then
-              local foundChoice = opt.actor:GetChildAt(4 + (pn - 1)) -- m_textItems[pn]
-              local onChoice
-              for i, choice in ipairs(opt.choices) do
-                if foundChoice and foundChoice.GetText and choice == foundChoice:GetText() then
-                  if not opt.isExit then
-                    opt.selected[pn][i] = not opt.underlines[pn][1]:GetHidden()
-                  end
-                  onChoice = i
-                  break
+            for i, option in ipairs(opt.choices) do
+              local width = opt.widths[i] + OPTION_GAP*2
+              local hovered = false
+              for pn = 1, players do
+                hovered = hovered or
+                  (selectedRow[pn] == optIdx and selectedOption[pn] == i)
+                local selected = opt.selected[pn][i]
+                if selected then
+                  quad:zoomto(opt.widths[i] * 0.9, 1)
+                  quad:xy(LABEL_LEFT_X + x + width/2, y + yOff + 10 * (pn%2*2-1))
+                  quad:diffuse((hovered and rgb(1, 1, 1) or getPlayerColor(pn)):unpack())
+                  quad:ztest(1)
+                  quad:ztestmode('writeonfail')
+                  quad:Draw()
+                  quad:ztest(0)
+                  quad:ztestmode('off')
                 end
               end
-              if onChoice then
-                local width = opt.widths[onChoice] + OPTION_GAP*2
-                local choice = opt.choices[onChoice]
-                
-                local hovered = selectedRow[pn] == rowIndex
-                if opt.oneChoiceForAllPlayers then
-                  hovered =
-                    selectedRow[1] == rowIndex or
-                    selectedRow[2] == rowIndex
+              if hovered then
+                optText:diffuse(1, 1, 1, 1)
+              else
+                optText:diffuse(0.8, 0.8, 0.8, 1)
+              end
+              for pn = 1, enabledPlayers do
+                if selectedRow[pn] == optIdx and selectedOption[pn] == i then
+                  cursorEases[pn][1]:set(LABEL_LEFT_X + x + width/2)
+                  cursorEases[pn][2]:set(y)
                 end
-                local selected = opt.selected[pn][onChoice]
-                if selected then
-                  quad:zoomto(opt.widths[onChoice]*0.9, 1)
-                  quad:xy(x + width*align, y + yOff + 10)
-                  quad:diffuse((hovered and rgb(1, 1, 1) or getPlayerColor(pn)):unpack())
-                  quad:Draw()
-                end
-                if hovered then
-                  optText:diffuse(1, 1, 1, 1)
-                else
-                  if opt.isExit then
-                    optText:diffuse(0.9, 0.7, 0.7, 1)
-                  else
-                    optText:diffuse(0.8, 0.8, 0.8, 1)
+              end
+              optText:settext(option)
+              optText:xy(LABEL_LEFT_X + x + width/2, y + yOff)
+              optText:ztest(1)
+              optText:ztestmode('writeonfail')
+              optText:Draw()
+              optText:ztest(0)
+              optText:ztestmode('off')
+
+              if optionRowOverlays[opt.idx] then
+                local draw = optionRowOverlays[opt.idx]
+                draw(opt.opt.optionRow, opt.selected, 1, LABEL_LEFT_X + totalWidth/2, y + yOff)
+              end
+              
+              x = x + width
+            end
+          else
+            for pn = 1, players do
+              local baseX = LABEL_LEFT_X
+              local totalWidth = WIDTH - (LABEL_LEFT_X - (scx-WIDTH/2))
+              local segmentWidth = totalWidth/players
+
+              local x = baseX + segmentWidth * (pn-0.5)
+              local align = 0
+
+              if opt.choices then
+                local foundChoice = opt.actor:GetChildAt(4 + (pn - 1)) -- m_textItems[pn]
+                local onChoice
+                for i, choice in ipairs(opt.choices) do
+                  if foundChoice and foundChoice.GetText and choice == foundChoice:GetText() then
+                    if not opt.isExit then
+                      opt.selected[pn][i] = not opt.underlines[pn][1]:GetHidden()
+                    end
+                    onChoice = i
+                    break
                   end
                 end
-                -- this is ugly but oh well
-                if opt.oneChoiceForAllPlayers then
-                  for pn = 1, enabledPlayers do
-                    if selectedRow[pn] == rowIndex then
+                if onChoice then
+                  local width = opt.widths[onChoice] + OPTION_GAP*2
+                  local choice = opt.choices[onChoice]
+                  
+                  local hovered = selectedRow[pn] == optIdx
+                  if opt.oneChoiceForAllPlayers and enabledPlayers > 1 then
+                    hovered =
+                      selectedRow[1] == optIdx or
+                      selectedRow[2] == optIdx
+                  end
+                  local selected = opt.selected[pn][onChoice]
+                  if selected then
+                    quad:zoomto(opt.widths[onChoice]*0.9, 1)
+                    quad:xy(x + width*align, y + yOff + 10)
+                    quad:diffuse((hovered and rgb(1, 1, 1) or getPlayerColor(pn)):unpack())
+                    quad:Draw()
+                  end
+                  if hovered then
+                    optText:diffuse(1, 1, 1, 1)
+                  else
+                    if opt.isExit then
+                      optText:diffuse(0.9, 0.7, 0.7, 1)
+                    else
+                      optText:diffuse(0.8, 0.8, 0.8, 1)
+                    end
+                  end
+                  -- this is ugly but oh well
+                  if opt.oneChoiceForAllPlayers and enabledPlayers > 1 then
+                    for pn = 1, enabledPlayers do
+                      if selectedRow[pn] == optIdx then
+                        cursorEases[pn][1]:set(x + width*align)
+                        cursorEases[pn][2]:set(y)
+                      end
+                    end
+                  else
+                    if hovered then
                       cursorEases[pn][1]:set(x + width*align)
                       cursorEases[pn][2]:set(y)
                     end
                   end
-                else
-                  if hovered then
-                    cursorEases[pn][1]:set(x + width*align)
-                    cursorEases[pn][2]:set(y)
+                  optText:settext(choice)
+                  optText:xy(x + width*align, y + yOff)
+                  optText:Draw()
+
+                  if optionRowOverlays[opt.idx] then
+                    local draw = optionRowOverlays[opt.idx]
+                    draw(opt.opt.optionRow, opt.selected, pn, x + width * align, y + yOff)
                   end
                 end
-                optText:settext(choice)
-                optText:xy(x + width*align, y + yOff)
-                optText:Draw()
               end
             end
           end

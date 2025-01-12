@@ -686,3 +686,19 @@ function introduceEntropyIntoUniverse()
   table.insert({}, {})
   collectgarbage()
 end
+
+---@generic K
+---@param tab table<K, number>
+---@return K
+function pickWeighted(tab)
+  local sum = 0
+  for _, v in pairs(tab) do
+    sum = sum + v
+  end
+  local roll = math.random() * sum
+  for k, v in pairs(tab) do
+    roll = roll - v
+    if roll <= 0 then return k end
+  end
+  return nil
+end

@@ -54,3 +54,42 @@ GREAT = TNS_GREAT
 DECENT = TNS_GOOD
 WAYOFF = TNS_BOO
 MISS = TNS_MISS
+
+JUDGMENTS = {
+  {
+    code = 'Marvelous',
+    score = TNS_MARVELOUS, -- TNS_MARVELOUS
+    name = 'Fantastic',
+    color = hex('27D0FE'),
+  },
+  {
+    code = 'Perfect',
+    score = TNS_PERFECT, -- TNS_PERFECT
+    name = 'Excellent',
+    color = hex('F6E213'),
+  },
+  {
+    code = 'Great',
+    score = TNS_GREAT, -- TNS_GREAT
+    name = 'Great',
+    color = hex('46E308'),
+  },
+  {
+    code = 'Good',
+    score = TNS_GOOD, -- TNS_GOOD
+    name = 'Decent',
+    color = hex('9C0AEB'),
+  },
+  {
+    code = 'Boo',
+    score = TNS_BOO, -- TNS_BOO
+    name = 'Way Off',
+    color = hex('FA7A04'),
+  },
+  {
+    code = 'Miss',
+    score = TNS_MISS, -- TNS_MISS
+    name = 'Miss',
+    color = hex('B50F00')
+  },
+}

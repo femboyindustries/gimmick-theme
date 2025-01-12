@@ -61,7 +61,7 @@ player.holdJudgmentTweens = {
 }
 
 local COMBO_SCALE = 0.7
----@type { name: string, tween: fun(self: Actor) }[]
+---@type { name: string, tween: fun(self: Actor, combo: number) }[]
 player.comboTweens = {
   {
     name = "Static",
@@ -71,8 +71,7 @@ player.comboTweens = {
   },
   {
     name = "Simply Love",
-    tween = function(self)
-      local combo = self:GetZoom()
+    tween = function(self, combo)
       local newZoom = scale(combo,50,3000,0.8,1.8)
       self:zoom(COMBO_SCALE * newZoom) self:linear(0.05) self:zoom(COMBO_SCALE * newZoom)
     end
@@ -162,6 +161,15 @@ function player.getJudgements()
   return names
 end
 
+function player.getHoldJudgements()
+  local judg = getFolderContents('Graphics/_HoldJudgments/', true)
+  local names = {}
+  for _, filename in ipairs(judg) do
+    table.insert(names, stripFilename(filename))
+  end
+  return names
+end
+
 ---@param self ActorFrame
 function player.judgmentReady(self)
   local sprite = self:GetChildAt(0) --[[@as Sprite]]
@@ -178,41 +186,59 @@ function player.judgmentReady(self)
   --sprite:diffusealpha(0.5)
 end
 
+---@param num BitmapText
+function player.initCombo(num, skipAlign)
+  num:shadowlength(0)
+  if not skipAlign then
+    num:align(0.5, 0)
+  end
+  num:diffusealpha(0.95)
+end
+
 ---@param self ActorFrame
 function player.combo(self)
   print('! Found combo (' .. tostring(self) .. ')')
 
   local num = self:GetChild('Number') --[[@as BitmapText]]
-
-  num:shadowlength(0)
-  num:align(0.5, 0)
-  num:diffusealpha(0.95)
+  player.initCombo(num)
 
   self:removecommand('On')
 end
 
 -- events
 
-function player.onJudgment(self, grade)
-  -- todo: store this info _somehow_ so it doesn't have to get called each time
-  local pn = player.getPlayerNumber(self:GetParent() --[[@as Player]])
+function player.onJudgment(self, grade, pn)
+  if not pn then
+      -- todo: store this info _somehow_ so it doesn't have to get called each time
+    pn = player.getPlayerNumber(self:GetParent() --[[@as Player]])
+  end
   local tween = player.getJudgementTween(pn)
   if not tween then return end
+  self:finishtweening()
   tween.tween(self, grade)
 end
 
-function player.onHoldJudgment(self, grade)
-  local pn = player.getPlayerNumber(self:GetParent() --[[@as Player]])
+function player.onHoldJudgment(self, grade, pn)
+  if not pn then
+      -- todo: store this info _somehow_ so it doesn't have to get called each time
+    pn = player.getPlayerNumber(self:GetParent() --[[@as Player]])
+  end
   local tween = player.getHoldJudgementTween(pn)
   if not tween then return end
+  self:finishtweening()
   tween.tween(self)
 end
 
-function player.onCombo(self)
-  local pn = player.getPlayerNumber(self:GetParent() --[[@as Player]])
+---@param self BitmapText
+function player.onCombo(self, pn, combo)
+  if not pn then
+      -- todo: store this info _somehow_ so it doesn't have to get called each time
+    pn = player.getPlayerNumber(self:GetParent() --[[@as Player]])
+  end
   local tween = player.getComboTween(pn)
   if not tween then return end
-  tween.tween(self)
+  self:finishtweening()
+  tween.tween(self, combo)
 end
 
 return player

@@ -5,45 +5,6 @@ local mascots = require 'gimmick.mascots'
 local save = require 'gimmick.save'
 local AWESOME = false
 
-local judgements = {
-  {
-    code = 'Marvelous',
-    score = TNS_MARVELOUS, -- TNS_MARVELOUS
-    name = 'Fantastic',
-    color = hex('27D0FE'),
-  },
-  {
-    code = 'Perfect',
-    score = TNS_PERFECT, -- TNS_PERFECT
-    name = 'Excellent',
-    color = hex('F6E213'),
-  },
-  {
-    code = 'Great',
-    score = TNS_GREAT, -- TNS_GREAT
-    name = 'Great',
-    color = hex('46E308'),
-  },
-  {
-    code = 'Good',
-    score = TNS_GOOD, -- TNS_GOOD
-    name = 'Decent',
-    color = hex('9C0AEB'),
-  },
-  {
-    code = 'Boo',
-    score = TNS_BOO, -- TNS_BOO
-    name = 'Way Off',
-    color = hex('FA7A04'),
-  },
-  {
-    code = 'Miss',
-    score = TNS_MISS, -- TNS_MISS
-    name = 'Miss',
-    color = hex('B50F00')
-  },
-}
-
 ---@type {string: string, file: string}
 local grades = {
   [GRADE_TIER01] = {
@@ -190,7 +151,7 @@ return {
     ---@type { name: string?, value: string?, total: string?, color: color?}[]
     local fields = {}
 
-    for _, judg in ipairs(judgements) do
+    for _, judg in ipairs(JUDGMENTS) do
       table.insert(fields, {
         name = judg.name,
         value = tostring(stats:GetTapNoteScores(judg.score)),

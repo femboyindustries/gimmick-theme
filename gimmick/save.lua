@@ -4,7 +4,7 @@ local M = {}
 
 local SAVE_NAME = 'gimmick!'
 
----@alias gimmick.PlayerData { judgment_skin: string, judgment_tween: string, hold_judgment_tween: string, combo_tween: string, }
+---@alias gimmick.PlayerData { judgment_skin: string, judgment_tween: string, hold_judgment_skin: string, hold_judgment_tween: string, combo_tween: string, }
 
 M.data = {
   settings = {
@@ -24,10 +24,11 @@ M.data = {
 for pn = 1, 2 do
   ---@type gimmick.PlayerData
   M.data.players[pn] = {
-    judgment_skin = player.getJudgements()[1],
-    judgment_tween = player.judgmentTweens[1].name,
-    hold_judgment_tween = player.holdJudgmentTweens[1].name,
-    combo_tween = player.comboTweens[1].name,
+    judgment_skin = 'Bold',
+    judgment_tween = 'Simply Love',
+    hold_judgment_skin = 'Simply Love',
+    hold_judgment_tween = 'Simply Love',
+    combo_tween = 'Simply Love',
   }
 end
 
