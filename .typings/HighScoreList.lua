@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class HighScoreList
 --- @field public __index table Gives you the ``HighScoreList`` table again
-local HighScoreList = {}
+HighScoreList = {}
 
 --- Returns the list of high scores
 ---

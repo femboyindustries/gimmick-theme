@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class RageDisplay
 --- @field public __index table Gives you the ``RageDisplay`` table again
-local RageDisplay = {}
+RageDisplay = {}
 
 --- Returns the vertices drawn per frame
 ---

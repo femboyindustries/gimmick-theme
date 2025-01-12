@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class GameState
 --- @field public __index table Gives you the ``GameState`` table again
-local GameState = {}
+GameState = {}
 
 --- Returns the playback speed of the music
 ---
@@ -209,7 +209,7 @@ function GameState:GetPremium() end
 --- |since_notitg_v2|
 ---
 --- @param mods string A mod string to apply
---- @param playerNumber int|nil An optional player number to apply mods to (1 indexed)
+--- @param playerNumber integer|nil An optional player number to apply mods to (1 indexed)
 ---
 --- @return nil
 function GameState:ApplyModifiers(mods, playerNumber) end

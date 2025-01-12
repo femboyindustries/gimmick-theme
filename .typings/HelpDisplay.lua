@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class HelpDisplay: BitmapText
 --- @field public __index table Gives you the ``HelpDisplay`` table again
-local HelpDisplay = {}
+HelpDisplay = {}
 
 --- Sets the tips and alternate tips
 ---

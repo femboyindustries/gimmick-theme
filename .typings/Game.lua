@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class Game
 --- @field public __index table Gives you the ``Game`` table again
-local Game = {}
+Game = {}
 
 --- Returns the name of the game
 ---

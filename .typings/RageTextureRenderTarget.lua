@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class RageTextureRenderTarget: RageTexture
 --- @field public __index table Gives you the ``RageTextureRenderTarget`` table again
-local RageTextureRenderTarget = {}
+RageTextureRenderTarget = {}
 
 --- Begins rendering to the texture
 ---

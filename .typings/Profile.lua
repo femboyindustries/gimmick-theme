@@ -5,7 +5,7 @@
 
 --- @class Profile
 --- @field public __index table Gives you the ``Profile`` table again
-local Profile = {}
+Profile = {}
 
 --- Returns the possible score of courses matched by ``stepsType`` and ``difficulty``
 ---

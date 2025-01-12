@@ -1,0 +1,7 @@
+--
+-- This is a file that the default theme would usually load.
+-- As scripts loaded by default play no role in the internals of a different
+-- theme or modfile funcionality, this file is left intentionally blank.
+-- OpenITG will always load the `default` theme below your theme, no matter what
+-- you do, so this is necessary to prevent global bloat.
+--

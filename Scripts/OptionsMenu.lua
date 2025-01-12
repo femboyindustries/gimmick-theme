@@ -12,68 +12,67 @@
 -- repo.
 --
 
--- Serialize the table "t".
-function Serialize(t)
-	local ret = ""
-	local queue = { }
-	local already_queued = { }
-
-	-- Convert a value to an identifier.  If we encounter a table that we've never seen before,
-	-- it's an anonymous table and we'll create a name for it; for example, in t = { [ {10} ] = 1 },
-	-- "{10}" has no name.
-	local next_id = 1
-	local function convert_to_identifier( v, name )
-		-- print("convert_to_identifier: " .. (name or "nil"))
-		if type(v) == "string" then
-			return string.format("%q", v)
-		elseif type(v) == "nil" then
-			return "nil"
-		elseif type(v) == "boolean" then
-			if v then return "true" end
-			return "false"
-		elseif type(v) == "number" then
-			return string.format("%i", v)
-		elseif type(v) == "table" then
-			if already_queued[v] then
-				return already_queued[v]
-			end
-
-			-- Create the table.  If we have no name, give it one; be sure to make it local.
-			if not name then
-				name = "tab" .. next_id
-				next_id = next_id + 1
-				ret = ret .. "local " .. name .. " = { }\n"
-			else
-				-- The name is probably something like "x[1][2][3]", so don't emit "local".
-				ret = ret .. name .. " = { }\n"
-			end
-
-			for i, tab in pairs(v) do
-				local to_fill = { ["name"] = name .. "[" .. convert_to_identifier(i) .. "]", with = tab }
-				table.insert( queue, to_fill )
-			end
-
-			already_queued[v] = name
-			return name
-		else
-			return '"UNSUPPORTED TYPE (' .. type(v) .. ')"', true
+-- Sample options menu item.  
+function OptionsRowTest()
+	local function Set(self,list,pn)
+		if list[1] then
+			Trace("FOO: 1")
+		end
+		if list[2] then
+			Trace("FOO: 2")
 		end
 	end
+	return 
+	{
+		-- Name is used to retrieve the header and explanation text.
+		Name = "Foo",
 
-	local top_name = convert_to_identifier( t )
- 
-	while table.getn(queue) > 0 do
-		local to_fill = table.remove( queue, 1 )
-		local str = convert_to_identifier( to_fill.with, to_fill.name )
-		-- Assign the result.  If to_fill.with is a non-anonymous table, we just created
-		-- it ("ret[1] = { }"); don't redundantly write "ret[1] = ret[1]".
-		if to_fill.name ~= str then
-			ret = ret .. to_fill.name .. " = " .. str .. "\n"
-		end
-	end
-	ret = ret .. "return " .. top_name
-	return ret
+		-- Flags for this row.  Note that as this table only defines
+		-- a row, not a menu, only row settings can be set here, not
+		-- OptionMenuFlags.
+		LayoutType = "ShowAllInRow",
+		SelectType = "SelectMultiple",
+		OneChoiceForAllPlayers = false,
+		ExportOnChange = false,
+		
+		-- Choices are not resolved as metrics, since they might
+		-- be dynamic.  Add THEME Lua hooks if we want to translate
+		-- these.
+		Choices = { "Option1", "Option2" },
+		-- Or:
+		-- for i = 1,20 do Choices[i] = "Option " .. i end
+
+		-- Set list[1] to true if Option1 should be selected, and
+		-- list[2] if Option2 should be selected.  This will be
+		-- called once per enabled player.
+		LoadSelections = (function(self,list,pn) list[1] = true; end),
+		SaveSelections = Set,
+	}
 end
+
+-- This option row loads and saves the results to a table.  For example, if you
+-- have options "fast" and "slow", and the name of the option is "run", then the
+-- table will be set to table["run"] = "fast" (or "slow"), and loaded appropriately.
+-- (This could handle SelectMultiple, by saving the result to a table, eg.
+-- table["run"]["fast"] = true.)
+
+OptionRowTable =
+{
+	SaveTo = nil, -- set this
+	Default = nil, -- set this
+
+	LoadSelections = function(self, list, pn)
+		local Sort = self.SaveTo[self.Name] or self.Default
+		-- Find the index of the current sort.
+		local Index = FindValue(self.RawChoices, Sort) or 1
+		list[Index] = true
+	end,
+
+	SaveSelections = function(self, list, pn)
+		local Selection = FindSelection( list )
+		self.SaveTo[self.Name] = self.RawChoices[Selection]
+	end
+}
 
 -- (c) 2005 Glenn Maynard
 -- All rights reserved.
@@ -97,3 +96,4 @@ end
 -- OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 -- OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 -- PERFORMANCE OF THIS SOFTWARE.
+

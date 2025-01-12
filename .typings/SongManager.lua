@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class SongManager
 --- @field public __index table Gives you the ``SongManager`` table again
-local SongManager = {}
+SongManager = {}
 
 --- Returns a list of all songs installed
 ---

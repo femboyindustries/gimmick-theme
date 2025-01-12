@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class RageTexture
 --- @field public __index table Gives you the ``RageTexture`` table again
-local RageTexture = {}
+RageTexture = {}
 
 --- Returns the width of the texture
 ---

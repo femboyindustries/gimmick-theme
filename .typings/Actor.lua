@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class Actor
 --- @field public __index table Gives you the ``Actor`` table again
-local Actor = {}
+Actor = {}
 --- @alias Quad Actor
 
 --- Sets the actor's X position

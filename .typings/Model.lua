@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class Model: Actor
 --- @field public __index table Gives you the ``Model`` table again
-local Model = {}
+Model = {}
 
 --- Plays a specified animation
 ---

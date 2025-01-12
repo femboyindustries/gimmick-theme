@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class RageInput
 --- @field public __index table Gives you the ``RageInput`` table again
-local RageInput = {}
+RageInput = {}
 
 --- Returns a list of connected input devices
 ---

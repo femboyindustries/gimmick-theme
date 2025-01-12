@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class Song
 --- @field public __index table Gives you the ``Song`` table again
-local Song = {}
+Song = {}
 
 --- Returns a list of all steps for the song
 ---

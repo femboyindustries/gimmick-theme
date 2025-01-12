@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class Sprite: Actor
 --- @field public __index table Gives you the ``Sprite`` table again
-local Sprite = {}
+Sprite = {}
 
 --- Sets the sprite's texture
 ---

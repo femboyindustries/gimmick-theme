@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class NoteSkinManager
 --- @field public __index table Gives you the ``NoteSkinManager`` table again
-local NoteSkinManager = {}
+NoteSkinManager = {}
 
 --- Return a table of available note skin names that are valid for the current game type
 ---

@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class ScreenGameplay: ActorFrame
 --- @field public __index table Gives you the ``ScreenGameplay`` table again
-local ScreenGameplay = {}
+ScreenGameplay = {}
 
 --- Sets whether the game should be paused
 ---

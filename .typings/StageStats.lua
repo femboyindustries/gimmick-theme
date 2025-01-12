@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class StageStats
 --- @field public __index table Gives you the ``StageStats`` table again
-local StageStats = {}
+StageStats = {}
 
 --- Returns the number of seconds played
 ---

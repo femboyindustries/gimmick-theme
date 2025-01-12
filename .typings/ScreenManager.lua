@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class ScreenManager
 --- @field public __index table Gives you the ``ScreenManager`` table again
-local ScreenManager = {}
+ScreenManager = {}
 
 --- Shows a message on screen for a few seconds
 ---

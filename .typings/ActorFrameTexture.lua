@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class ActorFrameTexture: ActorFrame
 --- @field public __index table Gives you the ``ActorFrameTexture`` table again
-local ActorFrameTexture = {}
+ActorFrameTexture = {}
 
 --- Creates the render target - you must call this before using an ActorFrameTexture
 ---
