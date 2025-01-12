@@ -1,3 +1,5 @@
+require 'gimmick.lib.fp'
+
 ---@generic T
 ---@param a T
 ---@param b T
@@ -103,11 +105,12 @@ function lpad(str, len, char)
 end
 
 function escapeLuaPattern(str)
-  return str:gsub("([%^%$%(%)%.%[%]%*%+%-%?])", "%%%1")
+  return string.gsub(str, '([%^%$%(%)%.%[%]%*%+%-%?%%])', '%%%1')
 end
 
 function replace(s, oldValue, newValue)
-  return string.gsub(s, escapeLuaPattern(oldValue), newValue)
+  local str = string.gsub(s, escapeLuaPattern(oldValue), newValue)
+  return str
 end
 
 function startsWith(str, sub)
@@ -576,6 +579,48 @@ function getFolderContents(path, clean_extensions)
   end
 
   return files
+end
+
+---@param str string
+---@param pattern string
+function findAndRemove(str, pattern)
+  local start, pend = string.find(str, pattern)
+  if start and pend then
+    return string.sub(str, 1, start - 1) .. string.sub(str, pend + 1)
+  end
+  return str
+end
+
+function casePattern(s)
+  local pattern = {}
+  for i = 1, string.len(s) do
+    local c = string.sub(s, i, i)
+    table.insert(pattern, '[' .. string.lower(c) .. string.upper(c) .. ']')
+  end
+  return table.concat(pattern, '')
+end
+
+-- Turns a formratted filename with hints into just the basename
+-- eg. Bold 2x6 (res 512x504) -> Bold
+function stripFilename(filename)
+  -- res hints
+  filename = findAndRemove(filename, '%([^\\)]-res %d+x%d+.-%)')
+  filename = findAndRemove(filename, '%([^\\)]-doubleres.-%)')
+
+  -- hint strings
+  filename = findAndRemove(filename, casePattern('32bpp'))
+  filename = findAndRemove(filename, casePattern('16bpp'))
+  filename = findAndRemove(filename, casePattern('dither'))
+  filename = findAndRemove(filename, casePattern('stretch'))
+  filename = findAndRemove(filename, casePattern('mipmaps'))
+  filename = findAndRemove(filename, casePattern('nomipmaps'))
+  filename = findAndRemove(filename, casePattern('grayscale'))
+  filename = findAndRemove(filename, casePattern('alphamap'))
+
+  -- frame dimensions
+  filename = findAndRemove(filename, '%d+x%d+')
+
+  return trimRight(filename)
 end
 
 ---@param ctx Context

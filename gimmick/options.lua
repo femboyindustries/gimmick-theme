@@ -98,21 +98,29 @@ function M.option.button(name, value, onPress)
 end
 
 local function applyMod(mod, pn, f)
-  local m = mod
-  if m then
-    if f then
-      m = f .. '% ' .. m
+  for p = pn, pn + 6, 2 do
+    local m = mod
+    if m then
+      if f then
+        m = f .. '% ' .. m
+      end
+      GAMESTATE:ApplyModifiers(m, p)
     end
-    GAMESTATE:ApplyModifiers(m, pn)
   end
 end
 
----@alias ModEntry { name?: string } | ({ type: 'bool' } | { type: 'float', step?: number } | { type: 'select', values: number[] })
+---@alias ModEntry { name?: string, default?: number, asOnePlayer: boolean? } | ({ type: 'bool' } | { type: 'float', step?: number, start?: number, stop?: number } | { type: 'select', values: number[] } | { type: 'mod', str: string, format?: string, step?: number, start?: number, stop?: number })
 ---@type table<string, ModEntry>
 local m = {}
 
 m.stealth = { type = 'float', step = 25 }
 m.metastealth = m.stealth
+
+m.xmod = { type = 'mod', str = '%x', start = 0.5, stop = 4, step = 0.25, default = 1 }
+m.mmod = { type = 'mod', str = 'm%', start = 0.5, stop = 4, step = 0.25, default = 1 }
+m.cmod = { type = 'mod', str = 'c%', start = 0.5, stop = 4, step = 0.25, default = 1 }
+m.xmusic = { name = 'Ratemod', type = 'mod', str = '%xmusic', format = '%x', start = 0.1, stop = 10, step = 0.1, default = 1, asOnePlayer = true }
+m.mini = { type = 'float', start = 0, step = 25, stop = 200 }
 
 ---@param modName string
 function M.option.mod(modName)
@@ -132,45 +140,52 @@ function M.option.mod(modName)
     end, function(self, selected, pn)
       if selected[2] then
         applyMod(modName, pn+1)
-        applyMod(modName, pn+3)
-        applyMod(modName, pn+5)
-        applyMod(modName, pn+7)
       else
         applyMod('no ' .. modName, pn+1)
-        applyMod('no ' .. modName, pn+3)
-        applyMod('no ' .. modName, pn+5)
-        applyMod('no ' .. modName, pn+7)
       end
-    end, false)
-  elseif entry.type == 'float' then
+    end, entry.asOnePlayer or false)
+  elseif entry.type == 'float' or entry.type == 'mod' then
     local options = {}
-    for p = 0, 100, (entry.step or 25) do
-      table.insert(options, p .. '%')
+    local default = 1
+    for p = entry.start or 0, entry.stop or 100, entry.step or 25 do
+      table.insert(options, p)
+      if entry.default and math.abs(p - entry.default) < 0.01 then
+        default = #options
+      end
     end
-    return M.option.choice(entry.name or origModName, options, function(self, selected, pn)
+    local optionsVisual = map(options, function(p)
+      if entry.type == 'float' then
+        return p .. '%'
+      else
+        return replace(entry.format or entry.str, '%', p)
+      end
+    end)
+    return M.option.choice(entry.name or origModName, optionsVisual, function(self, selected, pn)
       local enabled = GAMESTATE:PlayerIsUsingModifier(pn, modName)
-      -- todo: does not account for partial percentages (eg. 50% of a mod)
-      selected[enabled and #options or 1] = true
+      -- todo: does not read set mod percentage
+      selected[default or 1] = true
     end, function(self, selected, pn)
       for i, sel in ipairs(selected) do
         if sel then
-          local percentage = options[i]
-          applyMod(percentage .. ' ' .. modName, pn+1)
-          applyMod(percentage .. ' ' .. modName, pn+3)
-          applyMod(percentage .. ' ' .. modName, pn+5)
-          applyMod(percentage .. ' ' .. modName, pn+7)
+          if entry.type == 'float' then
+            applyMod(modName, pn+1, options[i])
+          else
+            applyMod(replace(entry.str, '%', options[i]), pn+1)
+          end
         end
       end
-    end, false)
-  elseif entry.type == 'select' then
-
+    end, false, entry.asOnePlayer or false)
+  elseif entry.type == 'choice' then
+    error('choice: entry type not implemented')
   end
 end
 ---@param name string
 ---@param modNames string[]
 ---@param onlyOne boolean?
-function M.option.mods(name, modNames, onlyOne)
-  return M.option.base(name, 'ShowAllInRow', onlyOne and 'SelectOne' or 'SelectMultiple', modNames, false, function(self, selected, pn)
+---@param showOne boolean?
+---@param asOnePlayer boolean?
+function M.option.mods(name, modNames, onlyOne, showOne, asOnePlayer)
+  return M.option.base(name, showOne and 'ShowOneInRow' or 'ShowAllInRow', onlyOne and 'SelectOne' or 'SelectMultiple', modNames, asOnePlayer or false, function(self, selected, pn)
     local isAnySelected = false
     for i, mod in ipairs(modNames) do
       local enabled = GAMESTATE:PlayerIsUsingModifier(pn, mod)
@@ -184,14 +199,8 @@ function M.option.mods(name, modNames, onlyOne)
     for i, mod in ipairs(modNames) do
       if selected[i] then
         applyMod(mod, pn+1)
-        applyMod(mod, pn+3)
-        applyMod(mod, pn+5)
-        applyMod(mod, pn+7)
       else
         applyMod('no ' .. mod, pn+1)
-        applyMod('no ' .. mod, pn+3)
-        applyMod('no ' .. mod, pn+5)
-        applyMod('no ' .. mod, pn+7)
       end
     end
   end)
