@@ -80,6 +80,54 @@ local optionsTable = {
       type = 'lua',
       optionRow = options.option.mods('Noteskin', NOTESKIN:GetNoteSkinNames(), true, true),
       marginTop = 1,
+      ---@param ctx Context
+      ---@param scope Scope
+      overlay = function(ctx, scope)
+        local containers = {}
+        ---@type Model[]
+        local notes = {}
+        for pn = 1, 2 do
+          local container = ctx:ActorFrame()
+          table.insert(containers, container)
+          local note = ctx:Model('../../NoteSkins/dance/scalable/Down Tap Note 4th.model')
+          table.insert(notes, note)
+          ctx:addChild(container, note)
+        end
+        local shownSkin = { '', '' }
+
+        return function(self, selected, pn, x, y)
+          --[[local skin = self.Choices[1]
+          for i, sel in ipairs(selected) do
+            if sel then skin = self.Choices[i] break end
+          end
+
+          if skin ~= shownSkin[pn] then
+            local model = FILEMAN:LoadIniFile('/NoteSkins/dance/' .. skin .. '/Down Tap Note 4th.model')
+            if not model then
+              model = FILEMAN:LoadIniFile('/NoteSkins/dance/default/Down Tap Note 4th.model')
+            end
+            if model and model.Model then
+              if model.Model.Meshes then
+                notes[pn]:LoadMilkshapeAscii(
+                  '/NoteSkins/dance/' .. skin .. '/' .. model.Model.Meshes
+                )
+              end
+              -- todo: do noteskins even use bones?
+              --if model.Model.Materials then
+              --  notes[pn]:LoadMilkshapeAsciiMaterials(
+              --    '/NoteSkins/dance/' .. skin .. '/' .. model.Model.Materials
+              --  )
+              --end
+            end
+            notes[pn]:animate(0)
+            shownSkin[pn] = skin
+          end
+
+          containers[pn]:xyz(x, y - 28, 500)
+          containers[pn]:zoom(28/64)
+          containers[pn]:Draw()]]
+        end
+      end,
     },
     -- todo make some like option.choice equivalent that doesn't need you to
     -- specify save/load with such utter verbosity
@@ -127,8 +175,6 @@ local optionsTable = {
         end)
 
         return function(self, selected, pn, x, y)
-          elemPn = pn
-
           local data = save.getPlayerData(pn)
           local judge = data.judgment_skin
 
@@ -223,8 +269,6 @@ local optionsTable = {
         end)
 
         return function(self, selected, pn, x, y)
-          elemPn = pn
-
           containers[pn]:xy(x, y - 28)
           containers[pn]:zoom(0.6)
           containers[pn]:Draw()
@@ -235,10 +279,7 @@ local optionsTable = {
       type = 'lua',
       optionRow = options.option.choice('Hold Judgments', player.getHoldJudgements(), function(self, selected, pn)
         local data = save.getPlayerData(pn + 1)
-        print(self.Choices)
-        print(data.hold_judgment_skin)
         for i, judge in ipairs(self.Choices) do
-          print(judge, data.hold_judgment_skin)
           if judge == data.hold_judgment_skin then
             selected[i] = true
             return
@@ -278,8 +319,6 @@ local optionsTable = {
         end)
   
         return function(self, selected, pn, x, y)
-          elemPn = pn
-
           local data = save.getPlayerData(pn)
           local judge = data.hold_judgment_skin
 
