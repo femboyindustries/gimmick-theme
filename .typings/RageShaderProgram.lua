@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class RageShaderProgram
 --- @field public __index table Gives you the ``RageShaderProgram`` table again
-local RageShaderProgram = {}
+RageShaderProgram = {}
 
 --- Sets an int/bool uniform
 ---

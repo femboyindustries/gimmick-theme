@@ -7,7 +7,7 @@ local tick = {
   locked = false,
 
   -- one-time events
-  ---@type { time: number, func: fun(time: number) }[]
+  ---@type { time: number, func: fun(time: number), funcArgs: any[] }[]
   funcs = { },
   -- recurring, temporary events
   ---@type { time: number, dur: number, func: fun(a: number) }[]
@@ -63,7 +63,7 @@ function tick:update(dt)
   for i = #self.funcs, 1, -1 do
     local f = self.funcs[i]
     if self.time >= f.time then
-      f.func(self.time)
+      f.func(unpack(f.funcArgs))
       table.remove(self.funcs, i)
     else
       break
@@ -167,11 +167,12 @@ end
 
 ---@param delay number
 ---@param func fun(time: number)
-function tick:func(delay, func)
+function tick:func(delay, func, ...)
   if self.locked then error('this tick instance is locked, no new functions can be scheduled', 2) end
-  insertSorted({
-    time = delay,
+  insertSorted(self.funcs, {
+    time = self.time + delay,
     func = func,
+    funcArgs = arg,
   })
 end
 
@@ -180,8 +181,8 @@ end
 ---@param func fun(time: number)
 function tick:perframe(delay, dur, func)
   if self.locked then error('this tick instance is locked, no new functions can be scheduled', 2) end
-  insertSorted({
-    time = delay,
+  insertSorted(self.perframes, {
+    time = self.time + delay,
     dur = dur,
     func = func,
   })
@@ -195,8 +196,8 @@ end
 ---@param func fun(time: number)
 function tick:ease(delay, dur, ease, from, to, func)
   if self.locked then error('this tick instance is locked, no new functions can be scheduled', 2) end
-  insertSorted({
-    time = delay,
+  insertSorted(self.eases, {
+    time = self.time + delay,
     dur = dur,
     ease = ease,
     from = from,

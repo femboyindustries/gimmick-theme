@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class ActorScroller: ActorFrame
 --- @field public __index table Gives you the ``ActorScroller`` table again
-local ActorScroller = {}
+ActorScroller = {}
 
 --- Scrolls to the item at index ``index``, and makes it the currently selected item
 ---

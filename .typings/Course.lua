@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class Course
 --- @field public __index table Gives you the ``Course`` table again
-local Course = {}
+Course = {}
 
 --- Returns the full title of the course for display
 ---

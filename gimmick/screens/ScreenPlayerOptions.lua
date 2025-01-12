@@ -1,6 +1,7 @@
 local options = require 'gimmick.options'
 local stack   = require 'gimmick.stack'
-local easable = require 'gimmick.lib.easable'
+local OptionsRenderer = require 'gimmick.optionsRenderer'
+local player          = require 'gimmick.player'
 
 local optionsStack = stack.new()
 local stackLocked = true
@@ -40,413 +41,320 @@ local optionsTable = {
   root = {
     {
       type = 'lua',
+      optionRow = options.option.mods('Turn', {'SmartBlender','SoftShuffle','Mirror','SwapLeftRight','SwapUpDown','SpookyShuffle'}, false, false, true)
+    },
+    {
+      type = 'lua',
+      optionRow = options.option.mod('xmusic'),
+      marginTop = 1,
+    },
+    {
+      type = 'lua',
       optionRow = {
-        Name = 'ShowAllInRow SelectOne',
-        LayoutType = 'ShowAllInRow',
+        Name = 'Bumpscosity',
+        LayoutType = 'ShowOneInRow',
         SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
+        Choices = { '1.00', '1.05', '1.10', '1.15', '1.20', '1.25', },
         LoadSelections = function(self, selected) selected[1] = true end,
         SaveSelections = function() end,
       },
+      marginTop = 1,
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectOne',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.mods('Columnswaps', {'MetaFlip', 'MetaInvert', 'MetaVideogames', 'MetaMonocolumn'}),
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectMultiple',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.mods('Arrows', {'MetaReverse', 'MetaDizzy', 'MetaOrient', 'MetaBrake'}),
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectMultiple',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.mods('Appear', {'MetaHidden'}),
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectNone',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.mod('MetaStealth'),
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectNone',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.mods('Noteskin', NOTESKIN:GetNoteSkinNames(), true, true),
+      marginTop = 1,
+    },
+    -- todo make some like option.choice equivalent that doesn't need you to
+    -- specify save/load with such utter verbosity
+    {
+      type = 'lua',
+      optionRow = options.option.choice('Judgments', player.getJudgements(), function(self, selected, pn)
+        local data = save.getPlayerData(pn + 1)
+        for i, judge in ipairs(self.Choices) do
+          if judge == data.judgment_skin then
+            selected[i] = true
+            return
+          end
+        end
+        selected[1] = true
+      end, function(self, selected, pn)
+        local data = save.getPlayerData(pn + 1)
+        for i, sel in ipairs(selected) do
+          if sel then
+            data.judgment_skin = self.Choices[i]
+            return
+          end
+        end
+        data.judgment_skin = self.Choices[1]
+      end, false, false),
+      marginTop = 1,
+      ---@param ctx Context
+      ---@param scope Scope
+      overlay = function(ctx, scope)
+        local containers = {}
+        local judgments = {}
+        for pn = 1, 2 do
+          local container = ctx:ActorFrame()
+          table.insert(containers, container)
+          local judgment = ctx:Sprite('Graphics/_missing')
+          table.insert(judgments, judgment)
+          ctx:addChild(container, judgment)
+        end
+        local shownJudge = { '', '' }
+
+        scope.event:on('judge', function(pn, judge)
+          judgments[pn]:finishtweening()
+          local off = math.random(0, 1)
+          judgments[pn]:setstate((5 - (judge - 3)) * 2 + off)
+          player.onJudgment(judgments[pn], judge, pn)
+        end)
+
+        return function(self, selected, pn, x, y)
+          elemPn = pn
+
+          local data = save.getPlayerData(pn)
+          local judge = data.judgment_skin
+
+          if judge ~= shownJudge[pn] then
+            judgments[pn]:Load(
+              THEME:GetPath(EC_GRAPHICS, '' , '_Judgments/' .. judge)
+            )
+            judgments[pn]:animate(0)
+            shownJudge[pn] = judge
+          end
+
+          containers[pn]:xy(x, y - 28)
+          containers[pn]:zoom(0.65)
+          containers[pn]:Draw()
+        end
+      end,
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectOne',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.choice('Judgment Tween', map(player.judgmentTweens, function(t) return t.name end), function(self, selected, pn)
+        local data = save.getPlayerData(pn + 1)
+        for i, tween in ipairs(self.Choices) do
+          if tween == data.judgment_tween then
+            selected[i] = true
+            return
+          end
+        end
+        selected[1] = true
+      end, function(self, selected, pn)
+        local data = save.getPlayerData(pn + 1)
+        for i, sel in ipairs(selected) do
+          if sel then
+            data.judgment_tween = self.Choices[i]
+            return
+          end
+        end
+        data.judgment_tween = self.Choices[1]
+      end, false, false),
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectOne',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.choice('Combo Tween', map(player.comboTweens, function(t) return t.name end), function(self, selected, pn)
+        local data = save.getPlayerData(pn + 1)
+        for i, tween in ipairs(self.Choices) do
+          if tween == data.combo_tween then
+            selected[i] = true
+            return
+          end
+        end
+        selected[1] = true
+      end, function(self, selected, pn)
+        local data = save.getPlayerData(pn + 1)
+        for i, sel in ipairs(selected) do
+          if sel then
+            data.combo_tween = self.Choices[i]
+            return
+          end
+        end
+        data.combo_tween = self.Choices[1]
+      end, false, false),
+      marginTop = 1,
+      ---@param ctx Context
+      ---@param scope Scope
+      overlay = function(ctx, scope)
+        local containers = {}
+        local combos = {}
+        local comboNum = { 6, 6 }
+        for pn = 1, 2 do
+          local container = ctx:ActorFrame()
+          table.insert(containers, container)
+          local combo = ctx:BitmapText('Numbers/Combo numbers', '00')
+          player.initCombo(combo, true)
+          table.insert(combos, combo)
+          ctx:addChild(container, combo)
+        end
+
+        scope.event:on('judge', function(pn, judge)
+          if judge == MISS or judge == DECENT or judge == WAYOFF then
+            comboNum[pn] = 0
+          else
+            comboNum[pn] = comboNum[pn] + 1
+          end
+
+          local combo = comboNum[pn]
+          if combo >= 1 then
+            combos[pn]:hidden(0)
+            combos[pn]:settext(lpad(tostring(combo), 2, '0'))
+            player.onCombo(combos[pn], pn, combo)
+          else
+            combos[pn]:hidden(1)
+          end
+        end)
+
+        return function(self, selected, pn, x, y)
+          elemPn = pn
+
+          containers[pn]:xy(x, y - 28)
+          containers[pn]:zoom(0.6)
+          containers[pn]:Draw()
+        end
+      end,
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectMultiple',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.choice('Hold Judgments', player.getHoldJudgements(), function(self, selected, pn)
+        local data = save.getPlayerData(pn + 1)
+        print(self.Choices)
+        print(data.hold_judgment_skin)
+        for i, judge in ipairs(self.Choices) do
+          print(judge, data.hold_judgment_skin)
+          if judge == data.hold_judgment_skin then
+            selected[i] = true
+            return
+          end
+        end
+        selected[1] = true
+      end, function(self, selected, pn)
+        local data = save.getPlayerData(pn + 1)
+        for i, sel in ipairs(selected) do
+          if sel then
+            data.hold_judgment_skin = self.Choices[i]
+            return
+          end
+        end
+        data.hold_judgment_skin = self.Choices[1]
+      end, false, false),
+      marginTop = 1,
+      ---@param ctx Context
+      ---@param scope Scope
+      overlay = function(ctx, scope)
+        local containers = {}
+        local shownJudge = { '', '' }
+        local judges = {}
+        for pn = 1, 2 do
+          local container = ctx:ActorFrame()
+          table.insert(containers, container)
+          local judge = ctx:Sprite('Graphics/_missing')
+          judge:animate(0)
+          table.insert(judges, judge)
+          ctx:addChild(container, judge)
+        end
+
+        scope.event:on('judge', function(pn, judge)
+          local miss = judge == MISS or judge == DECENT or judge == WAYOFF
+          judges[pn]:setstate(miss and 1 or 0)
+          player.onHoldJudgment(judges[pn], miss and HNS_NG or HNS_OK, pn)
+        end)
+  
+        return function(self, selected, pn, x, y)
+          elemPn = pn
+
+          local data = save.getPlayerData(pn)
+          local judge = data.hold_judgment_skin
+
+          if judge ~= shownJudge[pn] then
+            judges[pn]:Load(
+              THEME:GetPath(EC_GRAPHICS, '' , '_HoldJudgments/' .. judge)
+            )
+            judges[pn]:animate(0)
+            shownJudge[pn] = judge
+          end
+
+          containers[pn]:xy(x, y - 28)
+          containers[pn]:zoom(0.65)
+          containers[pn]:Draw()
+        end
+      end,
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectMultiple',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.choice('Hold Judgment Tween', map(player.holdJudgmentTweens, function(t) return t.name end), function(self, selected, pn)
+        local data = save.getPlayerData(pn + 1)
+        for i, tween in ipairs(self.Choices) do
+          if tween == data.hold_judgment_tween then
+            selected[i] = true
+            return
+          end
+        end
+        selected[1] = true
+      end, function(self, selected, pn)
+        local data = save.getPlayerData(pn + 1)
+        for i, sel in ipairs(selected) do
+          if sel then
+            data.hold_judgment_tween = self.Choices[i]
+            return
+          end
+        end
+        data.hold_judgment_tween = self.Choices[1]
+      end, false, false),
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectNone',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.mod('XMod'),
+      marginTop = 1,
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectNone',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.mod('Mini'),
     },
     {
       type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectOne',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectOne',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectMultiple',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectMultiple',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectNone',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectNone',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectOne',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectOne',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectMultiple',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectMultiple',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectNone',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectNone',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectOne',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectOne',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectMultiple',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectMultiple',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectNone',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectNone',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectOne',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectOne',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectOne',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function(self, selected) selected[1] = true end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectMultiple',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectMultiple',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectMultiple',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowAllInRow SelectNone',
-        LayoutType = 'ShowAllInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
-    },
-    {
-      type = 'lua',
-      optionRow = {
-        Name = 'ShowOneInRow SelectNone',
-        LayoutType = 'ShowOneInRow',
-        SelectType = 'SelectNone',
-        Choices = { 'A', 'B', 'C', 'D', 'E', 'F', },
-        LoadSelections = function() end,
-        SaveSelections = function() end,
-      },
+      optionRow = options.option.mods('Perspective', {'Overhead','Hallway','Distant','Incoming','Space'}, true)
     },
   },
 }
 
-local optionsFrameDrawfunc
+local function optionsGetter()
+  local opts = optionsStack:top()
+  if not opts then
+    print('Initializing options stack')
+    opts = 'root'
+    optionsStack:push(opts)
+  end
+  local res = optionsTable[opts]
+  if not res then
+    print('Invalid options screen: ' .. opts)
+    optionsStack:clear()
+    opts = 'root'
+    optionsStack:push(opts)
+    res = optionsTable[opts]
+  end
+  return res
+end
 
 return {
-  Options = {
-    Init = function(frame)
-      print('frame Got!')
-      print(frame)
-      frame:SetDrawFunction(optionsFrameDrawfunc)
-    end
-  },
+  options = OptionsRenderer.OptionsRenderer(),
 
   overlay = gimmick.ActorScreen(function(self, ctx, scope)
     local opts = optionsStack:top()
@@ -458,92 +366,30 @@ return {
       drawOverlay = res.overlay(self, ctx)
     end
 
-    --local testText = ctx:BitmapText('common','Fart')
-
-    local firstFrame = true
-    ---@type ActorFrame[]
-    local optionRows = {}
-
-    ---@type ActorFrame
-    local cursorP1
-    ---@type ActorFrame
-    local cursorP2
-
-    local cursorEases = {}
-    for pn = 1, 2 do
-      cursorEases[pn] = {scope.tick:easable(0, 25), scope.tick:easable(0, 25), scope.tick:easable(0, 25)}
-    end
-
-    local quad = ctx:Quad()
-    local text = ctx:BitmapText(FONTS.sans_serif, '')
-    text:halign(1)
-    text:shadowlength(0)
-    text:zoom(0.3)
-
-    self:SetDrawFunction(function()
-      if drawOverlay then drawOverlay() end
+    local hitTimer = 0
+    setDrawFunctionWithDT(self, function(dt)
+      hitTimer = hitTimer - dt
+      if hitTimer < 0 then
+        hitTimer = hitTimer + 1
+        for pn = 1, 2 do
+          local judge = pickWeighted({
+            [FANTASTIC] = 1,
+            [EXCELLENT] = 0.8,
+            [GREAT] = 0.5,
+            [WAYOFF] = 0.1,
+            [DECENT] = 0.15,
+            [MISS] = 0.3,
+          })
+          scope.event:call('judge', pn, judge)
+        end
+      end
+      if drawOverlay then
+        drawOverlay()
+      end
     end)
 
-    optionsFrameDrawfunc = function(frame)
-      if firstFrame then
-        local sprHightlightP1 = frame(2)
-        local sprHightlightP2 = frame(3)
-
-        cursorP1 = frame(4)
-        cursorP2 = frame(5)
-
-        CursorP1 = cursorP1
-
-        local optIndex = 1
-        while not frame(6 + optIndex - 1).GetText do
-          local row = frame(6 + optIndex - 1)
-          optionRows[optIndex] = row
-          print(row:GetChildAt(0):GetChildAt(3))
-          
-          optIndex = optIndex + 1
-        end
-
-        -- despite both having Change fired on them, these are fired regardless
-        -- of if P1 or P2 moves
-        sprHightlightP1:addcommand('Change', function()
-          print('something just happened')
-          print(cursorP1:GetX(), cursorP1:GetY())
-        end)
-
-        firstFrame = false
-      end
-
-      for pn, cursor in ipairs({cursorP1, cursorP2}) do
-        local eases = cursorEases[pn]
-
-        cursor:finishtweening()
-        local color = pn == 1 and rgb(1, 0.3, 0.4) or rgb(0.2, 0.3, 1)
-        local x, y = cursor:GetX(), cursor:GetY()
-        eases[1]:set(x) eases[2]:set(y)
-        quad:xy(eases[1].eased, eases[2].eased)
-        local zoomX = cursor(1):GetZoomX()
-        local frameWidth = cursor(2):GetWidth()
-        local barWidth = frameWidth * zoomX
-        eases[3]:set(barWidth)
-        quad:zoomto(eases[3].eased + 16, 20)
-        quad:diffuse(color:unpack())
-        quad:skewx(-0.4)
-        quad:Draw()
-      end
-
-      for _, row in ipairs(optionRows) do
-        local rowFrame = row:GetChildAt(0) --[[@as ActorFrame]]
-        local title = rowFrame(4) --[[@as BitmapText]]
-        --[[text:settext(title:GetText())
-        text:xy(rowFrame:GetX() + title:GetX(), rowFrame:GetY() + title:GetY())
-        text:diffuse(title:getdiffuse())
-        text:Draw()]]
-        --for i = 5, rowFrame:GetNumChildren() do
-        --  rowFrame(i):Draw()
-        --end
-        rowFrame:Draw()
-      end
-    end
+    --local testText = ctx:BitmapText('common','Fart')
+    OptionsRenderer.init(ctx, scope, optionsGetter)
 
     scope.event:on('press', function(pn, btn)
       -- hacky workaround to esc being broken
@@ -587,22 +433,6 @@ return {
     end
   end,
 
-  lines = options.LineProvider('ScreenPlayerOptions', function()
-    local opts = optionsStack:top()
-    if not opts then
-      print('Initializing options stack')
-      opts = 'root'
-      optionsStack:push(opts)
-    end
-    local res = optionsTable[opts]
-    if not res then
-      print('Invalid options screen: ' .. opts)
-      optionsStack:clear()
-      opts = 'root'
-      optionsStack:push(opts)
-      res = optionsTable[opts]
-    end
-    return res
-  end),
+  lines = options.LineProvider('ScreenPlayerOptions', optionsGetter),
 
 }

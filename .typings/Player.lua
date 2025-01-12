@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class Player: ActorFrame
 --- @field public __index table Gives you the ``Player`` table again
-local Player = {}
+Player = {}
 
 --- Activate/deactivate a playfield
 ---

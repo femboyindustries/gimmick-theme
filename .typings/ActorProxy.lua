@@ -6,7 +6,7 @@
 
 --- @class ActorProxy: Actor
 --- @field public __index table Gives you the ``ActorProxy`` table again
-local ActorProxy = {}
+ActorProxy = {}
 
 --- Sets or clears the target of the actor proxy
 ---

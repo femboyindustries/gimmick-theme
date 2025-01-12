@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class FadingBanner: ActorFrame
 --- @field public __index table Gives you the ``FadingBanner`` table again
-local FadingBanner = {}
+FadingBanner = {}
 
 --- Loads the banner for a given song
 ---

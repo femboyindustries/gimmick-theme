@@ -287,6 +287,14 @@ PLAYER_1 = 0
 --- @type integer
 PLAYER_2 = 1
 
+--- Equal to ``2``
+---
+--- |since_itg|
+---
+--- @export
+--- @type integer
+NUM_PLAYERS = 2
+
 --- Equal to ``true``
 ---
 --- |since_itg|
@@ -732,7 +740,7 @@ function GetNumMachineScores() end
 --- |since_itg|
 ---
 --- @return integer
-function GetNumMachineScores() end
+function GetNumPlayersEnabled() end
 
 --- Returns the name (and version if applicable) of the executable
 ---

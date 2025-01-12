@@ -1,3 +1,17 @@
+--
+-- This is a file borrowed from the fallback theme.
+-- Ideally, we'd make sure none of the functions in this are used in the theme
+-- or in the game, then entirely remove the contents of the files, replacing
+-- them with an empty script such that the fallback scripts aren't loaded.
+-- There's a slight chance this might break a modfile or two, but we'll consider
+-- this a quirk, as modfiles shouldn't be relying on theme internal functions
+-- that just happen to be out in the open.
+--
+-- For functions that are required here, like those used by the game, ideally
+-- we'd reimplement them from scratch, such that this isn't a mixed license
+-- repo.
+--
+
 -- Serialize the table "t".
 function Serialize(t)
 	local ret = ""

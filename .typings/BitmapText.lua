@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class BitmapText: Actor
 --- @field public __index table Gives you the ``BitmapText`` table again
-local BitmapText = {}
+BitmapText = {}
 
 --- Sets the text to be displayed
 ---

@@ -1,0 +1,121 @@
+undocumented
+DifficultyToString : =[C]
+InputHandler_HBT
+InputHandler_Reflex
+MK6_GetSensors : =[C]
+PlayerOptions
+PlayerState
+PlayModeToString : =[C]
+REFLEX
+ScoreDisplayAliveTime
+ScoreDisplayCalories
+StringToDifficulty : =[C]
+Twitch
+TWITCHMAN
+
+default theme
+ApplyOptions : @/Themes/default/Scripts/OptionsMenu.lua
+ContrastingDifficultyColor : @/Themes/default/Scripts/Colors.lua
+DifficultyChangingIsAvailable : @/Themes/default/Scripts/Other.lua
+EvalTweenDistance : @/Themes/default/Scripts/Other.lua
+EvaluationNextScreen : @/Themes/default/Scripts/Branches.lua
+EvalX : @/Themes/default/Scripts/Other.lua
+FinalizeUnlock : @/Themes/default/Scripts/Other.lua
+Get2PlayerJoinMessage : @/Themes/default/Scripts/Other.lua
+GetActual : @/Themes/default/Scripts/Other.lua
+GetCoursesPercentComplete : @/Themes/default/Scripts/Other.lua
+GetCreditsText : @/Themes/default/Scripts/Other.lua
+GetDefaultDifficulty : @/Themes/default/Scripts/OptionsMenu.lua
+GetDefaultSort : @/Themes/default/Scripts/OptionsMenu.lua
+GetDiagnosticsScreen : @/Themes/default/Scripts/Branches.lua
+GetEditStepsText : @/Themes/default/Scripts/Other.lua
+GetEvaluationHelpText : @/Themes/default/Scripts/HelpText.lua
+GetExtraCredit : @/Themes/default/Scripts/Other.lua
+GetInitialDifficulty : @/Themes/default/Scripts/Other.lua
+GetLegalText : @/Themes/default/Scripts/Legal.lua
+GetMaxPercentCompelte : @/Themes/default/Scripts/Other.lua
+GetModifierNames : @/Themes/default/Scripts/Other.lua
+GetPaneX : @/Themes/default/Scripts/Other.lua
+GetPlayersWithGoalType : @/Themes/default/Scripts/OptionsMenu.lua
+GetPossible : @/Themes/default/Scripts/Other.lua
+GetRandomCourseNames : @/Themes/default/Scripts/Other.lua
+GetRandomSongNames : @/Themes/default/Scripts/Other.lua
+GetScreenEvaluationNonstopWorkoutNextScreen : @/Themes/default/Scripts/Branches.lua
+GetScreenNameEntryTraditionalHelpText : @/Themes/default/Scripts/HelpText.lua
+GetScreenPlayerOptionsHelpText : @/Themes/default/Scripts/HelpText.lua
+GetScreenSelectMusicHelpText : @/Themes/default/Scripts/HelpText.lua
+GetScreenSelectStyleDefaultChoice : @/Themes/default/Scripts/Other.lua
+GetScreenSetTimeHelpText : @/Themes/default/Scripts/HelpText.lua
+GetSetTimeNextScreen : @/Themes/default/Scripts/Branches.lua
+GetSongsPercentComplete : @/Themes/default/Scripts/Other.lua
+GetStepChartFacts : @/Themes/default/Scripts/Other.lua
+GetTotalPercentComplete : @/Themes/default/Scripts/Other.lua
+GetUnlockCommand : @/Themes/default/Scripts/Other.lua
+GetUpdateScreen : @/Themes/default/Scripts/Branches.lua
+GetWorkoutMenuCommand : @/Themes/default/Scripts/Other.lua
+IsHomeMode : @/Themes/default/Scripts/Other.lua
+OptionsRowDifficulty : @/Themes/default/Scripts/OptionsMenu.lua
+OptionsRowGoalCalories : @/Themes/default/Scripts/OptionsMenu.lua
+OptionsRowGoalSeconds : @/Themes/default/Scripts/OptionsMenu.lua
+OptionsRowJukeboxCourses : @/Themes/default/Scripts/OptionsMenu.lua
+OptionsRowSort : @/Themes/default/Scripts/OptionsMenu.lua
+OptionsRowWeight : @/Themes/default/Scripts/OptionsMenu.lua
+Platform : @/Themes/default/Scripts/Other.lua
+RestoreDefaults : @/Themes/default/Scripts/Other.lua
+ScreenAfterGameplayWorkout : @/Themes/default/Scripts/Branches.lua
+ScreenEndingGetDisplayName : @/Themes/default/Scripts/Other.lua
+ScreenSelectMusicPrevScreen : @/Themes/default/Scripts/Branches.lua
+SelectButtonAvailable : @/Themes/default/Scripts/Other.lua
+SetColorFromMeterString : @/Themes/default/Scripts/Other.lua
+SetDifficultyFrameFromGameState : @/Themes/default/Scripts/Other.lua
+SetDifficultyFrameFromSteps : @/Themes/default/Scripts/Other.lua
+SetFromSongTitleAndCourseTitle : @/Themes/default/Scripts/Other.lua
+SetRemovedText : @/Themes/default/Scripts/Other.lua
+StopCourseEarly : @/Themes/default/Scripts/Other.lua
+TweenedWag : @/Themes/default/Scripts/Other.lua
+Unlock : @/Themes/default/Scripts/Other.lua
+WorkoutGetGoalCalories : @/Themes/default/Scripts/Other.lua
+WorkoutGetGoalSeconds : @/Themes/default/Scripts/Other.lua
+WorkoutGetPercentCompleteCalories : @/Themes/default/Scripts/Other.lua
+WorkoutGetPercentCompleteSeconds : @/Themes/default/Scripts/Other.lua
+WorkoutGetProfileGoalType : @/Themes/default/Scripts/Other.lua
+WorkoutGetStageCalories : @/Themes/default/Scripts/Other.lua
+WorkoutGetTotalCalories : @/Themes/default/Scripts/Other.lua
+WorkoutGetTotalSeconds : @/Themes/default/Scripts/Other.lua
+WorkoutResetStageStats : @/Themes/default/Scripts/Other.lua
+
+fallback theme
+clamp : @/Themes/gimmick/Scripts/Utilities.lua
+DifficultyColor : @/Themes/gimmick/Scripts/Colors.lua
+fapproach : @/Themes/gimmick/Scripts/Utilities.lua
+FindSelection : @/Themes/gimmick/Scripts/Utilities.lua
+FindValue : @/Themes/gimmick/Scripts/Utilities.lua
+GetGameplayNextScreen : @/Themes/gimmick/Scripts/Branches.lua
+GetGameplayScreen : @/Themes/gimmick/Scripts/Branches.lua
+GetScreenInstructions : @/Themes/gimmick/Scripts/Branches.lua
+IsEventMode : @/Themes/gimmick/Scripts/Branches.lua
+join : @/Themes/gimmick/Scripts/Utilities.lua
+ModeMenuAvailable : @/Themes/gimmick/Scripts/Branches.lua
+OptionRowTable
+OptionsMenuAvailable : @/Themes/gimmick/Scripts/Branches.lua
+OptionsRowTest : @/Themes/gimmick/Scripts/OptionsMenu.lua
+PlayerColor : @/Themes/gimmick/Scripts/Colors.lua
+scale : @/Themes/gimmick/Scripts/Utilities.lua
+ScreenBranchNetAfterEval : @/Themes/gimmick/Scripts/Branches.lua
+ScreenCautionBranch : @/Themes/gimmick/Scripts/Branches.lua
+ScreenEvaluationExitBranch : @/Themes/gimmick/Scripts/Branches.lua
+ScreenTitleBranch : @/Themes/gimmick/Scripts/Branches.lua
+SelectEndingScreen : @/Themes/gimmick/Scripts/Branches.lua
+SelectEvaluationScreen : @/Themes/gimmick/Scripts/Branches.lua
+SelectFirstOptionsScreen : @/Themes/gimmick/Scripts/Branches.lua
+Serialize : @/Themes/gimmick/Scripts/Serialize.lua
+SMOnlineScreen : @/Themes/gimmick/Scripts/Branches.lua
+SongSelectionScreen : @/Themes/gimmick/Scripts/Branches.lua
+split : @/Themes/gimmick/Scripts/Utilities.lua
+TableMetricLookup : @/Themes/gimmick/Scripts/Utilities.lua
+tableshuffle : @/Themes/gimmick/Scripts/Utilities.lua
+wrap : @/Themes/gimmick/Scripts/Utilities.lua
+
+gimmick theme
+gimmick
+paw

@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class RageSound
 --- @field public __index table Gives you the ``RageSound`` table again
-local RageSound = {}
+RageSound = {}
 
 --- Plays the sound from the beginning
 ---

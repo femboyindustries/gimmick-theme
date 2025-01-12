@@ -1,0 +1,4 @@
+
+<ActorFrame InitCommand="%gimmick.s.ScreenPlayerOptions.background.init"><children>
+	<Layer File="../actors.xml" InitCommand="%gimmick.s.ScreenPlayerOptions.background.initEnd"/>
+</children></ActorFrame>

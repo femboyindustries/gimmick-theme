@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class PrefsManager
 --- @field public __index table Gives you the ``PrefsManager`` table again
-local PrefsManager = {}
+PrefsManager = {}
 
 --- Sets the value of a preference
 ---

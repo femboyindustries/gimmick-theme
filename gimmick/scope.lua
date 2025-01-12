@@ -28,7 +28,7 @@ end
 
 ---@param dt number
 function Scope:update(dt)
-  if not self.active then return end
+  if not (self.active and self.tick) then return end
   self.tick:update(dt)
 end
 

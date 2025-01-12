@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class RadarValues
 --- @field public __index table Gives you the ``RadarValues`` table again
-local RadarValues = {}
+RadarValues = {}
 
 --- Returns the value of ``category``
 ---

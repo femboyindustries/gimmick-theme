@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class PlayerStageStats
 --- @field public __index table Gives you the ``PlayerStageStats`` table again
-local PlayerStageStats = {}
+PlayerStageStats = {}
 
 --- Returns whether the player obtained a full combo
 ---

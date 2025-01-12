@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class RageFileManager
 --- @field public __index table Gives you the ``RageFileManager`` table again
-local RageFileManager = {}
+RageFileManager = {}
 
 --- Loads a Lua file?
 --- (Doesn't work, it returns the function itself and the string)

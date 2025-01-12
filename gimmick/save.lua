@@ -1,6 +1,10 @@
+local player = require 'gimmick.player'
+
 local M = {}
 
 local SAVE_NAME = 'gimmick!'
+
+---@alias gimmick.PlayerData { judgment_skin: string, judgment_tween: string, hold_judgment_skin: string, hold_judgment_tween: string, combo_tween: string, }
 
 M.data = {
   settings = {
@@ -12,12 +16,21 @@ M.data = {
     show_imap = false,
     show_bootup = false,
     bootup_duration = "7",
-
-    judgment_tween = 1,
-    hold_judgment_tween = 1,
-    combo_tween = 1,
   },
+  ---@type table<number, gimmick.PlayerData>
+  players = {},
 }
+
+for pn = 1, 2 do
+  ---@type gimmick.PlayerData
+  M.data.players[pn] = {
+    judgment_skin = 'Bold',
+    judgment_tween = 'Simply Love',
+    hold_judgment_skin = 'Simply Love',
+    hold_judgment_tween = 'Simply Love',
+    combo_tween = 'Simply Love',
+  }
+end
 
 M.defaults = deepcopy(M.data)
 
@@ -39,6 +52,12 @@ function M.save()
   local saved = PROFILEMAN:GetMachineProfile():GetSaved()
   saved[SAVE_NAME] = pretty(M.data)
   PROFILEMAN:SaveMachineProfile()
+end
+
+---@param pn number
+---@return gimmick.PlayerData
+function M.getPlayerData(pn)
+  return M.data.players[(pn - 1) % 2 + 1]
 end
 
 M.shouldSaveNextFrame = false

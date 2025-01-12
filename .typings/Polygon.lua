@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class Polygon: Actor
 --- @field public __index table Gives you the ``Polygon`` table again
-local Polygon = {}
+Polygon = {}
 
 --- Sets the number of vertices for the polygon actor
 ---

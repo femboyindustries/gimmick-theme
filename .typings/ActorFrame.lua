@@ -5,7 +5,7 @@
 
 --- @class ActorFrame: Actor
 --- @field public __index table Gives you the ``ActorFrame`` table again
-local ActorFrame = {}
+ActorFrame = {}
 
 --- Set the ActorFrame's field-of-view (used when rendering children)
 ---

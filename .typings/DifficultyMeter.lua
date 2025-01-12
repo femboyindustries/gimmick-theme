@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class DifficultyMeter: ActorFrame
 --- @field public __index table Gives you the ``DifficultyMeter`` table again
-local DifficultyMeter = {}
+DifficultyMeter = {}
 
 --- Sets the difficulty meter's data from steps
 ---

@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class UnlockManager
 --- @field public __index table Gives you the ``UnlockManager`` table again
-local UnlockManager = {}
+UnlockManager = {}
 
 --- Unlocks an entry with a code
 ---

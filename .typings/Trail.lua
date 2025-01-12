@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class Trail
 --- @field public __index table Gives you the ``Trail`` table again
-local Trail = {}
+Trail = {}
 
 --- Returns the total length of the trail in seconds
 ---

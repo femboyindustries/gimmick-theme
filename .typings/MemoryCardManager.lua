@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class MemoryCardManager
 --- @field public __index table Gives you the ``MemoryCardManager`` table again
-local MemoryCardManager = {}
+MemoryCardManager = {}
 
 --- Returns the state of the specified player's memory card
 ---

@@ -2,7 +2,7 @@
 ---@diagnostic disable
 --- @class StatsManager
 --- @field public __index table Gives you the ``StatsManager`` table again
-local StatsManager = {}
+StatsManager = {}
 
 --- Returns a :lua:class:`StageStats` instance including every game played
 ---

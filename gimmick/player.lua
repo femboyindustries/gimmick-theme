@@ -61,7 +61,7 @@ player.holdJudgmentTweens = {
 }
 
 local COMBO_SCALE = 0.7
----@type { name: string, tween: fun(self: Actor) }[]
+---@type { name: string, tween: fun(self: Actor, combo: number) }[]
 player.comboTweens = {
   {
     name = "Static",
@@ -71,8 +71,7 @@ player.comboTweens = {
   },
   {
     name = "Simply Love",
-    tween = function(self)
-      local combo = self:GetZoom()
+    tween = function(self, combo)
       local newZoom = scale(combo,50,3000,0.8,1.8)
       self:zoom(COMBO_SCALE * newZoom) self:linear(0.05) self:zoom(COMBO_SCALE * newZoom)
     end
@@ -88,25 +87,54 @@ player.comboTweens = {
 
 -- capturing actors
 
+---@param plr Player
+---@return number
+function player.getPlayerNumber(plr)
+  local name = plr:GetName()
+  n = tonumber(string.sub(name, string.len(name)))
+  if n then return n end
+  warn('Cannot find player number of ' .. tostring(plr) .. ' (' .. name .. ')')
+  return 1
+end
+
+function player.getJudgementTween(pn)
+  local plrData = save.getPlayerData(pn)
+  local name = plrData.judgment_tween
+  for _, tween in ipairs(player.judgmentTweens) do
+    if tween.name == name then return tween end
+  end
+end
+
+function player.getHoldJudgementTween(pn)
+  local plrData = save.getPlayerData(pn)
+  local name = plrData.hold_judgment_tween
+  for _, tween in ipairs(player.holdJudgmentTweens) do
+    if tween.name == name then return tween end
+  end
+end
+
+function player.getComboTween(pn)
+  local plrData = save.getPlayerData(pn)
+  local name = plrData.combo_tween
+  for _, tween in ipairs(player.comboTweens) do
+    if tween.name == name then return tween end
+  end
+end
+
 ---@param self Player
----@param n number?
-function player.init(self, n)
-  if not n then
-    local name = self:GetName()
-    n = tonumber(string.sub(name, string.len(name)))
-    if not n then
-      warn('Cannot find player number of ' .. tostring(self) .. ' (' .. name .. ')')
-      return
-    end
+---@param pn number?
+function player.init(self, pn)
+  if not pn then
+    pn = player.getPlayerNumber(self)
   end
 
-  print('! Found P' .. n .. ' (' .. tostring(self) .. ')')
-  print('  Judgment tween:      ' .. player.judgmentTweens[save.data.settings.judgment_tween].name)
-  print('  Hold judgment tween: ' .. player.holdJudgmentTweens[save.data.settings.hold_judgment_tween].name)
-  print('  Combo tween:         ' .. player.comboTweens[save.data.settings.combo_tween].name)
+  print('! Found P' .. pn .. ' (' .. tostring(self) .. ')')
+  print('  Judgment tween:      ' .. player.getJudgementTween(pn).name)
+  print('  Hold judgment tween: ' .. player.getHoldJudgementTween(pn).name)
+  print('  Combo tween:         ' .. player.getComboTween(pn).name)
 
   -- just for debugging purposes
-  paw['P' .. n] = self
+  paw['P' .. pn] = self
 
   -- OffCommand defined here does not work; look at player.judgment if needed
 end
@@ -124,19 +152,47 @@ function player.judgment(self)
   -- must handle deinit if needed
 end
 
+function player.getJudgements()
+  local judg = getFolderContents('Graphics/_Judgments/', true)
+  local names = {}
+  for _, filename in ipairs(judg) do
+    table.insert(names, stripFilename(filename))
+  end
+  return names
+end
+
+function player.getHoldJudgements()
+  local judg = getFolderContents('Graphics/_HoldJudgments/', true)
+  local names = {}
+  for _, filename in ipairs(judg) do
+    table.insert(names, stripFilename(filename))
+  end
+  return names
+end
+
 ---@param self ActorFrame
 function player.judgmentReady(self)
   local sprite = self:GetChildAt(0) --[[@as Sprite]]
   if not sprite then return end
 
+  local pn = player.getPlayerNumber(self:GetParent() --[[@as Player]])
+
   -- Loading the sprite must be done in here rather than player.judgment because
   -- else it gets overridden
   sprite:Load(
-    -- todo: make this configurable
-    THEME:GetPath(EC_GRAPHICS, '' , '_Judgments/Bold')
+    THEME:GetPath(EC_GRAPHICS, '' , '_Judgments/' .. save.getPlayerData(pn).judgment_skin)
   )
 
   --sprite:diffusealpha(0.5)
+end
+
+---@param num BitmapText
+function player.initCombo(num, skipAlign)
+  num:shadowlength(0)
+  if not skipAlign then
+    num:align(0.5, 0)
+  end
+  num:diffusealpha(0.95)
 end
 
 ---@param self ActorFrame
@@ -144,32 +200,45 @@ function player.combo(self)
   print('! Found combo (' .. tostring(self) .. ')')
 
   local num = self:GetChild('Number') --[[@as BitmapText]]
-
-  num:shadowlength(0)
-  num:align(0.5, 0)
-  num:diffusealpha(0.95)
+  player.initCombo(num)
 
   self:removecommand('On')
 end
 
 -- events
 
-function player.onJudgment(self, grade)
-  local tween = player.judgmentTweens[save.data.settings.judgment_tween]
+function player.onJudgment(self, grade, pn)
+  if not pn then
+      -- todo: store this info _somehow_ so it doesn't have to get called each time
+    pn = player.getPlayerNumber(self:GetParent() --[[@as Player]])
+  end
+  local tween = player.getJudgementTween(pn)
   if not tween then return end
+  self:finishtweening()
   tween.tween(self, grade)
 end
 
-function player.onHoldJudgment(self, grade)
-  local tween = player.holdJudgmentTweens[save.data.settings.hold_judgment_tween]
+function player.onHoldJudgment(self, grade, pn)
+  if not pn then
+      -- todo: store this info _somehow_ so it doesn't have to get called each time
+    pn = player.getPlayerNumber(self:GetParent() --[[@as Player]])
+  end
+  local tween = player.getHoldJudgementTween(pn)
   if not tween then return end
+  self:finishtweening()
   tween.tween(self)
 end
 
-function player.onCombo(self)
-  local tween = player.comboTweens[save.data.settings.combo_tween]
+---@param self BitmapText
+function player.onCombo(self, pn, combo)
+  if not pn then
+      -- todo: store this info _somehow_ so it doesn't have to get called each time
+    pn = player.getPlayerNumber(self:GetParent() --[[@as Player]])
+  end
+  local tween = player.getComboTween(pn)
   if not tween then return end
-  tween.tween(self)
+  self:finishtweening()
+  tween.tween(self, combo)
 end
 
 return player
