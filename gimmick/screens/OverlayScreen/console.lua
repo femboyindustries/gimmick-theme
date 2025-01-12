@@ -163,6 +163,8 @@ function M.init(self, ctx, scope)
   local t = TextInput.new()
 
   local function onKey(key, device, isRepeat)
+    blink = os.clock()
+
     if key == 'enter' and not isShiftDown(device) and not isRepeat then
       table.insert(typedHistory, t.text)
       historyIdx = 0
@@ -202,8 +204,6 @@ function M.init(self, ctx, scope)
 
   scope.event:on('keypress', function(device, key)
     if device ~= InputDevice.Key then return end
-
-    blink = os.clock()
 
     if key == '9' and isCtrlDown(device) then
       consoleOpen = not consoleOpen
