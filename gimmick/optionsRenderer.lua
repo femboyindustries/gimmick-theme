@@ -76,7 +76,7 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
   end
 
   local WIDTH = math.min(sw - 64, 640)
-  local LABEL_LEFT_X = scx - WIDTH/2 + 230
+  local LABEL_LEFT_X = scx - WIDTH/2 + 200
   local OPTION_GAP = 10
   local ROWS_TOP_Y = 32
   local ROW_HEIGHT = 28
@@ -207,6 +207,7 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
             cursor:finishtweening()
             --print(cursor:GetX(), cursor:GetY())
             local rowIdx = cursor:GetY()
+            local lastRow, lastOption = selectedRow[pn], selectedOption[pn]
             selectedRow[pn] = rowIdx
             local row = getRow(rowIdx)
             if row and row.layoutType == 'ShowAllInRow' then
@@ -228,6 +229,11 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
                 end
               end
               if not foundOpt then selectedOption[pn] = 1 end
+            end
+            if lastRow == selectedRow[pn] and lastOption ~= selectedOption[pn] then
+              if row.opt.onChange then
+                row.opt.onChange(scope, pn)
+              end
             end
           end
         end)
@@ -280,14 +286,10 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
         if opt.layoutType == 'ShowAllInRow' then
           local x = 0
 
-          local followPn = 1 -- todo sync with other render followPn
-
+          -- todo don't do this twice
           local optsWidth = 0
           for i, option in ipairs(opt.choices) do
             local width = opt.widths[i] + OPTION_GAP*2
-            if selectedRow[followPn] == rowIndex and selectedOption[followPn] == i then
-              opt.selectedX:set(optsWidth + width/2)
-            end
             optsWidth = optsWidth + width
           end
           local totalWidth = WIDTH - (LABEL_LEFT_X - (scx-WIDTH/2))

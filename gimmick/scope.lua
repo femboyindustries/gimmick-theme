@@ -70,9 +70,9 @@ function Scope:offCommand()
 
   self.dead = true
   self.event:orphan()
-  self.event = nil
   self.tick:lock(function()
     self.tick = nil
+    self.event = nil
   end)
 end
 

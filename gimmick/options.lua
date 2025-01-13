@@ -200,14 +200,14 @@ function M.option.mods(name, modNames, onlyOne, showOne, asOnePlayer)
       if selected[i] then
         applyMod(mod, pn+1)
       else
-        applyMod('no ' .. mod, pn+1)
+        --applyMod('no ' .. mod, pn+1)
       end
     end
   end)
 end
 
 -- todo: `stepstype` and `steps`
----@alias Option { marginTop?: number, marginBottom?: number, overlay: fun(ctx: Context, scope: Scope): (fun(self: Option, selected: table<number, boolean>, pn: number, x: number, y: number): nil) } | { type: 'lua', optionRow: OptionRow } | { type: 'conf', pref: string } | { type: 'list', list: string }
+---@alias Option { marginTop?: number, marginBottom?: number, overlay: fun(ctx: Context, scope: Scope): (fun(self: Option, selected: table<number, boolean>, pn: number, x: number, y: number): nil), onChange?: fun(scope: Scope, pn: number) } | { type: 'lua', optionRow: OptionRow } | { type: 'conf', pref: string } | { type: 'list', list: string }
 
 ---@param screenName string
 ---@param optionsGetter fun(): Option[]

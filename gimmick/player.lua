@@ -2,6 +2,8 @@ require 'gimmick.lib.easings'
 
 local player = {}
 
+-- thank you Ky for most of these
+
 ---@type { name: string, tween: fun(self: Actor, n: number) }[]
 player.judgmentTweens = {
   {
@@ -49,7 +51,7 @@ player.holdJudgmentTweens = {
   {
     name = "Simply Love",
     tween = function(self)
-      self:diffuse(1,1,1,1) self:zoom(.5) self:sleep(.5) self:zoom(0)
+      self:diffuse(1,1,1,1) self:zoom(1) self:sleep(.5) self:zoom(0)
     end
   },
   {
@@ -74,6 +76,20 @@ player.comboTweens = {
     tween = function(self, combo)
       local newZoom = scale(combo,50,3000,0.8,1.8)
       self:zoom(COMBO_SCALE * newZoom) self:linear(0.05) self:zoom(COMBO_SCALE * newZoom)
+    end
+  },
+  {
+    name = "ITG2",
+    tween = function(self, combo)
+      local newZoom = scale(combo,0,500,0.9,1.4)
+      self:zoom(1.2*newZoom) self:linear(0.05) self:zoom(newZoom)
+    end
+  },
+  {
+    name = "GrooveNights",
+    tween = function(self, combo)
+      local newZoom = scale(combo,0,500,0.9,1.4)
+      self:zoom(1.05*newZoom) self:linear(0.05) self:zoom(newZoom)
     end
   },
   {

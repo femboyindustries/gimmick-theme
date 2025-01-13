@@ -121,11 +121,11 @@ local optionsTable = {
             end
             notes[pn]:animate(0)
             shownSkin[pn] = skin
-          end
+          end]]
 
           containers[pn]:xyz(x, y - 28, 500)
           containers[pn]:zoom(28/64)
-          containers[pn]:Draw()]]
+          containers[pn]:Draw()
         end
       end,
     },
@@ -157,6 +157,7 @@ local optionsTable = {
       ---@param scope Scope
       overlay = function(ctx, scope)
         local containers = {}
+        ---@type Sprite[]
         local judgments = {}
         for pn = 1, 2 do
           local container = ctx:ActorFrame()
@@ -179,10 +180,12 @@ local optionsTable = {
           local judge = data.judgment_skin
 
           if judge ~= shownJudge[pn] then
+            local i = judgments[pn]:getstate()
             judgments[pn]:Load(
               THEME:GetPath(EC_GRAPHICS, '' , '_Judgments/' .. judge)
             )
             judgments[pn]:animate(0)
+            judgments[pn]:setstate(i)
             shownJudge[pn] = judge
           end
 
@@ -213,6 +216,7 @@ local optionsTable = {
         end
         data.judgment_tween = self.Choices[1]
       end, false, false),
+      onChange = function(scope, pn) scope.event:call('randomJudge') end,
     },
     {
       type = 'lua',
@@ -235,6 +239,7 @@ local optionsTable = {
         end
         data.combo_tween = self.Choices[1]
       end, false, false),
+      onChange = function(scope, pn) scope.event:call('randomJudge') end,
       marginTop = 1,
       ---@param ctx Context
       ---@param scope Scope
@@ -296,6 +301,7 @@ local optionsTable = {
         end
         data.hold_judgment_skin = self.Choices[1]
       end, false, false),
+      onChange = function(scope, pn) scope.event:call('randomJudge') end,
       marginTop = 1,
       ---@param ctx Context
       ---@param scope Scope
@@ -357,6 +363,7 @@ local optionsTable = {
         end
         data.hold_judgment_tween = self.Choices[1]
       end, false, false),
+      onChange = function(scope, pn) scope.event:call('randomJudge') end,
     },
     {
       type = 'lua',
@@ -406,21 +413,26 @@ return {
     end
 
     local hitTimer = 0
+
+    scope.event:on('randomJudge', function()
+      hitTimer = 1
+      for pn = 1, 2 do
+        local judge = pickWeighted({
+          [FANTASTIC] = 1,
+          [EXCELLENT] = 0.6,
+          [GREAT] = 0.1,
+          [WAYOFF] = 0.01,
+          [DECENT] = 0.02,
+          [MISS] = 0.02,
+        })
+        scope.event:call('judge', pn, judge)
+      end
+    end)
+
     setDrawFunctionWithDT(self, function(dt)
       hitTimer = hitTimer - dt
-      if hitTimer < 0 then
-        hitTimer = hitTimer + 1
-        for pn = 1, 2 do
-          local judge = pickWeighted({
-            [FANTASTIC] = 1,
-            [EXCELLENT] = 0.8,
-            [GREAT] = 0.5,
-            [WAYOFF] = 0.1,
-            [DECENT] = 0.15,
-            [MISS] = 0.3,
-          })
-          scope.event:call('judge', pn, judge)
-        end
+      if hitTimer < 0 and scope.event then
+        scope.event:call('randomJudge')
       end
       if drawOverlay then
         drawOverlay()
