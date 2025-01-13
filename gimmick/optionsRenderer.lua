@@ -91,6 +91,10 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
   optText:shadowlength(0)
   optText:zoom(0.35)
 
+  local arrow = ctx:Sprite('Graphics/arrow.png')
+  arrow:zoom(0.6)
+  local circle = ctx:Sprite('Graphics/circle.png')
+
   OptionsRenderer.frameDrawFunc = function(frame)
     if firstFrame then
       local sprHightlightP1 = frame(2)
@@ -503,14 +507,11 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
                     quad:diffuse((hovered and rgb(1, 1, 1) or getPlayerColor(pn)):unpack())
                     quad:Draw()
                   end
+                  local col = rgb(0.8, 0.8, 0.8)
                   if hovered then
-                    optText:diffuse(1, 1, 1, 1)
-                  else
-                    if opt.isExit then
-                      optText:diffuse(0.9, 0.7, 0.7, 1)
-                    else
-                      optText:diffuse(0.8, 0.8, 0.8, 1)
-                    end
+                    col = rgb(1, 1, 1)
+                  elseif opt.isExit then
+                    col = rgb(0.9, 0.7, 0.7)
                   end
                   -- this is ugly but oh well
                   if opt.oneChoiceForAllPlayers and enabledPlayers > 1 then
@@ -528,7 +529,35 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
                   end
                   optText:settext(choice)
                   optText:xy(x + width*align, y + yOff)
+                  optText:diffuse(col:unpack())
                   optText:Draw()
+
+                  if onChoice ~= 1 then
+                    arrow:rotationz(180)
+                    arrow:xy(x + width*align - opt.widths[onChoice]/2 - 8, y + yOff)
+                    arrow:diffuse(col:unpack())
+                    arrow:Draw()
+                  end
+                  if onChoice ~= #opt.choices then
+                    arrow:rotationz(0)
+                    arrow:xy(x + width*align + opt.widths[onChoice]/2 + 8, y + yOff)
+                    arrow:diffuse(col:unpack())
+                    arrow:Draw()
+                  end
+
+                  if opt.opt and opt.opt.showIndex and hovered then
+                    local owidth = 3
+                    local ogap = 1.5
+                    for i = 1, #opt.choices do
+                      local ox = (-(#opt.choices-1)/2 + i-1) * (owidth + ogap) - ogap
+                      circle:zoomto(owidth, owidth)
+                      circle:xy(x + width*align + ox, y + yOff - 10)
+
+                      circle:diffuse((onChoice == i and rgb(1, 1, 1) or (getPlayerColor(pn) * 0.7)):unpack())
+
+                      circle:Draw()
+                    end
+                  end
 
                   if optionRowOverlays[opt.idx] then
                     local draw = optionRowOverlays[opt.idx]

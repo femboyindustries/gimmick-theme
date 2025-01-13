@@ -207,7 +207,7 @@ function M.option.mods(name, modNames, onlyOne, showOne, asOnePlayer)
 end
 
 -- todo: `stepstype` and `steps`
----@alias Option { marginTop?: number, marginBottom?: number, overlay: fun(ctx: Context, scope: Scope): (fun(self: Option, selected: table<number, boolean>, pn: number, x: number, y: number): nil), onChange?: fun(scope: Scope, pn: number) } | { type: 'lua', optionRow: OptionRow } | { type: 'conf', pref: string } | { type: 'list', list: string }
+---@alias Option { marginTop?: number, marginBottom?: number, overlay: fun(ctx: Context, scope: Scope): (fun(self: Option, selected: table<number, boolean>, pn: number, x: number, y: number): nil), onChange?: fun(scope: Scope, pn: number), showIndex?: boolean } | { type: 'lua', optionRow: OptionRow } | { type: 'conf', pref: string } | { type: 'list', list: string }
 
 ---@param screenName string
 ---@param optionsGetter fun(): Option[]

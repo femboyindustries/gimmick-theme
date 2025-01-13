@@ -79,7 +79,7 @@ local optionsTable = {
     {
       type = 'lua',
       optionRow = options.option.mods('Noteskin', NOTESKIN:GetNoteSkinNames(), true, true),
-      marginTop = 1,
+      marginTop = 2,
       ---@param ctx Context
       ---@param scope Scope
       overlay = function(ctx, scope)
@@ -152,6 +152,7 @@ local optionsTable = {
         end
         data.judgment_skin = self.Choices[1]
       end, false, false),
+      showIndex = true,
       marginTop = 1,
       ---@param ctx Context
       ---@param scope Scope
@@ -217,6 +218,7 @@ local optionsTable = {
         data.judgment_tween = self.Choices[1]
       end, false, false),
       onChange = function(scope, pn) scope.event:call('randomJudge') end,
+      showIndex = true,
     },
     {
       type = 'lua',
@@ -240,6 +242,7 @@ local optionsTable = {
         data.combo_tween = self.Choices[1]
       end, false, false),
       onChange = function(scope, pn) scope.event:call('randomJudge') end,
+      showIndex = true,
       marginTop = 1,
       ---@param ctx Context
       ---@param scope Scope
@@ -302,6 +305,7 @@ local optionsTable = {
         data.hold_judgment_skin = self.Choices[1]
       end, false, false),
       onChange = function(scope, pn) scope.event:call('randomJudge') end,
+      showIndex = true,
       marginTop = 1,
       ---@param ctx Context
       ---@param scope Scope
@@ -364,6 +368,7 @@ local optionsTable = {
         data.hold_judgment_tween = self.Choices[1]
       end, false, false),
       onChange = function(scope, pn) scope.event:call('randomJudge') end,
+      showIndex = true,
     },
     {
       type = 'lua',
