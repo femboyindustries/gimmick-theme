@@ -67,18 +67,21 @@ function gimmick.print(...)
       table.insert(msgPlain, table.concat(str, ''))
     end
     Debug('\27[0m\27[32m[GIMMICK]\27[0m ' .. table.concat(msgPlain, '\t') .. '\27[0m')
-  else
-    local msgPlain = {}
-    for _, part in ipairs(msg) do
-      local str = {}
-      for _, token in ipairs(part) do
-        table.insert(str, token[1])
-      end
-      table.insert(msgPlain, table.concat(str, ''))
-    end
+  end
 
+  local msgPlain = {}
+  for _, part in ipairs(msg) do
+    local str = {}
+    for _, token in ipairs(part) do
+      table.insert(str, token[1])
+    end
+    table.insert(msgPlain, table.concat(str, ''))
+  end
+
+  if not USING_WINE then
     Debug('[GIMMICK] ' .. table.concat(msgPlain, '\t'))
   end
+  --if event then event:call('log', table.concat(msgPlain, ' ')) end
 end
 -- 🐾🐾🐾
 paw.print = gimmick.print

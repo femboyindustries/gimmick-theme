@@ -98,6 +98,9 @@ Debug = _Debug
 event:on('warn', function(msg)
   table.insert(history, {HistoryType.Error, 'gimmick: ' .. msg})
 end)
+event:on('log', function(msg)
+  table.insert(history, {HistoryType.Log, 'gimmick: ' .. msg})
+end)
 
 ---@param device InputDevice
 local function isCtrlDown(device)
