@@ -1,6 +1,7 @@
 -- @file        validation.lua
 -- @author      Théo Brigitte <theo.brigitte@gmail.com>
 -- @contributor Henrique Silva <hensansi@gmail.com>
+-- @contributor Jade "oatmealine" <me@oat.zone>
 -- @date        Thu May 28 16:05:15 2015
 --
 -- @brief       Lua schema validation library.
@@ -34,16 +35,10 @@ end
 
 local M = { _NAME = 'validation' }
 
---- Generate error message for validators.
---
--- @param data mixed
---   Value that failed validation.
--- @param expected_type string
---   Expected type for data
---
--- @return
---   String describing the error.
----
+-- Generate error message for validators.
+---@param data any @ Value that failed validation.
+---@param expected_type string @ Expected type for data
+---@return string @ String describing the error.
 local function error_message(data, expected_type)
   if data then
     return format('is not %s.', expected_type)
@@ -52,22 +47,17 @@ local function error_message(data, expected_type)
   return format('is missing and should be %s.', expected_type)
 end
 
---- Create a readable string output from the validation errors output.
---
--- @param error_list table
+-- Create a readable string output from the validation errors output.
+---@param error_list table
 --   Nested table identifying where the error occured.
 --   e.g. { price = { rule_value = 'error message' } }
--- @param parents string
---   String of dot separated parents keys
---
--- @return string
---   Message describing where the error occured. e.g. price.rule_value = "error message"
----
+---@param parents string @ String of dot separated parents keys
+---@return string @ Message describing where the error occured. e.g. price.rule_value = "error message"
 function M.print_err(error_list, parents)
   -- Makes prefix not nil, for posterior concatenation.
   local error_output = ''
   local parents = parents or ''
-  if not error_list then return false end
+  if not error_list then return '' end
   -- Iterates over the list of messages.
   for key, err in pairs(error_list) do
     -- If it is a node, print it.
@@ -82,26 +72,13 @@ function M.print_err(error_list, parents)
   return error_output
 end
 
---- Validators.
---
+-- Validators.
 -- A validator is a function in charge of verifying data compliance.
---
--- Prototype:
--- @key
---   Key of data being validated.
--- @data
---   Current data tree level. Meta-validator might need to verify other keys. e.g. assert()
---
--- @return
---   true on success, false and message describing the error
----
+---@alias validator fun(value: any, key: any, data: any): boolean, string | table | nil
 
 
---- Generates string validator.
---
--- @return
---   String validator function.
----
+-- Generates string validator.
+---@return validator @ String validator function.
 function M.is_string()
   return function(value)
     if type(value) ~= 'string' then
@@ -111,11 +88,8 @@ function M.is_string()
   end
 end
 
---- Generates integer validator.
---
--- @return
---   Integer validator function.
----
+-- Generates integer validator.
+---@return validator
 function M.is_integer()
   return function(value)
     if type(value) ~= 'number' or value%1 ~= 0 then
@@ -125,11 +99,8 @@ function M.is_integer()
   end
 end
 
---- Generates number validator.
---
--- @return
---   Number validator function.
----
+-- Generates number validator.
+---@return validator
 function M.is_number()
   return function(value)
     if type(value) ~= 'number' then
@@ -139,11 +110,8 @@ function M.is_number()
   end
 end
 
---- Generates boolean validator.
---
--- @return
---   Boolean validator function.
----
+-- Generates boolean validator.
+---@return validator
 function M.is_boolean()
   return function(value)
     if type(value) ~= 'boolean' then
@@ -153,23 +121,14 @@ function M.is_boolean()
   end
 end
 
---- Generates an array validator.
---
+-- Generates an array validator.
 -- Validate an array by applying same validator to all elements.
---
--- @param validator function
---   Function used to validate the values.
--- @param is_object boolean (optional)
---   When evaluted to false (default), it enforce all key to be of type number.
---
--- @return
---   Array validator function.
---   This validator return value is either true on success or false and
---   a table holding child_validator errors.
----
+---@param child_validator validator @ Function used to validate the values.
+---@param is_object boolean? @ When evaluted to false (default), it enforce all key to be of type number.
+---@return validator
 function M.is_array(child_validator, is_object)
-  return function(value, key, data)
-    local result, err = nil
+  return function(value)
+    local result, err
     local err_array = {}
 
     -- Iterate the array and validate them.
@@ -196,17 +155,44 @@ function M.is_array(child_validator, is_object)
   end
 end
 
---- Generates optional validator.
---
+-- Generates a map-style table validator.
+-- Validate an map by applying a validator to all keys and values.
+---@param key_validator validator @ Function used to validate the keys.
+---@param value_validator validator @ Function used to validate the values.
+---@return validator
+function M.is_map(key_validator, value_validator)
+  return function(value)
+    local result, err
+    local err_array = {}
+
+    -- Iterate the map and validate them.
+    if type(value) == 'table' then
+      for index in pairs(value) do
+        result, err = key_validator(index, index, value)
+        if not result then
+          err_array[index] = err
+        end
+        result, err = value_validator(value[index], index, value)
+        if not result then
+          err_array[index] = err
+        end
+      end
+    else
+      insert(err_array, error_message(value, 'a map') )
+    end
+
+    if next(err_array) == nil then
+      return true
+    else
+      return false, err_array
+    end
+  end
+end
+
+-- Generates optional validator.
 -- When data is present apply the given validator on data.
---
--- @param validator function
---   Function used to validate value.
---
--- @return
---   Optional validator function.
---   This validator return true or the result from the given validator.
----
+---@param validator validator
+---@return validator
 function M.optional(validator)
   return function(value, key, data)
     if not value then return true
@@ -216,20 +202,14 @@ function M.optional(validator)
   end
 end
 
---- Generates or meta validator.
---
+-- Generates or meta validator.
 -- Allow data validation using two different validators and applying
 -- or condition between results.
---
--- @param validator_a function
---   Function used to validate value.
--- @param validator_b function
---   Function used to validate value.
---
--- @return
+---@param validator_a validator @ Function used to validate value.
+---@param validator_b validator @ Function used to validate value.
+---@return validator
 --   Or validator function.
 --   This validator return true or the result from the given validator.
----
 function M.or_op(validator_a, validator_b)
   return function(value, key, data)
     if not value then return true
@@ -247,23 +227,16 @@ function M.or_op(validator_a, validator_b)
   end
 end
 
---- Generates assert validator.
---
+-- Generates assert validator.
 -- This function enforces the existence of key/value with the
 -- verification of the key_check.
---
--- @param key_check mixed
---   Key used to check the optionality of the asserted key.
--- @param match mixed
---   Comparation value.
--- @param validator function
---   Function that validates the type of the data.
---
--- @return
+---@param key_check any @ Key used to check the optionality of the asserted key.
+---@param match any @ Comparation value.
+---@param validator validator @ Function that validates the type of the data.
+---@return validator
 --   Assert validator function.
 --   This validator return true, the result from the given validator or false
 --   when the assertion fails.
----
 function M.assert(key_check, match, validator)
   return function(value, key, data)
     if data[key_check] == match then
@@ -274,20 +247,10 @@ function M.assert(key_check, match, validator)
   end
 end
 
---- Generates list validator.
---
+-- Generates list validator.
 -- Ensure the value is contained in the given list.
---
--- @param list table
---   Set of allowed values.
--- @param value mixed
---   Comparation value.
--- @param validator function
---   Function that validates the type of the data.
---
--- @return
---   In list validator function.
----
+---@param list any[] Set of allowed values.
+---@return validator @ In list validator function.
 function M.in_list(list)
   return function(value)
     local printed_list = "["
@@ -303,21 +266,16 @@ function M.in_list(list)
   end
 end
 
---- Generates table validator.
---
+-- Generates table validator.
 -- Validate table data by using appropriate schema.
---
--- @param schema table
---   Schema used to validate the table.
---
--- @return
+---@param schema table @ Schema used to validate the table.
+---@return validator
 --   Table validator function.
 --   This validator return value is either true on success or false and
 --   a nested table holding all errors.
----
 function M.is_table(schema, tolerant)
   return function(value)
-    local result, err = nil
+    local result, err
 
     if type(value) ~= 'table' then
       -- Enforce errors of childs value.
@@ -333,16 +291,10 @@ function M.is_table(schema, tolerant)
   end
 end
 
---- Validate function.
---
--- @param data
---   Table containing the pairs to be validated.
--- @param schema
---   Schema against which the data will be validated.
---
--- @return
---   String describing the error or true.
----
+-- Validate function.
+---@param data table @ Table containing the pairs to be validated.
+---@param schema table @ Schema against which the data will be validated.
+---@return boolean, string[]? @ String describing the error or true.
 function validate_table(data, schema, tolerant)
 
   -- Array of error messages.

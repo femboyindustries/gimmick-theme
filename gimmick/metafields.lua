@@ -3,21 +3,63 @@ local _M = {}
 local sbox = require 'gimmick.lib.sbox'
 local v = require 'gimmick.lib.validation'
 
+local THEME_ID = 'femboy_industries.gimmick'
+local THEME_VERSION = '0'
+
+local is_difficulty = v.in_list({
+  DIFFICULTY_BEGINNER, DIFFICULTY_EASY, DIFFICULTY_MEDIUM, DIFFICULTY_HARD,
+  DIFFICULTY_CHALLENGE, DIFFICULTY_EDIT
+})
+local is_radar_value = v.in_list({
+  RADAR_CATEGORY_STREAM, RADAR_CATEGORY_VOLTAGE, RADAR_CATEGORY_AIR,
+  RADAR_CATEGORY_FREEZE, RADAR_CATEGORY_CHAOS, RADAR_CATEGORY_TAPS,
+  RADAR_CATEGORY_JUMPS, RADAR_CATEGORY_HOLDS, RADAR_CATEGORY_MINES,
+  RADAR_CATEGORY_HANDS, RADAR_CATEGORY_ROLLS
+})
+
+local segmentSources = {
+  metafields_v0 = {
+    name = 'Metafields specification (v0, draft)',
+    url = 'https://docs.google.com/document/d/1bzg8LIPAHw6486dJ_6rEJ5KTjGTAprLcbruIsLmWm1k/edit',
+  },
+}
+
 local schemas = {
+  meta = {
+    version = 0,
+    source = 'metafields_v0',
+    table = v.is_table({
+      metafields_version = v.is_integer(),
+    }),
+  },
   ['base.chart_metadata'] = {
     version = 0,
-    url = 'https://docs.google.com/document/d/1bzg8LIPAHw6486dJ_6rEJ5KTjGTAprLcbruIsLmWm1k/edit',
+    source = 'metafields_v0',
     table = v.is_table({
       -- TODO: move this outside of here. it's ugly in here
-      segment_version = v.is_number(),
+      segment_version = v.is_integer(),
 
       title = v.optional(v.is_string()),
       subtitle = v.optional(v.is_string()),
       artist = v.optional(v.is_string()),
       display_bpm = v.optional(v.is_string()),
       banner = v.optional(v.is_string()),
-      -- todo
-      --notes = v.optional
+      notes = v.optional(v.is_map(v.is_table({
+        [1] = is_difficulty,
+        [2] = v.optional(v.is_string())
+      }), v.is_table({
+        name = v.optional(v.is_string()),
+        meter = v.optional(v.is_string()),
+        radar_values = v.optional(v.is_map(is_radar_value, v.is_number())),
+        stats = v.optional(v.is_table({
+          taps = v.optional(v.is_string()),
+          mines = v.optional(v.is_string()),
+          holds = v.optional(v.is_string()),
+          rolls = v.optional(v.is_string()),
+          jumps = v.optional(v.is_string()),
+          hands = v.optional(v.is_string()),
+        }))
+      })))
     }),
   }
 }
