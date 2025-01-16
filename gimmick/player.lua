@@ -43,6 +43,12 @@ player.judgmentTweens = {
     tween = function(self)
       self:zoom(1.15) self:bounceend(0.2) self:zoom(1) self:sleep(0.6) self:accelerate(0.2) self:zoom(0)
     end
+  },
+  {
+    name = "Gimmick",
+    tween = function(self)
+      self:zoomy(0.5) self:zoomx(1.3) self:skewx(0.2) self:tween(0.1,outBack) self:zoomx(1) self:skewx(0) self:zoomy(1) self:sleep(0.6) self:tween(0.2,inBack) self:skewx(-0.5) self:zoomx(0) self:zoomy(0.1) self:sleep(0) self:skewx(0)
+    end
   }
 }
 
@@ -58,6 +64,12 @@ player.holdJudgmentTweens = {
     name = "ITG2",
     tween = function(self)
       self:diffuse(1,1,1,1) self:zoom(1.25) self:linear(0.3) self:zoomx(1) self:zoomy(1) self:sleep(0.5) self:diffuse(1,1,1,0)
+    end
+  },
+  {
+    name = "Gimmick",
+    tween = function(self)
+      self:zoomy(1.2) self:zoomx(1.5) self:tween(0.2,outBack) self:zoomx(1) self:zoomy(1) 
     end
   }
 }
@@ -97,6 +109,12 @@ player.comboTweens = {
     name = "Ky_Dash",
     tween = function(self)
       local y = self:GetY() self:zoom(COMBO_SCALE) self:tween(0.05, outCirc) self:y(y - 12) self:tween(0.2, outBounce) self:y(y)
+    end
+  },
+  {
+    name = "Gimmick",
+    tween = function(self)
+      self:zoomy(0.5) self:zoomx(1.1) self:tween(0.1,outBack) self:zoomx(1) self:zoomy(1) 
     end
   }
 }
