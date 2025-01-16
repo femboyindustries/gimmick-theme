@@ -17,6 +17,9 @@ M.data = {
     show_bootup = false,
     bootup_duration = "7",
   },
+  state = {
+    console_history = {},
+  },
   ---@type table<number, gimmick.PlayerData>
   players = {},
 }
