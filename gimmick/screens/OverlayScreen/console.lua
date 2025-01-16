@@ -25,7 +25,6 @@ local tip = tips[math.random(1, #tips)]
 
 local consoleOpen = false
 local history = {}
-local typedHistory = {}
 local historyIdx = 0
 
 local HistoryType = {
@@ -166,7 +165,10 @@ function M.init(self, ctx, scope)
     blink = os.clock()
 
     if key == 'enter' and not isShiftDown(device) and not isRepeat then
-      table.insert(typedHistory, t.text)
+      table.insert(save.data.state.console_history, t.text)
+      if #save.data.state.console_history > 100 then
+        table.remove(save.data.state.console_history, 1)
+      end
       historyIdx = 0
       table.insert(history, {HistoryType.Input, t:toString()})
       local status, res = eval(t:toString())
@@ -180,12 +182,12 @@ function M.init(self, ctx, scope)
     if key == 'up' or key == 'down' then
       historyIdx = historyIdx + ((key == 'up') and 1 or -1)
       historyIdx = math.max(historyIdx, 0)
-      historyIdx = math.min(historyIdx, #typedHistory)
+      historyIdx = math.min(historyIdx, #save.data.state.console_history)
 
       if historyIdx == 0 then
         t.text = {}
       else
-        t.text = typedHistory[#typedHistory - (historyIdx - 1)]
+        t.text = save.data.state.console_history[#save.data.state.console_history - (historyIdx - 1)]
       end
       t.cursor = #t.text
     end
