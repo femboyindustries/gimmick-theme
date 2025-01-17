@@ -2,6 +2,7 @@ local options = require 'gimmick.options'
 local stack   = require 'gimmick.stack'
 local mascots = require 'gimmick.mascots'
 local OptionsRenderer = require 'gimmick.optionsRenderer'
+local metafields      = require 'gimmick.metafields'
 
 local optionsStack = stack.new()
 local stackLocked = true
@@ -54,6 +55,10 @@ local optionsTable = {
     {
       type = 'lua',
       optionRow = screenButton('system', 'System Options')
+    },
+    {
+      type = 'lua',
+      optionRow = screenButton('metafields', 'Metafields Options')
     },
     --[[
     {
@@ -191,7 +196,34 @@ local optionsTable = {
       optionRow = screenButton('jailbreak', 'Jailbreak Options'),
     },
   },
-
+  metafields = {
+    {
+      type = 'lua',
+      optionRow = options.option.choice('implemented', {'_'}, function(_, s) s[1] = true end, function() end),
+      overlay = function(ctx, scope)
+        local schemas = metafields.schemas
+        local sources = metafields.segmentSources
+        local txt = ctx:BitmapText(FONTS.sans_serif)
+        txt:zoom(0.3)
+        txt:shadowlength(0)
+        return function(self, selected, pn, x, y)
+          txt:settext('Implemented segments')
+          txt:zoom(0.4)
+          txt:xy(x, y)
+          txt:Draw()
+          local y = y
+          for name, schema in pairs(schemas) do
+            y = y + 28
+            txt:xy(x, y)
+            txt:settext(name .. ' v' .. schema.version .. ': ' .. sources[schema.source].name)
+            txt:zoom(0.3)
+            txt:Draw()
+          end
+        end
+      end,
+      marginBottom = countKeys(metafields.schemas)
+    }
+  },
 }
 
 local function optionsGetter()

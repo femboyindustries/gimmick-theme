@@ -37,6 +37,7 @@ local segmentSources = {
     url = 'https://docs.google.com/document/d/1bzg8LIPAHw6486dJ_6rEJ5KTjGTAprLcbruIsLmWm1k/edit',
   },
 }
+_M.segmentSources = segmentSources
 
 local schemas = {
   meta = {
@@ -112,6 +113,7 @@ local schemas = {
     })
   }
 }
+_M.schemas = schemas
 
 ---@param song Song
 ---@param path string
