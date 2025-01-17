@@ -1,8 +1,9 @@
-local easable = require 'gimmick.lib.easable'
+local easable    = require 'gimmick.lib.easable'
 local MeterWheel = require 'gimmick.lib.meterWheel'
-local barlib = require 'gimmick.bar'
+local barlib     = require 'gimmick.bar'
 local MusicWheel = require 'gimmick.screens.ScreenSelectMusic.MusicWheel'
 local TextPool   = require 'gimmick.textpool'
+local metafields = require 'gimmick.metafields'
 
 return {
   MusicWheel = MusicWheel.MusicWheel(),
@@ -55,11 +56,19 @@ return {
     diffRepText:shadowlength(0)
     local diffEase = scope.tick:easable(0, 8)
 
+    local debug = ctx:BitmapText(FONTS.monospace)
+    debug:align(0, 1)
+    debug:zoom(0.2)
+
     local statR = TextPool.new(ctx, FONTS.sans_serif, nil, function(self) self:align(1, 0.5); self:zoom(0.28); self:shadowlength(0); self:diffuse(0.6, 0.6, 0.6, 1) end)
     local statL = TextPool.new(ctx, FONTS.sans_serif, nil, function(self) self:align(0, 0.5); self:zoom(0.32); self:shadowlength(0) end)
 
     ---@type Song
     local song = nil
+    ---@type Metafields?
+    local songMetafields = nil
+    ---@type table
+    local overrideMetadata = {}
     ---@alias StepSet {[1]: number, [2]: Steps, locked: boolean}
     ---@type StepSet[]
     local steps = {}
@@ -91,6 +100,14 @@ return {
             end
           end
         end
+        if song then
+          songMetafields = metafields.getSongMetafields(song)
+          overrideMetadata = songMetafields and songMetafields:get('base.chart_metadata') or {}
+        else
+          songMetafields = nil
+          overrideMetadata = {}
+        end
+        scope.event:call('songSwitch', song)
       end
 
       local selected = GAMESTATE:GetCurrentSteps(0)
@@ -218,7 +235,11 @@ return {
         local statY = 180
         do
           local label = statR:get('ARTIST')
-          local value = statL:get(song:GetDisplayArtist())
+          local str = song:GetDisplayArtist()
+          if overrideMetadata.artist then
+            str = overrideMetadata.artist
+          end
+          local value = statL:get(str)
           label:xy(statX, statY)
           label:Draw()
           value:xy(statX + 8, statY)
@@ -227,7 +248,11 @@ return {
         do
           local label = statR:get('LENGTH')
           local len = song:MusicLengthSeconds()
-          local value = statL:get(formatTime(len))
+          local str = formatTime(len)
+          if overrideMetadata.song_length then
+            str = overrideMetadata.song_length
+          end
+          local value = statL:get(str)
           label:xy(statX, statY + 16)
           label:Draw()
           value:xy(statX + 8, statY + 16)
@@ -242,6 +267,9 @@ return {
           if min ~= max then
             str = tostring(math.floor(min)) .. ' - ' .. tostring(math.floor(max))
           end
+          if overrideMetadata.display_bpm then
+            str = overrideMetadata.display_bpm
+          end
           local value = statL:get(str)
           label:xy(statX, statY + 16 * 2)
           label:Draw()
@@ -249,7 +277,22 @@ return {
           value:Draw()
         end
 
-
+        local mtxt = 'No Metafields file found'
+        if songMetafields then
+          local meta = songMetafields:get('meta')
+          local ver = meta and meta.metafields_version or 'unknown'
+          mtxt = 'Metafields v' .. ver .. ' found (' .. #songMetafields.warnings .. ' errors)'
+          for i, warn in ipairs(songMetafields.warnings) do
+            mtxt = mtxt .. '\n  ' .. i .. '. ' .. warn.msg
+          end
+          mtxt = mtxt .. '\n' .. countKeys(songMetafields.segments) .. ' segments:'
+          for name in pairs(songMetafields.segments) do
+            mtxt = mtxt .. '\n  ' .. name
+          end
+        end
+        debug:settext(mtxt)
+        debug:xy(20, sh-20)
+        debug:Draw()
       end
     end)
   end),

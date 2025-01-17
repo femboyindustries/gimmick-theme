@@ -25,6 +25,7 @@ local format = string.format
 local floor = math.floor
 local insert = table.insert
 local next = next
+local tostring = tostring
 
 -- Disable global environment.
 if _G.setfenv then
@@ -46,12 +47,13 @@ local function error_message(data, expected_type)
 
   return format('is missing and should be %s.', expected_type)
 end
+M.error_message = error_message
 
 -- Create a readable string output from the validation errors output.
 ---@param error_list table
 --   Nested table identifying where the error occured.
 --   e.g. { price = { rule_value = 'error message' } }
----@param parents string @ String of dot separated parents keys
+---@param parents string? @ String of dot separated parents keys
 ---@return string @ Message describing where the error occured. e.g. price.rule_value = "error message"
 function M.print_err(error_list, parents)
   -- Makes prefix not nil, for posterior concatenation.
@@ -62,10 +64,10 @@ function M.print_err(error_list, parents)
   for key, err in pairs(error_list) do
     -- If it is a node, print it.
     if type(err) == 'string' then
-      error_output = format('%s\n%s%s %s', error_output, parents ,key, err)
+      error_output = format('%s\n%s%s %s', error_output, parents, tostring(key), err)
     else
       -- If it is a table, recurse it.
-      error_output = format('%s%s', error_output, M.print_err(err, format('%s%s.', parents, key)))
+      error_output = format('%s%s', error_output, M.print_err(err, format('%s%s.', parents, tostring(key))))
     end
   end
 

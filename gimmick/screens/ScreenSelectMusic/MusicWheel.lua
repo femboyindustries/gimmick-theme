@@ -20,6 +20,7 @@
 
 local TextPool = require 'gimmick.textpool'
 local easable = require 'gimmick.lib.easable'
+local metafields = require 'gimmick.metafields'
 
 ---@class MusicWheel
 local MusicWheel = {}
@@ -253,6 +254,8 @@ function MusicWheel.init(ctx)
         end
 
         local song = songLookup[cacheKey]
+        local songMetafields = song and metafields.getSongMetafields(song)
+        local overrideFields = songMetafields and songMetafields:get('base.chart_metadata') or {}
 
         if song then
           local curStep
@@ -283,7 +286,7 @@ function MusicWheel.init(ctx)
           meterT:maxwidth(0)
         end
 
-        local titleText = itemText:get(titleT)
+        local titleText = itemText:get(overrideFields.title or titleT)
         local maxWidth = WHEEL_ITEM_WIDTH - METER_WIDTH - 16
         titleText:xy(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH + 6 + offX, 2)
         titleText:zoom(0.4)
@@ -292,7 +295,7 @@ function MusicWheel.init(ctx)
         if not subtitle:GetHidden() and subtitleT ~= '' then
           titleText:xy(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH + 6 + offX, -5 + 2)
           titleText:Draw()
-          local subtitleText = itemText:get(subtitleT)
+          local subtitleText = itemText:get(overrideFields.subtitle or subtitleT)
           subtitleText:xy(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH + 6 + offX, 5 + 2)
           subtitleText:zoom(0.22)
           subtitleText:Draw()
