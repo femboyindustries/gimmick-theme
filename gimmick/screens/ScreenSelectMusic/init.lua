@@ -12,7 +12,7 @@ return {
     On = function(bn)
       bn:ztest(0)
       -- this is only vaguely better than magic numbers
-      bn:xy((48 + 96 + 240)/2, 100)
+      bn:xy((48 + 96 + 240) / 2, 100)
       --bn:effectclock('bgm')
       --bn:wag()
     end
@@ -26,11 +26,11 @@ return {
 
     local bar = barlib.new(ctx)
     local bar_af = bar.actorframe
-    local bar_ease = scope.tick:easable(0,24)
+    local bar_ease = scope.tick:easable(0, 24)
     bar_af:xy(scx * 0.5, scy * 1.5)
 
     local wheel = MeterWheel.new(ctx, scope)
-    
+
     local text = ctx:BitmapText(FONTS.sans_serif)
     text:shadowlength(0)
     text:zoom(0.35)
@@ -60,8 +60,19 @@ return {
     debug:align(0, 1)
     debug:zoom(0.2)
 
-    local statR = TextPool.new(ctx, FONTS.sans_serif, nil, function(self) self:align(1, 0.5); self:zoom(0.28); self:shadowlength(0); self:diffuse(0.6, 0.6, 0.6, 1) end)
-    local statL = TextPool.new(ctx, FONTS.sans_serif, nil, function(self) self:align(0, 0.5); self:zoom(0.32); self:shadowlength(0) end)
+    local statR = TextPool.new(ctx, FONTS.sans_serif, nil,
+      function(self)
+        self:align(1, 0.5); self:zoom(0.28); self:shadowlength(0); self:diffuse(0.6, 0.6, 0.6, 1)
+      end)
+    local statL = TextPool.new(ctx, FONTS.sans_serif, nil,
+      function(self)
+        self:align(0, 0.5); self:zoom(0.32); self:shadowlength(0)
+      end)
+
+    local volatile_warning = ctx:BitmapText(FONTS.monospace, "/!\\ Song is VOLATILE")
+    volatile_warning:xy(scx*0.5, scy*1.35)
+    volatile_warning:zoom(0.5)
+
 
     ---@type Song
     local song = nil
@@ -111,7 +122,7 @@ return {
       end
 
       local selected = GAMESTATE:GetCurrentSteps(0)
-      
+
 
       if selected and difficulty ~= selected:GetDifficulty() then
         difficulty = selected:GetDifficulty()
@@ -184,7 +195,7 @@ return {
           fold:xy(x, scy)
           fold:Draw()
           if step.locked then
-            lockIcon:xy(x + w.eased/2, scy)
+            lockIcon:xy(x + w.eased / 2, scy)
             local zoom = math.min(w.eased - 2, 16)
             lockIcon:diffuse(0, 0, 0, 1)
             lockIcon:zoomto(zoom, zoom)
@@ -262,7 +273,7 @@ return {
           local label = statR:get('BPM')
           local min = song:GetMinBPM()
           local max = song:GetMaxBPM()
-           
+
           local str = tostring(math.floor(min))
           if min ~= max then
             str = tostring(math.floor(min)) .. ' - ' .. tostring(math.floor(max))
@@ -289,9 +300,14 @@ return {
           for name in pairs(songMetafields.segments) do
             mtxt = mtxt .. '\n  ' .. name
           end
+
+          local volatile_value = songMetafields:get('mayf.volatile').is_volatile
+          if volatile_value then
+            volatile_warning:Draw()
+          end
         end
         debug:settext(mtxt)
-        debug:xy(20, sh-20)
+        debug:xy(20, sh - 20)
         debug:Draw()
       end
     end)

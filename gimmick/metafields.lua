@@ -36,6 +36,10 @@ local segmentSources = {
     name = 'Metafields specification (v0, draft)',
     url = 'https://docs.google.com/document/d/1bzg8LIPAHw6486dJ_6rEJ5KTjGTAprLcbruIsLmWm1k/edit',
   },
+  gimmick_interal = {
+    name = 'gimmick_interal',
+    url = 'gimmick.com'
+  }
 }
 _M.segmentSources = segmentSources
 
@@ -110,6 +114,14 @@ local schemas = {
       copyright_warning = v.optional(v.is_boolean()),
       warning_label = v.optional(v.is_string()),
       warning_label_severity = v.optional(v.in_list({'note', 'acknowledge', 'urgent'})),
+    })
+  },
+
+  ['mayf.volatile'] = {
+    version = 0,
+    source = 'gimmick_interal',
+    table = v.is_table({
+      is_volatile = v.optional(v.is_string())
     })
   }
 }

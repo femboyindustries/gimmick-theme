@@ -94,6 +94,11 @@ function MusicWheel.init(ctx)
 
   -- actors
 
+  local volatile_warning = ctx:Sprite('Graphics/volatile.png')
+  volatile_warning:texturefiltering(false)
+  volatile_warning:stretchto(0,0,16,16)
+
+
   local quad = ctx:Quad()
   local itemText = TextPool.new(ctx, FONTS.sans_serif, WHEEL_ITEMS * 3,
     function(a)
@@ -284,6 +289,13 @@ function MusicWheel.init(ctx)
           meterT:maxwidth(METER_WIDTH/0.45)
           meterT:Draw()
           meterT:maxwidth(0)
+
+          if songMetafields then 
+            if songMetafields:get('mayf.volatile').is_volatile then
+              volatile_warning:xy(-WHEEL_ITEM_WIDTH*0.5+offX,WHEEL_ITEM_HEIGHT*0.25)
+              volatile_warning:Draw()
+            end
+          end
         end
 
         local titleText = itemText:get(overrideFields.title or titleT)
