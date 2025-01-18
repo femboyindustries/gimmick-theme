@@ -98,6 +98,7 @@ local bn_height = 109
 local bn_x = scx * 0.35
 local bn_y = scy * 0.3
 
+
 return {
   Init = function(self) Trace('theme.com') end,
 
@@ -115,18 +116,16 @@ return {
 
   overlay = gimmick.ActorScreen(function(self, ctx, scope)
     local opacity = scope.tick:aux(0)
-    scope.event:on('on',function()
+    scope.event:on('on', function()
       --self:zoomy(0.5)
 
-      opacity:ease(0,0.1,linear,1)
-      
+      opacity:ease(0, 0.1, linear, 1)
     end)
 
-    scope.event:on('off',function()
+    scope.event:on('off', function()
       --self:zoomy(0.5)
 
-      opacity:ease(0,5,linear,0)
-      
+      opacity:ease(0, 5, linear, 0)
     end)
 
     local pool = TextPool.new(ctx, FONTS.sans_serif, nil, function(actor)
@@ -241,18 +240,27 @@ return {
 
     --Grades
     local grade_int = GetGradeFromPercent(stats:GetPercentDancePoints())
-    print(pretty(grades[grade_int]))
 
     --error('/Graphics/Grades/'..grades[grade_int].file..'.png')
     --TODO: Quads
-    local gradeActor = ctx:Sprite('Graphics/Grades/' .. grades[grade_int].file .. '.png')
 
-    local mascot
+
+    local gradeActor
+
+
     if save.data.settings.mascot_enabled then
-      --placeholder mascot grade
-      mascot = ctx:Sprite('Mascots/grades/default.png')
+      local mascot_path = mascots.getPaths(save.data.settings.mascot).character
+
+      if contains(getFolderContents('Mascots/grades/' .. save.data.settings.mascot .. '/', true), grades[grade_int].file) then
+        mascot_path = 'Mascots/grades/' .. save.data.settings.mascot .. '/' .. grades[grade_int].file
+      end
+
+      mascot = ctx:Sprite(mascot_path)
     end
 
+    --print(getFolderContents('Mascots/grades/'..save.data.settings.mascot..'/',true))
+
+    gradeActor = ctx:Sprite('Graphics/Grades/' .. grades[grade_int].file)
 
     local rateOverlay = ctx:Quad()
 
@@ -363,20 +371,25 @@ return {
     end
 
     local winner = ctx:Sprite('Graphics/winner.png')
-    local bg = ctx:Sprite('Mascots/backgrounds/jimble.jpg')
+    local bg_path = GAMESTATE:GetCurrentSong():GetBackgroundPath()
+    if save.data.settings.mascot_enabled then
+      bg_path = mascots.getPaths(save.data.settings.mascot).background
+    end
+
+    local bg = ctx:Sprite(bg_path)
+
     bg:stretchto(0, 0, sw, sh)
     bg:diffusealpha(0.6)
 
     self:SetDrawFunction(function()
       bg:Draw()
 
-      --[[
+
       winner:scaletofit(scx - 100, scy - 100, scx + 100, scy + 100)
-        winner:valign(0)
-      winner:xy(scx, scy * 0.06)
+      winner:valign(0)
+      winner:xy(scx * 0.25, scy * 1.1)
 
       winner:Draw()
-      ]]
     end)
   end),
   header = gimmick.ActorScreen(function(self, ctx)
