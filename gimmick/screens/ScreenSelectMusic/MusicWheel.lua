@@ -274,6 +274,8 @@ function MusicWheel.init(ctx)
           curStep = curStep or steps[1]
           local diff = DIFFICULTIES[curStep:GetDifficulty()]
 
+          local overrideDiff = songMetafields and songMetafields:getDiffOverride(curStep)
+
           quad:xywh(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH / 2 + offX, 2/2, METER_WIDTH, WHEEL_ITEM_HEIGHT-2)
           quad:diffuse(diff.color:unpack())
           quad:Draw()
@@ -282,7 +284,11 @@ function MusicWheel.init(ctx)
           quad:diffuse((diff.color * 0.85):unpack())
           quad:Draw()
 
-          local meterT = meterText:get(tostring(curStep:GetMeter()))
+          local meterStr = tostring(curStep:GetMeter())
+          if overrideDiff and overrideDiff.meter then
+            meterStr = overrideDiff.meter
+          end
+          local meterT = meterText:get(meterStr)
           meterT:xy(-WHEEL_ITEM_WIDTH / 2 + METER_WIDTH / 2 + offX, 2)
           meterT:diffuse(diff.text:unpack())
           meterT:zoom(0.45)
@@ -290,7 +296,7 @@ function MusicWheel.init(ctx)
           meterT:Draw()
           meterT:maxwidth(0)
 
-          if songMetafields then 
+          if songMetafields and songMetafields:get('mayf.volatile') then 
             if songMetafields:get('mayf.volatile').is_volatile then
               volatile_warning:xy(-WHEEL_ITEM_WIDTH*0.5+offX,WHEEL_ITEM_HEIGHT*0.25)
               volatile_warning:Draw()

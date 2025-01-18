@@ -53,7 +53,7 @@ function MeterWheel:ease(meter, difficulty)
   end
 end
 
-function MeterWheel:draw(x, y)
+function MeterWheel:draw(x, y, overrideStr)
   local fill = self.meter.eased / 20
 
   self.pie:diffuse(self.color.eased:unpack())
@@ -78,7 +78,7 @@ function MeterWheel:draw(x, y)
     self.pie:Draw()
   end
 
-  self.rating:settext(tostring(self.meter.target))
+  self.rating:settext(overrideStr or tostring(self.meter.target))
   self.rating:xy(x, y)
   self.rating:diffuse(1, 1, 1, 1)
   self.rating:zoom(0.55)

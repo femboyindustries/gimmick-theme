@@ -163,6 +163,8 @@ return {
         local step = renderSteps[diffI]
         local diff = DIFFICULTIES[diffI] or DIFFICULTIES[DIFFICULTY_EASY]
 
+        local overrideDiff = songMetafields and step[2] and songMetafields:getDiffOverride(step[2])
+
         folds[diffI] = folds[diffI] or easable(0)
         local w = folds[diffI]
 
@@ -183,7 +185,11 @@ return {
           fold:SetWidth(w.eased)
           fold:xy(x, scy)
           fold:Draw()
-          text:settext(step[2]:GetDescription())
+          local desc = step[2]:GetDescription()
+          if overrideDiff and overrideDiff.name then
+            desc = overrideDiff.name
+          end
+          text:settext(desc)
           text:diffuse(0, 0, 0, 1)
           text:xy(x + FOLD_BORDER, scy)
           text:Draw()
@@ -211,8 +217,9 @@ return {
       end
 
       if selected then
+        local overrideDiff = songMetafields and songMetafields:getDiffOverride(selected)
         wheel:ease(selected:GetMeter(), selected:GetDifficulty())
-        wheel:draw(48, scy)
+        wheel:draw(48, scy, overrideDiff and overrideDiff.meter)
       else
         wheel:set(0, nil)
       end
@@ -301,7 +308,7 @@ return {
             mtxt = mtxt .. '\n  ' .. name
           end
 
-          local volatile_value = songMetafields:get('mayf.volatile').is_volatile
+          local volatile_value = songMetafields:get('mayf.volatile') and songMetafields:get('mayf.volatile').is_volatile
           if volatile_value then
             volatile_warning:Draw()
           end

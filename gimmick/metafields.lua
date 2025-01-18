@@ -63,7 +63,7 @@ local schemas = {
       display_bpm = v.optional(v.is_string()),
       banner = v.optional(v.is_string()), -- TODO implement
       song_length = v.optional(v.is_string()),
-      notes = v.optional(v.is_map(v.is_table({ -- TODO implement
+      notes = v.optional(v.is_map(v.is_table({
         [1] = is_difficulty,
         [2] = v.optional(v.is_string())
       }), v.is_table({
@@ -202,6 +202,20 @@ end
 ---@param segment string
 function Metafields:get(segment)
   return self.segments[segment]
+end
+
+---@param steps Steps
+function Metafields:getDiffOverride(steps)
+  local overrideFields = self:get('base.chart_metadata')
+  if overrideFields and overrideFields.notes then
+    for key, value in pairs(overrideFields.notes) do
+      local diffVal = key[1]
+      local desc = key[2]
+      if steps:GetDifficulty() == diffVal and (not desc or steps:GetDescription() == desc) then
+        return value
+      end
+    end
+  end
 end
 
 ---@param tab table?
