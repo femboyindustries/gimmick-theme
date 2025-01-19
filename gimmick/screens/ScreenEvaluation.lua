@@ -138,6 +138,7 @@ return {
     local chart = stats:GetPossibleSteps()[1]:GetNoteData()
     local song = GAMESTATE:GetCurrentSong()
     local steps = GAMESTATE:GetCurrentSteps(1)
+    local mascot
 
     --handle hold and mine counts
     local holdsN = 0
