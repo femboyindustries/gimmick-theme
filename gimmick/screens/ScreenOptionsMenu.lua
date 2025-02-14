@@ -61,6 +61,10 @@ local optionsTable = {
       optionRow = screenButton('gayzone', 'gay zone', 'Enter... if you dare...'),
     },
     ]]
+    {
+      type = 'lua',
+      optionRow = options.option.settingToggle('Fix', 'fix_gimmick'),
+    },
 
     {
       type = 'lua',

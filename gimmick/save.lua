@@ -16,6 +16,7 @@ M.data = {
     show_imap = false,
     show_bootup = false,
     bootup_duration = "7",
+    fix_gimmick = false
   },
   state = {
     console_history = {},
