@@ -702,3 +702,10 @@ function pickWeighted(tab)
   end
   return nil
 end
+
+function fix()
+  for i = 1, 100 do
+    introduceEntropyIntoUniverse()
+  end
+  print("fixed")
+end
