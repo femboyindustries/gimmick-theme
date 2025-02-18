@@ -98,6 +98,7 @@ function MusicWheel.init(ctx)
   volatile_warning:texturefiltering(false)
   volatile_warning:stretchto(0,0,16,16)
 
+  local icons = metafields.createWarningIcons(ctx)
 
   local quad = ctx:Quad()
   local itemText = TextPool.new(ctx, FONTS.sans_serif, WHEEL_ITEMS * 3,
@@ -296,11 +297,24 @@ function MusicWheel.init(ctx)
           meterT:Draw()
           meterT:maxwidth(0)
 
+          local songIcons = {}
+
           if songMetafields and songMetafields:get('mayf.volatile') then 
             if songMetafields:get('mayf.volatile').is_volatile then
-              volatile_warning:xy(-WHEEL_ITEM_WIDTH*0.5+offX,WHEEL_ITEM_HEIGHT*0.25)
-              volatile_warning:Draw()
+              table.insert(songIcons, volatile_warning)
             end
+          end
+
+          if songMetafields then
+            for _, icon in ipairs(songMetafields:getIcons(icons)) do
+              table.insert(songIcons, icon)
+            end
+          end
+
+          for i, icon in ipairs(songIcons) do
+            icon:xy(-WHEEL_ITEM_WIDTH*0.5+offX - (i - 1) * (16 + 2), WHEEL_ITEM_HEIGHT*0.25)
+            icon:zoomto(16, 16)
+            icon:Draw()
           end
         end
 

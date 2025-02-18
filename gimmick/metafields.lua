@@ -103,7 +103,7 @@ local schemas = {
       max_height = v.optional(v.is_integer()),
     })
   },
-  ['base.warnings'] = { -- TODO implement
+  ['base.warnings'] = {
     version = 0,
     source = 'metafields_v0',
     table = v.is_table({
@@ -112,8 +112,8 @@ local schemas = {
       loud_warning = v.optional(v.is_boolean()),
       window_movements = v.optional(v.is_boolean()),
       copyright_warning = v.optional(v.is_boolean()),
-      warning_label = v.optional(v.is_string()),
-      warning_label_severity = v.optional(v.in_list({'note', 'acknowledge', 'urgent'})),
+      warning_label = v.optional(v.is_string()), -- TODO implement
+      warning_label_severity = v.optional(v.in_list({'note', 'acknowledge', 'urgent'})), -- TODO implement
     })
   },
 
@@ -126,6 +126,13 @@ local schemas = {
   }
 }
 _M.schemas = schemas
+
+local warningIcons = {
+  epilepsy_warning = 'Graphics/icon-loud.png', -- todo
+  loud_warning = 'Graphics/icon-loud.png',
+  window_movements = 'Graphics/icon-window-movements.png',
+  copyright_warning = 'Graphics/icon-copyright.png',
+}
 
 ---@param song Song
 ---@param path string
@@ -218,6 +225,27 @@ function Metafields:getDiffOverride(steps)
   end
 end
 
+-- initialize `icons` beforehand with `metafields.createWarningIcons`
+function Metafields:getIcons(icons)
+  local w = self:get('base.warnings')
+  local songIcons = {}
+  if w then
+    if w.epilepsy_warning then
+      table.insert(songIcons, icons.epilepsy_warning)
+    end
+    if w.loud_warning then
+      table.insert(songIcons, icons.loud_warning)
+    end
+    if w.window_movements then
+      table.insert(songIcons, icons.window_movements)
+    end
+    if w.copyright_warning then
+      table.insert(songIcons, icons.copyright_warning)
+    end
+  end
+  return songIcons
+end
+
 ---@param tab table?
 ---@param song Song
 ---@param path string
@@ -303,6 +331,15 @@ function _M.getSongMetafields(song)
     metafields = meta
   }
   return meta
+end
+
+---@param ctx Context
+function _M.createWarningIcons(ctx)
+  local icons = {}
+  for key, filename in pairs(warningIcons) do
+    icons[key] = ctx:Sprite(filename)
+  end
+  return icons
 end
 
 return _M

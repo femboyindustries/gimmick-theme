@@ -74,6 +74,8 @@ return {
     volatile_warning:zoom(0.5)
 
 
+    local icons = metafields.createWarningIcons(ctx)
+
     ---@type Song
     local song = nil
     ---@type Metafields?
@@ -293,6 +295,21 @@ return {
           label:Draw()
           value:xy(statX + 8, statY + 16 * 2)
           value:Draw()
+        end
+
+        local songIcons = songMetafields and songMetafields:getIcons(icons) or {}
+
+        for i, icon in ipairs(songIcons) do
+          -- huh??
+          icon:xy(64 + (i - 1) * (32 + 8), scy + 48)
+          icon:zoomto(32, 32)
+          icon:Draw()
+
+          if #songIcons == 1 then
+            local value = statL:get('Copyrighted music')
+            value:xy(64 + 24, scy + 48)
+            value:Draw()
+          end
         end
 
         local mtxt = 'No Metafields file found'
