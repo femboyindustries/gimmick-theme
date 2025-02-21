@@ -8,6 +8,110 @@ local THEME_VERSION = '0'
 
 local METAFIELDS_VERSION = 0
 
+---@enum Comparison
+local Comparison = {
+  STRICT = '',
+
+  EQ = '=',
+  NEQ = '~=',
+  GTE = '>=',
+  GT = '>',
+  LTE = '<=',
+  LT = '<',
+}
+
+---@class ThemeIdentifier
+---@field theme string
+---@field version string?
+---@field comp Comparison?
+local ThemeIdentifier = {}
+ThemeIdentifier.__index = ThemeIdentifier
+
+function ThemeIdentifier:test(theme, version)
+  if not string.find(theme, '^' .. replace(escapeLuaPattern(self.theme), '%*', '.+') .. '$') then
+    return false
+  end
+
+  if not self.version then
+    return true
+  end
+
+  if self.comp == Comparison.STRICT then
+    return string.find(version, '^' .. replace(escapeLuaPattern(self.version), '%*', '.+') .. '$') ~= nil
+  end
+
+  error('sorry no flexver impl :(')
+end
+
+function ThemeIdentifier.new(str)
+  local self = setmetatable({}, ThemeIdentifier)
+
+  self.theme = str
+
+  local at = string.find(str, '@')
+
+  if at then
+    self.theme = string.sub(str, 1, at - 1)
+    self.version = string.sub(str, at + 1)
+  end
+
+  if string.len(self.theme) == 0 then
+    error('not well-formed theme indicator - empty', 2)
+  end
+
+  if not string.find(self.theme, '^%w') then
+    error('not well-formed theme indicator - comparasion signs cannot be used in theme indicators', 2)
+  end
+
+  if string.find(self.theme, '%*%*') then
+    error('not well-formed theme indicator - duplicated wildcards', 2)
+  end
+
+  if self.version then
+    if string.find(self.version, '@') then
+      error('not well-formed theme identifier - multiple @ signs', 2)
+    end
+
+    if string.len(self.version) == 0 then
+      error('not well-formed version indicator - empty', 2)
+    end
+  
+    if string.find(self.version, '^[%w*]') then
+      self.comp = Comparison.STRICT
+    else
+      -- trying to avoid matching >= as GT instead of GTE by trying to find
+      -- the longest sign that matches. there's probably a smarter way to do
+      -- this
+      local maxLen = 0
+      local maxSign
+
+      for _, sign in pairs(Comparison) do
+        if
+          string.len(sign) > maxLen and
+          string.find(self.version, '^' .. escapeLuaPattern(sign))
+        then
+          maxSign = sign
+        end
+      end
+
+      if not maxSign then
+        error('not well-formed version indicator - invalid comparison sign', 2)
+      end
+
+      self.comp = maxSign
+      self.version = string.sub(self.version, string.len(maxSign) + 1)
+    end
+
+    if self.comp ~= Comparison.STRICT and string.find(self.version, '%*') then
+      error('not well-formed version indicator - wildcards can only be used with strict equivalence', 2)
+    elseif self.comp == Comparison.STRICT and string.find(self.version, '%*%*') then
+      error('not well-formed version indicator - duplicated wildcards', 2)
+    end
+  end
+
+  return self
+end
+
 local is_difficulty = v.in_list({
   DIFFICULTY_BEGINNER, DIFFICULTY_EASY, DIFFICULTY_MEDIUM, DIFFICULTY_HARD,
   DIFFICULTY_CHALLENGE, DIFFICULTY_EDIT
@@ -27,8 +131,19 @@ local is_aspect_ratio = function(value)
   end
   return true
 end
+local is_theme = function(value)
+  if type(value) ~= 'string' then
+    return false, v.error_message(value, 'a string')
+  end
+  local status, res = pcall(ThemeIdentifier.new, value)
+  if not status then
+    return false, v.error_message(value, 'a theme identifier (' .. res .. ')')
+  end
+  return true
+end
 local meta_schema = v.is_table({
-  version = v.is_integer()
+  version = v.is_integer(),
+  disallow_implementations = v.optional(v.is_array(is_theme)),
 })
 
 local segmentSources = {
@@ -112,6 +227,7 @@ local schemas = {
       loud_warning = v.optional(v.is_boolean()),
       window_movements = v.optional(v.is_boolean()),
       copyright_warning = v.optional(v.is_boolean()),
+      is_minigame = v.optional(v.is_boolean()),
       warning_label = v.optional(v.is_string()), -- TODO implement
       warning_label_severity = v.optional(v.in_list({'note', 'acknowledge', 'urgent'})), -- TODO implement
     })
@@ -129,6 +245,7 @@ _M.schemas = schemas
 
 local warningIcons = {
   epilepsy_warning = 'Graphics/icon-loud.png', -- todo
+  is_minigame = 'Graphics/icon-loud.png', -- todo
   loud_warning = 'Graphics/icon-loud.png',
   window_movements = 'Graphics/icon-window-movements.png',
   copyright_warning = 'Graphics/icon-copyright.png',
@@ -190,7 +307,23 @@ function Metafields:loadTable(tab)
       if segment.meta and segment.meta.version ~= schema.version then
         self:warn('segment version: ' .. segment.meta.version .. ', implemented version: ' .. schema.version)
       end
-      self.segments[segmentName] = segment
+      local canLoad = true
+      if segment.meta and segment.meta.disallow_implementations then
+        for _, impl in pairs(segment.meta.disallow_implementations) do
+          local status, identifier = pcall(ThemeIdentifier.new, impl)
+          if status then
+            local res = identifier:test(THEME_ID, THEME_VERSION)
+            print(impl, ':', res)
+            if res then
+              canLoad = false
+              --break
+            end
+          end
+        end
+      end
+      if canLoad then
+        self.segments[segmentName] = segment
+      end
     else
       self:warn('unsupported segment: ' .. segmentName .. ', ignoring')
     end
@@ -241,6 +374,9 @@ function Metafields:getIcons(icons)
     end
     if w.copyright_warning then
       table.insert(songIcons, icons.copyright_warning)
+    end
+    if w.is_minigame then
+      table.insert(songIcons, icons.is_minigame)
     end
   end
   return songIcons
