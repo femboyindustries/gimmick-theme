@@ -2,6 +2,7 @@ local _M = {}
 
 local sbox = require 'gimmick.lib.sbox'
 local v = require 'gimmick.lib.validation'
+local FlexVer = require 'gimmick.lib.flexver'
 
 local THEME_ID = 'femboy_industries.gimmick'
 local THEME_VERSION = '0'
@@ -40,7 +41,15 @@ function ThemeIdentifier:test(theme, version)
     return string.find(version, '^' .. replace(escapeLuaPattern(self.version), '%*', '.+') .. '$') ~= nil
   end
 
-  error('sorry no flexver impl :(')
+  local cmp = FlexVer.new(version):compare(FlexVer.new(self.version))
+
+  return
+    (self.comp == Comparison.EQ and cmp == 0) or
+    (self.comp == Comparison.NEQ and cmp ~= 0) or
+    (self.comp == Comparison.GTE and cmp >= 0) or
+    (self.comp == Comparison.GT and cmp > 0) or
+    (self.comp == Comparison.LTE and cmp <= 0) or
+    (self.comp == Comparison.LT and cmp < 0)
 end
 
 function ThemeIdentifier.new(str)
