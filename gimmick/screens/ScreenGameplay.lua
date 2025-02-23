@@ -1,5 +1,10 @@
 return {
   Init = function(self)
+    _G.SCREEN_WIDTH = SCREEN_HEIGHT/3*4
+    _G.SCREEN_CENTER_X = _G.SCREEN_WIDTH/2
+    _G.SCREEN_RIGHT = _G.SCREEN_WIDTH
+
+    self:x2((sw - _G.SCREEN_WIDTH)/2)
   end,
   overlay = gimmick.ActorScreen(function(self, ctx, scope)
     local incorrect = ctx:Sprite('Graphics/incorrect.png')
@@ -22,6 +27,9 @@ return {
         self:get():Play()
       end
     end)
+
+    local letterbox = ctx:Quad()
+    letterbox:diffuse(0, 0, 0, 1)
 
     scope.event:on('press', function(pn, key)
       if key == 'Start' and not gimmick.s.OverlayScreen.modules.pause.isPaused() then
@@ -48,6 +56,12 @@ return {
       end
 
       incorrect:Draw()
+
+      local w = (sw - _G.SCREEN_WIDTH)/2
+      letterbox:xywh(w/2, scy, w, sh)
+      letterbox:Draw()
+      letterbox:xywh(sw-w/2, scy, w, sh)
+      letterbox:Draw()
     end)
   end),
   underlay = gimmick.ActorScreen(function(self, ctx) end)
