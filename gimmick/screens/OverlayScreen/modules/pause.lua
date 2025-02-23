@@ -1,44 +1,43 @@
-local M = {}
-
-local paused = false
-local pauseButtonIdx = 1
-local pauseButtons = {
-  { 'Resume', function()
-    SCREENMAN:GetTopScreen():PauseGame(false)
-    SCREENMAN:SetInputMode(0)
-    -- todo: disqualify player
-  end },
-  { 'Restart', function()
-    SCREENMAN:GetTopScreen():playcommand('Off')
-    GAMESTATE:ApplyGameCommand('mod, clearall, 3x, Overhead, scalable')
-    SCREENMAN:SetNewScreen('ScreenGameplay')
-  end },
-  { 'Exit', function()
-    SCREENMAN:GetTopScreen():playcommand('Off')
-    GAMESTATE:ApplyGameCommand('mod, clearall, 3x, Overhead, scalable')
-    SCREENMAN:SetNewScreen('ScreenSelectMusic')
-  end },
-}
-
-function M.pause()
-  paused = true
-  SCREENMAN:GetTopScreen():PauseGame(true)
-  SCREENMAN:SetInputMode(1)
-end
-function M.unpause()
-  paused = false
-  SCREENMAN:GetTopScreen():PauseGame(false)
-  SCREENMAN:SetInputMode(0)
-end
-function M.isPaused()
-  return paused
-end
-
 ---@param ctx Context
 ---@param scope Scope
-function M.init(self, ctx, scope)
+return function (ctx, scope)
   local pauseQuad = ctx:Quad()
   local pauseText = ctx:BitmapText(FONTS.sans_serif)
+  local paused = false
+  local pauseButtonIdx = 1
+  local pauseButtons = {
+    { 'Resume', function()
+      SCREENMAN:GetTopScreen():PauseGame(false)
+      SCREENMAN:SetInputMode(0)
+      -- todo: disqualify player
+    end },
+    { 'Restart', function()
+      SCREENMAN:GetTopScreen():playcommand('Off')
+      GAMESTATE:ApplyGameCommand('mod, clearall, 3x, Overhead, scalable')
+      SCREENMAN:SetNewScreen('ScreenGameplay')
+    end },
+    { 'Exit', function()
+      SCREENMAN:GetTopScreen():playcommand('Off')
+      GAMESTATE:ApplyGameCommand('mod, clearall, 3x, Overhead, scalable')
+      SCREENMAN:SetNewScreen('ScreenSelectMusic')
+    end },
+  }
+
+  local M = {}
+  
+  function M.pause()
+    paused = true
+    SCREENMAN:GetTopScreen():PauseGame(true)
+    SCREENMAN:SetInputMode(1)
+  end
+  function M.unpause()
+    paused = false
+    SCREENMAN:GetTopScreen():PauseGame(false)
+    SCREENMAN:SetInputMode(0)
+  end
+  function M.isPaused()
+    return paused
+  end
 
   -- using global events to cancel presses
   event:on('press', function(pn, key)
@@ -58,7 +57,7 @@ function M.init(self, ctx, scope)
     return true
   end)
 
-  return function(dt)
+  function M.draw()
     if not paused then return end
 
     pauseQuad:xywh(scx, scy, sw, sh)
@@ -84,6 +83,6 @@ function M.init(self, ctx, scope)
       pauseText:Draw()
     end
   end
+  
+  return M
 end
-
-return M

@@ -1,5 +1,3 @@
-local M = {}
-
 ---@param device InputDevice
 local function isCtrlDown(device)
   return
@@ -22,7 +20,7 @@ end
 
 ---@param ctx Context
 ---@param scope Scope
-function M.init(self, ctx, scope)
+return function(ctx, scope)
   local PADDING = 8
   local LEFT_PADDING = 16
   local TOOLS_HEIGHT = 350
@@ -112,88 +110,88 @@ function M.init(self, ctx, scope)
     end
   end)
 
-  return function(dt)
-    blur()
+  return {
+    draw = function(dt)
+      blur()
 
-    local yoff = (1 - devtoolsOpenAux.value) * -(TOOLS_HEIGHT + PADDING*2)
+      local yoff = (1 - devtoolsOpenAux.value) * -(TOOLS_HEIGHT + PADDING*2)
 
-    if devtoolsOpenAux.value > 0.01 then
-      rootNode = SCREENMAN:GetTopScreen()
+      if devtoolsOpenAux.value > 0.01 then
+        rootNode = SCREENMAN:GetTopScreen()
 
-      flatNodes = {}
-      local selectedExists = false
-      walk(rootNode, function(node, parent, depth)
-        local data = getNode(node)
-        data.parent = parent
-        data.depth = depth
-        if node == selectedNode then
-          selectedExists = true
+        flatNodes = {}
+        local selectedExists = false
+        walk(rootNode, function(node, parent, depth)
+          local data = getNode(node)
+          data.parent = parent
+          data.depth = depth
+          if node == selectedNode then
+            selectedExists = true
+          end
+          if (not data.parent) or getNode(data.parent).open then
+            table.insert(flatNodes, node)
+          end
+        end)
+        if not selectedExists then
+          selectedNode = rootNode
         end
-        if (not data.parent) or getNode(data.parent).open then
-          table.insert(flatNodes, node)
+        
+        --[[local tailNode = selectedNode
+        while tailNode do
+          if not nodeData[tailNode] then break end
+          tailNode = nodeData[tailNode].parent
+          if not nodeData[tailNode] then break end
+          nodeData[tailNode].open = true
+        end]]
+
+        bitmapText:SetShader(actorgen.Proxy.getRaw(scissor))
+        scissor:uniform2f('res', dw, dh)
+        scissor:uniform1f('bottom', 1 - (TOOLS_HEIGHT + yoff) / sh)
+
+        quad:xywh(sw/2, TOOLS_HEIGHT/2 + yoff, sw, TOOLS_HEIGHT)
+        quad:diffuse(0, 0, 0, 0.7)
+        quad:Draw()
+
+        local y = PADDING
+
+        for _, node in ipairs(flatNodes) do
+          if selectedNode == node then
+            scroll = clamp(y - TOOLS_HEIGHT/2, 0, math.max(treeHeight - TOOLS_HEIGHT + PADDING, 0))
+          end
+
+          y = y + NODE_HEIGHT
         end
-      end)
-      if not selectedExists then
-        selectedNode = rootNode
-      end
-      
-      --[[local tailNode = selectedNode
-      while tailNode do
-        if not nodeData[tailNode] then break end
-        tailNode = nodeData[tailNode].parent
-        if not nodeData[tailNode] then break end
-        nodeData[tailNode].open = true
-      end]]
+        treeHeight = y
 
-      bitmapText:SetShader(actorgen.Proxy.getRaw(scissor))
-      scissor:uniform2f('res', dw, dh)
-      scissor:uniform1f('bottom', 1 - (TOOLS_HEIGHT + yoff) / sh)
+        y = PADDING
 
-      quad:xywh(sw/2, TOOLS_HEIGHT/2 + yoff, sw, TOOLS_HEIGHT)
-      quad:diffuse(0, 0, 0, 0.7)
-      quad:Draw()
+        for _, node in ipairs(flatNodes) do
+          local data = getNode(node)
 
-      local y = PADDING
+          if selectedNode == node then
+            quad:diffuse(1, 1, 1, 0.2)
+            quad:xywh(sw/2, y + NODE_HEIGHT/2 + yoff - scroll, sw, NODE_HEIGHT)
+            quad:Draw()
+          end
 
-      for _, node in ipairs(flatNodes) do
-        if selectedNode == node then
-          scroll = clamp(y - TOOLS_HEIGHT/2, 0, math.max(treeHeight - TOOLS_HEIGHT + PADDING, 0))
-        end
-
-        y = y + NODE_HEIGHT
-      end
-      treeHeight = y
-
-      y = PADDING
-
-      for _, node in ipairs(flatNodes) do
-        local data = getNode(node)
-
-        if selectedNode == node then
-          quad:diffuse(1, 1, 1, 0.2)
-          quad:xywh(sw/2, y + NODE_HEIGHT/2 + yoff - scroll, sw, NODE_HEIGHT)
-          quad:Draw()
-        end
-
-        if node:GetHidden() then
-          bitmapText:diffuse(0.7, 0.7, 0.7, 1)
-        else
-          bitmapText:diffuse(1, 1, 1, 1)
-        end
-        bitmapText:settext(actorToString(node, true))
-        bitmapText:xy(LEFT_PADDING + data.depth * 10 + 16, y + yoff - scroll)
-        bitmapText:Draw()
-        if node.GetChildren then
-          bitmapText:diffuse(0.7, 0.7, 0.7, 1)
-          bitmapText:settext(data.open and 'v' or '>')
-          bitmapText:xy(LEFT_PADDING + data.depth * 10, y + yoff - scroll)
+          if node:GetHidden() then
+            bitmapText:diffuse(0.7, 0.7, 0.7, 1)
+          else
+            bitmapText:diffuse(1, 1, 1, 1)
+          end
+          bitmapText:settext(actorToString(node, true))
+          bitmapText:xy(LEFT_PADDING + data.depth * 10 + 16, y + yoff - scroll)
           bitmapText:Draw()
-        end
+          if node.GetChildren then
+            bitmapText:diffuse(0.7, 0.7, 0.7, 1)
+            bitmapText:settext(data.open and 'v' or '>')
+            bitmapText:xy(LEFT_PADDING + data.depth * 10, y + yoff - scroll)
+            bitmapText:Draw()
+          end
 
-        y = y + NODE_HEIGHT
+          y = y + NODE_HEIGHT
+        end
       end
     end
-  end
+  }
 end
-
-return M

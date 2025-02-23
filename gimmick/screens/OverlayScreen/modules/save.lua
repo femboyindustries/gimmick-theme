@@ -1,7 +1,5 @@
-local M = {}
-
 ---@param ctx Context
-function M.init(self, ctx)
+return function(ctx)
   local savefile = ctx:Sprite('Graphics/savefile.png')
   savefile:xy(sw - 32, sh - 32)
 
@@ -21,17 +19,17 @@ function M.init(self, ctx)
     savefile:Draw()
   end
 
-  return function(dt)
-    if drewSavefile then
-      drewSavefile = false
-      save.save()
+  return {
+    draw = function(dt)
+      if drewSavefile then
+        drewSavefile = false
+        save.save()
+      end
+      if save.shouldSaveNextFrame then
+        save.shouldSaveNextFrame = false
+        drewSavefile = true
+        draw()
+      end
     end
-    if save.shouldSaveNextFrame then
-      save.shouldSaveNextFrame = false
-      drewSavefile = true
-      draw()
-    end
-  end
+  }
 end
-
-return M

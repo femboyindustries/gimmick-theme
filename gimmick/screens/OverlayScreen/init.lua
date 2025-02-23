@@ -1,33 +1,36 @@
 -- overlay screens are funny in that after they're initialized, the lua state is
 -- reset at some point, rendering all lua data of the actors completely useless.
--- luckily i found a way to force evaluate actor235 a second time, but
+-- luckily i found a way to force evaluate actor235 a second time, by
 -- pretend-running through to get all the actors from the already-generated
 -- actorframe. yippee!
 
--- todo import order matters for event ordering. FOR NOW. i want to change this.
-local pauseModule = require 'gimmick.screens.OverlayScreen.pause'
-local devToolsModule = require 'gimmick.screens.OverlayScreen.devtools'
-local consoleModule = require 'gimmick.screens.OverlayScreen.console'
-local saveModule = require 'gimmick.screens.OverlayScreen.save'
-local imapModule = require 'gimmick.screens.OverlayScreen.imap'
 local tick       = require 'gimmick.lib.tick'
 local Scope      = require 'gimmick.scope'
 local inputs     = require 'gimmick.lib.inputs'
 
--- !!!!: actors built by `init` MUST remain deterministic.
--- in other words, make sure the actors initialized never change conditionally
+---@alias OverlayModule fun(ctx: Context, scope: Scope): ({ draw:(fun(dt: number)), z: number? })
+
+---@type OverlayModule[]
+local moduleSources = {
+  hotkeys = require 'gimmick.screens.OverlayScreen.modules.hotkeys',
+  pause = require 'gimmick.screens.OverlayScreen.modules.pause',
+  devtools = require 'gimmick.screens.OverlayScreen.modules.devtools',
+  console = require 'gimmick.screens.OverlayScreen.modules.console',
+  save = require 'gimmick.screens.OverlayScreen.modules.save',
+  imap = require 'gimmick.screens.OverlayScreen.modules.imap',
+}
+
+local modules = {}
 
 ---@param self ActorFrame
 ---@param ctx Context
 ---@param scope Scope
 local function init(self, ctx, scope)
-  local drawConsole = consoleModule.init(self, ctx, scope)
-  local drawSave = saveModule.init(self, ctx)
-  local drawImap = imapModule.init(self, ctx)
-  local drawPause = pauseModule.init(self, ctx, scope)
-  local drawDevTools = devToolsModule.init(self, ctx, scope)
-
   local lastdw, lastdh = dw, dh
+
+  for key, module in pairs(moduleSources) do
+    modules[key] = module(ctx, scope)
+  end
 
   self:SetUpdateFunction(function()
     if save.data.settings.prevent_stretching then
@@ -61,18 +64,14 @@ local function init(self, ctx, scope)
   setDrawFunctionWithDT(self, function(dt)
     tick:update(dt)
 
-    drawPause(dt)
-    drawConsole(dt)
-    drawDevTools(dt)
-    drawSave(dt)
-    drawImap(dt)
+    for _, module in ipairs(modules) do
+      if module.draw then module.draw(dt) end
+    end
   end)
 end
 
 return {
-  modules = {
-    pause = pauseModule
-  },
+  modules = modules,
   overlay = {
     init = function(self)
       self:removecommand('Init')
@@ -115,57 +114,6 @@ return {
       end)
 
       init(self, ctx, scope)
-
-      scope.event:on('keypress', function(device, key)
-        if device == InputDevice.Key and key == 'F5' then
-          if inputs.rawInputs[device]['left ctrl'] or inputs.rawInputs[device]['left right'] then
-            print('Ctrl+F5 pressed; Clearing everything and reloading')
-
-            local search = gimmick.package.search
-
-            _G.gimmick = nil
-            _G.paw = nil
-
-            setfenv(2, _G)
-
-            local filename = 'Scripts/00 gimmick.lua'
-            for prefix in string.gfind(search, '[^;]+') do
-              -- get the file path
-              local filepath = prefix .. filename
-              -- check if file exists
-              if GAMESTATE:GetFileStructure(filepath) then
-                local res, err = pcall(dofile, filepath)
-                if not res then
-                  Debug(err)
-                end
-              end
-            end
-
-            GAMESTATE:ApplyGameCommand('stopmusic')
-            SCREENMAN:SetNewScreen(SCREENMAN:GetTopScreen():GetName())
-            SCREENMAN:SystemMessageNoAnimate('Ctrl+F5 pressed; Theme reloaded')
-          else
-            print('F5 pressed; Reloading screens')
-
-            for _, v in ipairs(SCREENMAN:GetTopScreen():GetChildren()) do
-              v:playcommand('Off')
-            end
-
-            for k in pairs(gimmick.s) do
-              rawset(gimmick.s, k, nil)
-            end
-            for k in pairs(gimmick.package.loaded) do
-              if startsWith(k, 'gimmick.screens.') then
-                gimmick.package.loaded[k] = nil
-              end
-            end
-
-            GAMESTATE:ApplyGameCommand('stopmusic')
-            SCREENMAN:SetNewScreen(SCREENMAN:GetTopScreen():GetName())
-            SCREENMAN:SystemMessageNoAnimate('F5 pressed; Screens reloaded')
-          end
-        end
-      end)
 
       actorgen.ready(ctx)
       -- force-evaluate the actors.xml
