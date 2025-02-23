@@ -244,7 +244,7 @@ end
 function player.onJudgment(self, grade, pn)
   if not pn then
       -- todo: store this info _somehow_ so it doesn't have to get called each time
-    pn = player.getPlayerNumber(self:GetParent() --[[@as Player]])
+    pn = player.getPlayerNumber(self:GetParent():GetParent() --[[@as Player]])
   end
   local tween = player.getJudgementTween(pn)
   if not tween then return end
@@ -255,7 +255,7 @@ end
 function player.onHoldJudgment(self, grade, pn)
   if not pn then
       -- todo: store this info _somehow_ so it doesn't have to get called each time
-    pn = player.getPlayerNumber(self:GetParent() --[[@as Player]])
+    pn = player.getPlayerNumber(self:GetParent():GetParent() --[[@as Player]])
   end
   local tween = player.getHoldJudgementTween(pn)
   if not tween then return end
