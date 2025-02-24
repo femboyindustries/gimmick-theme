@@ -64,7 +64,7 @@ local function init(self, ctx, scope)
   setDrawFunctionWithDT(self, function(dt)
     tick:update(dt)
 
-    for _, module in ipairs(modules) do
+    for _, module in pairs(modules) do
       if module.draw then module.draw(dt) end
     end
   end)
