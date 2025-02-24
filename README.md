@@ -3,14 +3,21 @@
 A minimal NotITG v4.3.0 theme focused on developer simplicity and modern
 solutions.
 
-Gimmick is meant to be partly a playground, and partly an example for other
-developers aiming to make a theme with no idea where to begin.
+The intent is to make Gimmick a fully feature-complete theme, from regular
+gameplay to modfile creation to irregular gameplay, but it's still in its early
+stages. For now, it functions partly as a playground, and partly as an actual
+working theme.
 
 ## Why is it called "gimmick"?
 
-Because I really don't know if any of what I'm doing is going to stick. The
-stuff presented here is highly experimental and prone to breaking under
-pressure!
+In a sense, the entire theme's structure, funcionality and ideas are big,
+expermiental and highly prone to breaking gimmicks. Noone knows if any of them will
+stick, but whatever sticks is at the very least neat.
+
+## Hey isn't that name kind of close to the 1992 hit Sunsoft videogame "Gimmick!"
+
+Yeah I think I was subconsciously inspired by that and didn't realize sorry.
+You'll have to put up with that being confusing
 
 ## Compatibility
 
@@ -34,7 +41,7 @@ specific quirks you may encounter.
 
 ### Actors
 
-For actor initialization, gimmick uses [actor235](https://github.com/femboyindustries/gimmick-theme/blob/main/gimmick/lib/actor235.lua),
+For actor initialization, gimmick uses [actor235](gimmick/lib/actor235.lua),
 a work-in-progress (mostly complete) port of [Uranium Template](https://git.oat.zone/oat/uranium-template)'s
 actor system. For the most part, you can refer to [its documentation](https://git.oat.zone/oat/uranium-template/src/branch/main/MANUAL.md#user-content-defining-actors),
 but it won't always align since actor235 has been greatly modified and rewritten
@@ -52,7 +59,7 @@ initialized outside of a context_, as there's no way for you to load an actor
 during runtime, so you will need a `Context` in order to initialize actors.
 
 In gimmick, `Context`s are created during screen initialization, and are only
-usable in said screen initialization. Usually this means that you'll be given
+usable in said screen's initialization. Usually this means that you'll be given
 a `Context` whenever you define a screen:
 
 ```lua
@@ -83,9 +90,9 @@ ctx:addChild(frame, child)
 passes and initialization completes, it is _locked_ and accessing it will error.
 
 ```lua
--- DON'T DO THIS
 local quad = ctx:Quad()
 quad:addcommand('Init', function()
+  -- DON'T DO THIS
   local otherQuad = ctx:Quad()
 end)
 ```
@@ -95,6 +102,22 @@ local storedContext
 
 return function(ctx)
   storedContext = ctx
+end
+```
+
+Similarly, **do not** store actors from the context, as accessing them after the
+player has left the screen will net you a very hard to debug AV.
+
+```lua
+local storedActor
+
+local function update()
+  -- ticking AV timebomb
+  storedActor:xy(scx, scy)
+end
+
+return function(ctx)
+  storedActor = ctx:Quad()
 end
 ```
 
