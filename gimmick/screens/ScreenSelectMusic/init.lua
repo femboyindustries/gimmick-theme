@@ -5,6 +5,8 @@ local MusicWheel = require 'gimmick.screens.ScreenSelectMusic.MusicWheel'
 local TextPool   = require 'gimmick.textpool'
 
 return {
+  OutDur = 2,
+
   MusicWheel = MusicWheel.MusicWheel(),
   Banner = {
     ---@param bn FadingBanner
@@ -19,14 +21,37 @@ return {
   overlay = gimmick.ActorScreen(function(self, ctx, scope)
     MusicWheel.init(ctx)
 
+    _QUIPS = {
+      {"PLEASE", "WAIT"},
+      {"GET","READY"},
+      {"PREPARE","TO STEP"},
+      {"\"SCHALL\"","WE STEP?"},
+      {"","cheese"},
+      {"NSERT", "POO KEY"},
+      {"READY","UP"},
+      {"TIME TO","STEP UP"},
+      {"LET US","COMMENCE FORTH"},
+      {"Whatever,","go my scarab"},
+      {"TOP TEXT","BOTTOM TEXT"}
+      
+    }
+    _QUIPS_INDEX = math.random(2,#_QUIPS)
+    --_QUIPS_INDEX = 11
+
+    
+
+    
+
     local openAux = scope.tick:aux(0)
     openAux:ease(0, 0.5, outExpo, 1)
-    scope.event:on('off', function() openAux:ease(0, 0.6, inBack, 0) end)
+    scope.event:on('off', function()
+       openAux:ease(0, 0.6, inBack, 0)
+    end)
 
     local bar = barlib.new(ctx)
     local bar_af = bar.actorframe
     local bar_ease = scope.tick:easable(0,24)
-    bar_af:xy(scx * 0.5, scy * 1.5)
+    bar_af:xy(scx * 0.5, sh * 0.95)
 
     local wheel = MeterWheel.new(ctx, scope)
     
@@ -58,6 +83,16 @@ return {
     local statR = TextPool.new(ctx, FONTS.sans_serif, nil, function(self) self:align(1, 0.5); self:zoom(0.28); self:shadowlength(0); self:diffuse(0.6, 0.6, 0.6, 1) end)
     local statL = TextPool.new(ctx, FONTS.sans_serif, nil, function(self) self:align(0, 0.5); self:zoom(0.32); self:shadowlength(0) end)
 
+    local function chartStatsConf(elf)
+      --haha elf
+
+      --like the movie
+      elf:zoom(0.28) elf:shadowlength(0)
+    end
+
+    local chartStatsLabel = TextPool.new(ctx,FONTS.sans_serif, nil, function (self) chartStatsConf(self) self:halign(1) end)
+    local chartStatsValue = TextPool.new(ctx,FONTS.sans_serif, nil, function (self) chartStatsConf(self) self:halign(0) end)
+
     ---@type Song
     local song = nil
     ---@alias StepSet {[1]: number, [2]: Steps, locked: boolean}
@@ -66,6 +101,8 @@ return {
     local difficulty = nil
 
     --local test = ctx:Sprite('Graphics/_missing.png')
+
+    local doorAnim = gimmick.common.doors(ctx, scope)
 
     setDrawFunctionWithDT(self, function(dt)
       MusicWheel.update(dt)
@@ -194,6 +231,7 @@ return {
         diffRepText:settext(string.upper(diff.name) .. ' // ')
         diffRepText:diffuse(diff.text:unpack())
         quad:diffuse(diff.color:unpack())
+        stripes_color = diff.color
       else
         diffRepText:settext('SELECT A SONG // ')
         diffRepText:diffuse(0, 0, 0, 1)
@@ -249,8 +287,60 @@ return {
           value:Draw()
         end
 
+        --probably not good for performance
+        --whatever. i can optimize it later if needed
+        local a1 = SCREENMAN()
+        local a2 = a1(24)
+        if a2 then
+          local Pane = a2(2) --[[@as ActorFrame]]
+          
+          local numSteps = Pane('SongNumStepsText'):GetText()
+          local stepLabel = chartStatsLabel:get('STEPS')
+          local stepValue = chartStatsValue:get(numSteps)
+          stepLabel:xy(scx*0.15,scy*1.3)
+          stepValue:xy(scx*0.16,scy*1.3)
+
+          local jumps = Pane('SongJumpsText'):GetText()
+          local jumpLabel = chartStatsLabel:get('JUMPS')
+          local jumpValue = chartStatsValue:get(jumps)
+          jumpLabel:xy(scx*0.15,scy*1.37)
+          jumpValue:xy(scx*0.16,scy*1.37)
+
+          local rolls = Pane('SongRollsText'):GetText()
+          local rollsLabel = chartStatsLabel:get('ROLLS')
+          local rollsValue = chartStatsValue:get(rolls)
+          rollsLabel:xy(scx*0.15,scy*1.44)
+          rollsValue:xy(scx*0.16,scy*1.44)
+
+          local mines = Pane('SongMinesText'):GetText()
+          local minesLabel = chartStatsLabel:get('MINES')
+          local minesValue = chartStatsValue:get(mines)
+          minesLabel:xy(scx*0.15,scy*1.51)
+          minesValue:xy(scx*0.16,scy*1.51)
+
+          local hands = Pane('SongHandsText'):GetText()
+          local handsLabel = chartStatsLabel:get('HANDS')
+          local handsValue = chartStatsValue:get(hands)
+          handsLabel:xy(scx*0.15,scy*1.58)
+          handsValue:xy(scx*0.16,scy*1.58)
+
+          stepLabel:Draw()
+          stepValue:Draw()
+          jumpLabel:Draw()
+          jumpValue:Draw()
+          rollsLabel:Draw()
+          rollsValue:Draw()
+          minesLabel:Draw()
+          minesValue:Draw()
+          handsLabel:Draw()
+          handsValue:Draw()
+        end
 
       end
+
+      doorAnim()
+
+
     end)
   end),
   underlay = gimmick.ActorScreen(function(self, ctx)

@@ -97,6 +97,7 @@ function gimmick.ActorScreen(initFunc)
 
       scope.event:on('press', function(pn, btn)
         if btn == 'Back' then
+          print(scope.name)
           print('Back key pressed, simulating OffCommand')
           self:queuecommand('Off')
         end

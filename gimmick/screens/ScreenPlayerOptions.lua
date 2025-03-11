@@ -412,6 +412,7 @@ return {
     local res = optionsTable[opts]
 
     local drawOverlay = nil
+    local doors = gimmick.common.doors(ctx,scope,false,0)
 
     if res and res.overlay then
       drawOverlay = res.overlay(self, ctx)
@@ -442,6 +443,7 @@ return {
       if drawOverlay then
         drawOverlay()
       end
+      doors()
     end)
 
     --local testText = ctx:BitmapText('common','Fart')
