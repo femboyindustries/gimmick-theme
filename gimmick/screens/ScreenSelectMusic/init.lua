@@ -4,6 +4,8 @@ local barlib = require 'gimmick.bar'
 local MusicWheel = require 'gimmick.screens.ScreenSelectMusic.MusicWheel'
 local TextPool   = require 'gimmick.textpool'
 
+local SelectOptionsPrompt = nil
+
 return {
   OutDur = 2,
 
@@ -102,7 +104,7 @@ return {
 
     --local test = ctx:Sprite('Graphics/_missing.png')
 
-    local doorAnim = gimmick.common.doors(ctx, scope)
+    local doorAnim,settext1,settext2 = gimmick.common.doors(ctx, scope,nil,nil,SelectOptionsPrompt)
 
     setDrawFunctionWithDT(self, function(dt)
       MusicWheel.update(dt)
@@ -338,6 +340,11 @@ return {
 
       end
 
+      if SelectOptionsPrompt and SelectOptionsPrompt:getstate() == 1 then
+        settext1("PLEASE","LOADING")
+        settext2("WAIT","OPTIONS")
+      end
+
       doorAnim()
 
 
@@ -349,4 +356,11 @@ return {
   end),
   footer = gimmick.ActorScreen(function(self, ctx)
   end),
+
+  ---@param fb_actor Sprite Fallback Actor from Stepmania
+  doorclose = function (fb_actor)
+    fb_actor:hidden(1)
+    SelectOptionsPrompt = fb_actor
+  end
+
 }

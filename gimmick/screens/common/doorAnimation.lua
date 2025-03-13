@@ -1,10 +1,8 @@
-local USE_SHADER = false
-
 ---@param ctx Context
 ---@param scope Scope
 ---@param invertease boolean|nil
 ---@param screenType number|nil
-function gimmick.common.doors(ctx, scope, invertease, screenType)
+function gimmick.common.doors(ctx, scope, invertease, screenType,OptionsPrompt)
     if not invertease then invertease = false end
     if not screenType then screenType = -1 end
 
@@ -116,8 +114,9 @@ function gimmick.common.doors(ctx, scope, invertease, screenType)
     local stripes_color = hex('#FFF')
 
     setDrawFunctionWithDT(outT, function(dt)
-        if GAMESTATE:GetCurrentSteps(0):GetDifficulty() then
-            stripes_color = DIFFICULTIES[GAMESTATE:GetCurrentSteps(0):GetDifficulty()].color
+        local cur_steps = GAMESTATE:GetCurrentSteps(0)
+        if cur_steps and cur_steps:GetDifficulty() then
+            stripes_color = DIFFICULTIES[cur_steps:GetDifficulty()].color
         end
         outTbg:diffuse(hex("#262626"):unpack())
         outTbg:stretchto(0, 0, sw * 2, sh)
@@ -192,5 +191,11 @@ function gimmick.common.doors(ctx, scope, invertease, screenType)
 
     return function()
         outActors:Draw()
+    end,function (str,str2)
+        outTtext:settext(str)
+        outQuip1:settext(str2)
+    end,function (str,str2)
+        outBtext:settext(str)
+        outQuip2:settext(str2)
     end
 end
