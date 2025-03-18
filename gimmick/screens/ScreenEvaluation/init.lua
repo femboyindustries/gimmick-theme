@@ -4,6 +4,7 @@ local wheel = require 'gimmick.lib.meterWheel'
 local mascots = require 'gimmick.mascots'
 local save = require 'gimmick.save'
 local AWESOME = false
+local offsetPlot = require 'gimmick.screens.ScreenEvaluation.offsetPlot'
 
 ---@type {string: string, file: string}
 local grades = {
@@ -97,7 +98,6 @@ local bn_width = 278
 local bn_height = 109
 local bn_x = scx * 0.35
 local bn_y = scy * 0.3
-
 
 return {
   Init = function(self) Trace('theme.com') end,
@@ -265,6 +265,8 @@ return {
 
     local rateOverlay = ctx:Quad()
 
+    local offsetPlot = offsetPlot(ctx,scope)
+
     setDrawFunctionWithDT(self, function(dt)
       self:diffusealpha(opacity.value)
 
@@ -344,8 +346,15 @@ return {
         --local paths = mascots.getPaths(save.data.settings.mascot)
         mascot:scaletofit(0, 0, sw * 0.4, sh * 0.4)
         mascot:valign(0)
-        mascot:xy(scx, scy * 0.9)
+        mascot:xy(scx*0.85, scy*1.1)
         mascot:Draw()
+      end
+
+      if offsetPlot then
+      offsetPlot:xy(scx*1.5,sh*0.85)
+      offsetPlot:Draw()
+      else
+        print("offsetPlot is nil")
       end
     end)
   end),
