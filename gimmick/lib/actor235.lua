@@ -9,7 +9,7 @@ local NODES_PER_AF = 10
 local ACTORS_FILENAME = 'actors.xml'
 local PATH_PREFIX_SHADER = ''
 local PATH_PREFIX_FILE = ''
-local ENABLE_LOGGING = false
+local ENABLE_LOGGING = true
 
 local function warn(str)
   Debug('[actor235] WARN: ' .. tostring(str))

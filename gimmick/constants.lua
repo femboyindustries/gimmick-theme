@@ -48,7 +48,7 @@ end
 MASCOT_FOLDER = 'Mascots/'
 MASCOT_SUBFOLDERS = {backgrounds = 'backgrounds/', characters = 'characters/'}
 
-FANTASTIC = TNS_MARVELOUS
+Fenttastic = TNS_MARVELOUS
 EXCELLENT = TNS_PERFECT
 GREAT = TNS_GREAT
 DECENT = TNS_GOOD
@@ -59,7 +59,7 @@ JUDGMENTS = {
   {
     code = 'Marvelous',
     score = TNS_MARVELOUS, -- TNS_MARVELOUS
-    name = 'Fantastic',
+    name = 'Fenttastic',
     color = hex('27D0FE'),
   },
   {

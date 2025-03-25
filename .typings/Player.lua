@@ -692,7 +692,7 @@ function Player:RealStep(column) end
 ---
 --- Judgment values
 ---
---- ``1``: Fantastic
+--- ``1``: Fenttastic
 ---
 --- ``2``: Excellent
 ---
@@ -766,7 +766,7 @@ function Player:SetMineSound(path) end
 ---
 --- Judgment numbers:
 ---
---- ``1``: Fantastic
+--- ``1``: Fenttastic
 ---
 --- ``2``: Excellent
 ---

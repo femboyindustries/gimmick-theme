@@ -99,6 +99,8 @@ local bn_height = 109
 local bn_x = scx * 0.35
 local bn_y = scy * 0.3
 
+local max_near_miss = 3
+
 return {
   Init = function(self) Trace('theme.com') end,
 
@@ -148,14 +150,15 @@ return {
       if n[3] == 'M' then minesN = minesN + 1 end
     end
 
-    ---@type { name: string?, value: string?, total: string?, color: color?}[]
+    ---@type { name: string?, value: string?, total: string?, color: color?, visible: boolean?, played: boolean?}[]
     local fields = {}
 
     for _, judg in ipairs(JUDGMENTS) do
       table.insert(fields, {
         name = judg.name,
         value = tostring(stats:GetTapNoteScores(judg.score)),
-        color = judg.color
+        color = judg.color,
+        visible = false
       })
     end
 
@@ -166,17 +169,33 @@ return {
       name = 'Holds',
       value = stats:GetHoldNoteScores(2), -- HNS_OK
       total = holdsN,
-      color = hex('#A0A0A0')
+      color = hex('#A0A0A0'),
+      visible = false
     })
     table.insert(fields, {
       name = 'Mines',
       value = stats:GetTapNoteScores(1), -- TNS_HITMINE
       total = minesN,
-      color = hex('#A0A0A0')
+      color = hex('#A0A0A0'),
+      visible = false
     })
 
     local perc = stats:GetPercentDancePoints() * 100
     local score = string.format('%05.2f', math.max(perc, 0))
+    local nearMiss = false
+
+    local causes = {}
+    local score_num = tonumber(score)
+    --if total amount of non Fantastic Counts is 3 or less consider it to be a near_miss and laugh at the user
+    if score_num < 100 and (fields[2].value + fields[3].value + fields[4].value + fields[5].value + fields[6].value) <= max_near_miss then
+      nearMiss = true
+      --save the judgements that "caused" the near miss for later
+      for i = 2, 6 do
+        if tonumber(fields[i].value) > 0 then
+          table.insert(causes, fields[i])
+        end
+      end
+    end
 
     local title = song:GetDisplayMainTitle()
     local subtitle = song:GetDisplaySubTitle()
@@ -191,7 +210,6 @@ return {
 
     for i, field in ipairs(fields) do
       local af = ctx:ActorFrame()
-
       local name = ctx:BitmapText(FONTS.sans_serif, field.name or '')
       name:xy(inside_spacing * 0.5, 0)
       name:halign(0)
@@ -208,6 +226,15 @@ return {
 
       af:y((item_spacing * i) - (item_spacing * (#fields + 1) * 0.5))
       af:halign(0.5)
+      af:SetName(field.name)
+
+      local v = field
+      setDrawFunctionWithDT(af, function(time)
+        if v and v.visible then
+          name:Draw()
+          value:Draw()
+        end
+      end)
 
       ctx:addChild(judge_counts, af)
     end
@@ -259,19 +286,105 @@ return {
       mascot = ctx:Sprite(mascot_path)
     end
 
+    local miss_rotation = math.random(-10, 10)
+    ---@param scope Scope
+    ---@param name string
+    ---@param sucks number?
+    function appearAnimation(scope, name, sucks)
+      if not sucks then sucks = 0 end
+
+      local actor = judge_counts:GetChild(name)
+      scope.tick:ease(0, 0.2, outBack, 2, 1, function(p)
+        if not actor then return end
+        actor:zoom(p)
+        actor:x2((-p + 1) * 100)
+        if sucks ~= 0 then
+          actor:rotationz(sucks)
+          actor:y2(4)
+          actor:x2(-10)
+        end
+      end)
+    end
+
     --print(getFolderContents('Mascots/grades/'..save.data.settings.mascot..'/',true))
 
     gradeActor = ctx:Sprite('Graphics/Grades/' .. grades[grade_int].file)
+    gradeActor:hidden(1)
 
     local rateOverlay = ctx:Quad()
 
-    local offsetPlot = offsetPlot(ctx,scope)
+    local offsetPlot = offsetPlot(ctx, scope)
+
+    local timer = 0
+
+    local inception = ctx:ActorSound('Sounds/inception.ogg')
+    local soda = ctx:ActorSound('Sounds/boowomp.ogg')
+    local tada = ctx:ActorSound('Sounds/tada.ogg')
+
+    --youll never see this string anyways and if you do something is going very wrong
+    local full_score = pool:get("uh oh")
+    scope.tick:ease(2, 0.3, outBack, 1.5, 1, function(p) full_score:zoom2(p) end)
+    scope.tick:ease(2, 0.3, outBack, -300, 0, function(p) gradeActor:x2(p) end)
+    scope.tick:func(2, function()
+      tada:get():Play()
+      gradeActor:hidden(0)
+    end)
+
+    if save.data.settings.mascot_enabled then
+      local timescale = 5
+      scope.tick:perframe(0,999999,function (t)
+        if mascot then
+          mascot:x2(math.sin(t*timescale)*15)
+          mascot:y2(math.abs(math.cos((t*timescale)-math.pi)*10)*-1)
+          mascot:rotationz(math.cos(t*timescale+math.pi)*5)
+        end
+      end)
+    end
 
     setDrawFunctionWithDT(self, function(dt)
+      timer = timer + dt
+
+      --i wouldnt need this if scope.tick:func delay worked properly
+      for i, v in ipairs(fields) do
+        local skipthisone = false
+        if timer > i * 0.17 and not v.played then
+          --skip animation for near miss causes
+          if nearMiss and contains(causes, v) then
+            skipthisone = true
+          end
+
+          if not skipthisone then
+            inception:get():Play()
+            v.visible = true
+            v.played = true
+            appearAnimation(scope, v.name)
+          end
+        end
+      end
+
+      if nearMiss then
+        for i, v in ipairs(causes) do
+          if timer > 3.5 and not v.played then
+            v.visible = true
+            v.played = true
+            soda:get():Play()
+            local random_float
+            repeat
+              random_float = math.random() * 8 - 4 -- Generates a float between -4 and 4
+            until random_float ~= 0
+            appearAnimation(scope, v.name, random_float)
+          end
+        end
+      end
+
+
       self:diffusealpha(opacity.value)
+      local display_score = score
+      if timer < 2 then
+        display_score = string.format('%05.2f', math.random() + math.random(1, 100))
+      end
 
-
-      local full_score = pool:get(score)
+      full_score:settext(display_score)
       full_score:halign(0.5)
       full_score:valign(0)
       full_score:zoom(1.4)
@@ -346,13 +459,13 @@ return {
         --local paths = mascots.getPaths(save.data.settings.mascot)
         mascot:scaletofit(0, 0, sw * 0.4, sh * 0.4)
         mascot:valign(0)
-        mascot:xy(scx*0.85, scy*1.1)
+        mascot:xy(scx * 0.85, scy * 1.1)
         mascot:Draw()
       end
 
       if offsetPlot then
-      offsetPlot:xy(scx*1.5,sh*0.85)
-      offsetPlot:Draw()
+        offsetPlot:xy(scx * 1.5, sh * 0.85)
+        offsetPlot:Draw()
       else
         print("offsetPlot is nil")
       end

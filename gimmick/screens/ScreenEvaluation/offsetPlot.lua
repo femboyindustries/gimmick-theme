@@ -549,7 +549,7 @@ return function(ctx, scope)
   local regionMSs = ctx:BitmapText(FONTS.sans_serif)
   ctx:addChild(host, regionMSs)
 
-  local judgements = {regionFNs,regionEXs,regionGRs,regionDCs,regionWOs,regionMSs}
+  local judgements = { regionFNs, regionEXs, regionGRs, regionDCs, regionWOs, regionMSs }
 
   local judgementHits = ctx:Polygon()
   judgementHits:SetDrawMode('Quads')
@@ -984,7 +984,6 @@ return function(ctx, scope)
       oplot_hidden[pn] = oplot_hidden[pn] * -1
       scope.event:call('UpdateSpellDisplayP2')
     end
-
   end)
 
   scope.event:on('UpdateSpellDisplayP1', function()
@@ -1050,7 +1049,7 @@ return function(ctx, scope)
       scrollbarLocation:hidden(0)
       playCount:hidden(1)
       resetCount:hidden(1)
-      
+
       regionMinimap:hidden(0)
 
       if not GAMESTATE:IsCourseMode() then
@@ -1081,54 +1080,46 @@ return function(ctx, scope)
     end
   end)
 
+  oplot_hidden[1] = 1
+  host:hidden(0)
+  scope.event:call('UpdateSpellDisplayP1')
 
-  scope.event:on('UpdateSpellDisplayP2', function()
-    local pn = 1
+  setDrawFunctionWithDT(host, function(dt)
+    background:Draw()
+    --unsure what this one does
+    --unlabeledQuad1:Draw()
+    regionMarkers:Draw()
+    centerBar:Draw()
+    judgementLines:Draw()
 
-    --line 450-460
-    
-  end)
+    --TODO: Track life
+    --BX_CustomLifeGraph_1bg:Draw()
+    --BX_CustomLifeGraph_1:Draw()
 
-  setDrawFunctionWithDT(host,function (dt)
+    judgementCountFrame:Draw()
+    scrollbarDivider:Draw()
+    scrollbarBg:Draw()
+    scrollbarLocation:Draw()
+    regionTitle:Draw()
+    regionDifficulty:Draw()
+    regionScore:Draw()
+    regionFNs:Draw()
+    regionEXs:Draw()
+    regionGRs:Draw()
+    regionDCs:Draw()
+    regionWOs:Draw()
+    regionMSs:Draw()
+    judgementHits:Draw()
 
+    BX_CustomTimingGraph1:Draw()
+    resetContainer:Draw()
 
-
-      background:Draw()
-      --unsure what this one does
-      --unlabeledQuad1:Draw()
-      regionMarkers:Draw()
-      centerBar:Draw()
-      judgementLines:Draw()
-      
-      --TODO: Track life
-      --BX_CustomLifeGraph_1bg:Draw()
-      --BX_CustomLifeGraph_1:Draw()
-      
-      judgementCountFrame:Draw()
-      scrollbarDivider:Draw()
-      scrollbarBg:Draw()
-      scrollbarLocation:Draw()
-      regionTitle:Draw()
-      regionDifficulty:Draw()
-      regionScore:Draw()
-      regionFNs:Draw()
-      regionEXs:Draw()
-      regionGRs:Draw()
-      regionDCs:Draw()
-      regionWOs:Draw()
-      regionMSs:Draw()
-      judgementHits:Draw()
-      
-      BX_CustomTimingGraph1:Draw()
-      resetContainer:Draw()
-
-      lateMarker:Draw()
-      earlyMarker:Draw()
-      playCount:Draw()
-      resetCount:Draw()
-      freakyOffsetStats:Draw()
-      --regionMinimap:Draw()
-
+    lateMarker:Draw()
+    earlyMarker:Draw()
+    playCount:Draw()
+    resetCount:Draw()
+    freakyOffsetStats:Draw()
+    --regionMinimap:Draw()
   end)
 
   return host

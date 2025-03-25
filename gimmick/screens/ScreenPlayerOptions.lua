@@ -424,7 +424,7 @@ return {
       hitTimer = 1
       for pn = 1, 2 do
         local judge = pickWeighted({
-          [FANTASTIC] = 1,
+          [Fenttastic] = 1,
           [EXCELLENT] = 0.6,
           [GREAT] = 0.1,
           [WAYOFF] = 0.01,
