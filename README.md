@@ -105,7 +105,7 @@ return function(ctx)
 end
 ```
 
-Similarly, **do not** store actors from the context, as accessing them after the
+Similarly, **do not** store actors from the context outside the ctx function, as accessing them after the
 player has left the screen will net you a very hard to debug AV.
 
 ```lua

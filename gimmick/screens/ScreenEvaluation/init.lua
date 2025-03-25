@@ -162,7 +162,6 @@ return {
       })
     end
 
-    --table.insert(fields, {})
     introduceEntropyIntoUniverse()
 
     table.insert(fields, {
@@ -313,7 +312,7 @@ return {
 
     local rateOverlay = ctx:Quad()
 
-    local offsetPlot = offsetPlot(ctx, scope)
+    --local offsetPlot = offsetPlot(ctx, scope)
 
     local timer = 0
 
@@ -464,8 +463,8 @@ return {
       end
 
       if offsetPlot then
-        offsetPlot:xy(scx * 1.5, sh * 0.85)
-        offsetPlot:Draw()
+        --offsetPlot:xy(scx * 1.5, sh * 0.85)
+        --offsetPlot:Draw()
       else
         print("offsetPlot is nil")
       end

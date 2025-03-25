@@ -92,8 +92,8 @@ return {
       elf:zoom(0.28) elf:shadowlength(0)
     end
 
-    local chartStatsLabel = TextPool.new(ctx,FONTS.sans_serif, nil, function (self) chartStatsConf(self) self:halign(1) end)
-    local chartStatsValue = TextPool.new(ctx,FONTS.sans_serif, nil, function (self) chartStatsConf(self) self:halign(0) end)
+    local chartStatsLabel = TextPool.new(ctx,FONTS.sans_serif, 1, function (self) chartStatsConf(self) self:halign(1) end)
+    local chartStatsValue = TextPool.new(ctx,FONTS.sans_serif, 1, function (self) chartStatsConf(self) self:halign(0) end)
 
     ---@type Song
     local song = nil
@@ -297,45 +297,64 @@ return {
           local Pane = a2(2) --[[@as ActorFrame]]
           
           local numSteps = Pane('SongNumStepsText'):GetText()
-          local stepLabel = chartStatsLabel:get('STEPS')
-          local stepValue = chartStatsValue:get(numSteps)
-          stepLabel:xy(scx*0.15,scy*1.3)
-          stepValue:xy(scx*0.16,scy*1.3)
+          if numSteps then
+            local stepLabel = chartStatsLabel:get('STEPS')
+            local stepValue = chartStatsValue:get(numSteps)
+            stepLabel:xy(scx*0.15,scy*1.3)
+            stepValue:xy(scx*0.16,scy*1.3)
 
+            stepLabel:Draw()
+            stepValue:Draw()
+          end
+          
           local jumps = Pane('SongJumpsText'):GetText()
-          local jumpLabel = chartStatsLabel:get('JUMPS')
-          local jumpValue = chartStatsValue:get(jumps)
-          jumpLabel:xy(scx*0.15,scy*1.37)
-          jumpValue:xy(scx*0.16,scy*1.37)
+          if jumps then
+            local jumpLabel = chartStatsLabel:get('JUMPS')
+            local jumpValue = chartStatsValue:get(jumps)
+            jumpLabel:xy(scx*0.15,scy*1.37)
+            jumpValue:xy(scx*0.16,scy*1.37)
+  
+            jumpLabel:Draw()
+            jumpValue:Draw()
+          end
 
           local rolls = Pane('SongRollsText'):GetText()
-          local rollsLabel = chartStatsLabel:get('ROLLS')
-          local rollsValue = chartStatsValue:get(rolls)
-          rollsLabel:xy(scx*0.15,scy*1.44)
-          rollsValue:xy(scx*0.16,scy*1.44)
+          if rolls then
+            local rollsLabel = chartStatsLabel:get('ROLLS')
+            local rollsValue = chartStatsValue:get(rolls)
+            rollsLabel:xy(scx*0.15,scy*1.44)
+            rollsValue:xy(scx*0.16,scy*1.44)
 
+            rollsLabel:Draw()
+            rollsValue:Draw()
+          end
+          
           local mines = Pane('SongMinesText'):GetText()
-          local minesLabel = chartStatsLabel:get('MINES')
-          local minesValue = chartStatsValue:get(mines)
-          minesLabel:xy(scx*0.15,scy*1.51)
-          minesValue:xy(scx*0.16,scy*1.51)
+          if mines then
+            local minesLabel = chartStatsLabel:get('MINES')
+            local minesValue = chartStatsValue:get(mines)
+            minesLabel:xy(scx*0.15,scy*1.51)
+            minesValue:xy(scx*0.16,scy*1.51)
+  
+            minesLabel:Draw()
+            minesValue:Draw()
+          end
 
           local hands = Pane('SongHandsText'):GetText()
-          local handsLabel = chartStatsLabel:get('HANDS')
-          local handsValue = chartStatsValue:get(hands)
-          handsLabel:xy(scx*0.15,scy*1.58)
-          handsValue:xy(scx*0.16,scy*1.58)
+          if hands then
+            local handsLabel = chartStatsLabel:get('HANDS')
+            local handsValue = chartStatsValue:get(hands)
+            handsLabel:xy(scx*0.15,scy*1.58)
+            handsValue:xy(scx*0.16,scy*1.58)
+  
+            handsLabel:Draw()
+            if handsValue then
+              print(handsValue)
+              handsValue:Draw()  
+            end
+            
+          end
 
-          stepLabel:Draw()
-          stepValue:Draw()
-          jumpLabel:Draw()
-          jumpValue:Draw()
-          rollsLabel:Draw()
-          rollsValue:Draw()
-          minesLabel:Draw()
-          minesValue:Draw()
-          handsLabel:Draw()
-          handsValue:Draw()
         end
 
       end

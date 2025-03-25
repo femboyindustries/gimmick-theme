@@ -9,7 +9,7 @@ local NODES_PER_AF = 10
 local ACTORS_FILENAME = 'actors.xml'
 local PATH_PREFIX_SHADER = ''
 local PATH_PREFIX_FILE = ''
-local ENABLE_LOGGING = true
+local ENABLE_LOGGING = false
 
 local function warn(str)
   Debug('[actor235] WARN: ' .. tostring(str))
@@ -187,6 +187,7 @@ function Proxy.new(name)
 
         local val = actor[key]
         if type(val) == 'function' then
+          print(actor,debug.traceback())
           return Proxy.wrapCall(val)
         end
         return val
