@@ -349,7 +349,7 @@ return {
   
             handsLabel:Draw()
             if handsValue then
-              print(handsValue)
+              --print(handsValue)
               handsValue:Draw()  
             end
             
