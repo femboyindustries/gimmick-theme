@@ -3,15 +3,27 @@ local mascots = require 'gimmick.mascots'
 local TextPool = require 'gimmick.textpool'
 local save = require 'gimmick.save'
 
+--the index that will be saved
 local active_i = 1
+--displayed selection
 local selected = 1
 local cursor = easable(1, 28)
+
 
 local mascotPaths = {}
 local mascotNames = mascots.getMascots()
 for _, mascot in ipairs(mascotNames) do
   mascotPaths[#mascotPaths + 1] = mascots.getPaths(mascot)
 end
+
+if save.data.settings.mascot_enabled then
+  local res = find(mascotNames,save.data.settings.mascot)
+  if res then
+    active_i,selected = res,res
+    cursor:reset(res)
+  end
+end
+
 
 -- Register the input event handling outside of the returned table
 local lastMenuRightPress = 0
@@ -40,6 +52,7 @@ local function handleInputEvents(pn, button)
       print('gay people tomorrow 10am')
       save.data.settings.mascot = mascotNames[selected]
       save.save()
+      SCREENMAN:SystemMessage("Your mascot is now: "..mascotNames[selected])
     end
   end
 end
@@ -102,10 +115,22 @@ return {
 
       local offset = math.pi / 2 - ((selected - active_i) * angle_step)
       for i, mascot in ipairs(mascot_actors) do
+        if selected == i then
+          local t = os.clock()
+          local timescale = 5
+          mascot:diffusealpha(1)
+          mascot:x2(math.sin(t*timescale)*15)
+          mascot:y2(math.abs(math.cos((t*timescale)-math.pi)*10)*-1)
+          mascot:rotationz(math.cos(t*timescale+math.pi)*5)
+        else
+          mascot:x2(0)
+          mascot:y2(0)
+          mascot:rotationz(0)
+          mascot:diffusealpha(0.2)
+        end
         local a = ((i - cursor.eased) * angle_step) + offset
         a = a % (2 * math.pi)
         local x, y = math.cos(a), math.sin(a)
-        mascot:diffusealpha(selected ~= i and 0.2 or 1)
         mascot:x((x * (sw * 0.3)) + scx * 0.8)
         mascot:z((y * (sh * 0.3)))
         mascot:Draw()
