@@ -91,9 +91,9 @@ function OptionsRenderer.init(ctx, scope, optionsGetter, players)
   optText:shadowlength(0)
   optText:zoom(0.35)
 
-  local arrow = ctx:Sprite('Graphics/arrow.png')
+  local arrow = ctx:Sprite('gimmick/assets/arrow.png')
   arrow:zoom(0.6)
-  local circle = ctx:Sprite('Graphics/circle.png')
+  local circle = ctx:Sprite('gimmick/assets/circle.png')
 
   OptionsRenderer.frameDrawFunc = function(frame)
     if firstFrame then

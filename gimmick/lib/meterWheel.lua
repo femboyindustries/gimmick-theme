@@ -22,7 +22,7 @@ function MeterWheel.new(ctx, scope)
     rating = ctx:BitmapText(FONTS.sans_serif),
 
     shader = ctx:Shader('Shaders/pie.frag'),
-    pie = ctx:Sprite('Graphics/white.png'),
+    pie = ctx:Sprite('gimmick/assets/white.png'),
   }, MeterWheel)
 
   wheel.rating:shadowlength(0)

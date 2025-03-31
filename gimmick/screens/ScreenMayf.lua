@@ -13,7 +13,7 @@ return {
       --a(a)
     else
 
-      local img = ctx:Sprite('Graphics/ltg.mp4')
+      local img = ctx:Sprite('gimmick/assets/ltg.mp4')
       --local snd = ctx:ActorSound('Sounds/zelda.ogg')
 
       img:pause()

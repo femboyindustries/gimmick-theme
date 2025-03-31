@@ -139,7 +139,7 @@ local optionsTable = {
   theme = {
     ---@param ctx Context
     overlay = function(self, ctx)
-      local wait = ctx:Sprite('Graphics/wait.png')
+      local wait = ctx:Sprite('gimmick/assets/wait.png')
       wait:xy(scx, scy + 50)
 
       return function()

@@ -3,7 +3,7 @@ local save = require 'gimmick.save'
 
 ---@param ctx Context
 return function(ctx)
-  local imap = ctx:Sprite('Graphics/imap.png')
+  local imap = ctx:Sprite('gimmick/assets/imap.png')
 
   imap:scaletofit(sw*0.5, sh * 0.83, sw*0.99, sh * 0.99)
   imap:valign(1)

@@ -104,7 +104,7 @@ function MusicWheel.init(ctx)
       a:shadowlength(0)
       a:align(0.5, 0.5)
     end)
-  local grad = ctx:Sprite('Graphics/grad.png')
+  local grad = ctx:Sprite('gimmick/assets/grad.png')
 
   itemI = 0
   itemEases = {}

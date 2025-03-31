@@ -105,10 +105,10 @@ function gimmick.common.doors(ctx, scope, invertease, screenType,OptionsPrompt)
     end
     ctx:addChild(outB, outBtext)
 
-    local outTstripes = ctx:Sprite('Graphics/stripes.png')
+    local outTstripes = ctx:Sprite('gimmick/assets/stripes.png')
     ctx:addChild(outT, outTstripes)
 
-    local outBstripes = ctx:Sprite('Graphics/stripes.png')
+    local outBstripes = ctx:Sprite('gimmick/assets/stripes.png')
     ctx:addChild(outB, outBstripes)
 
     local stripes_color = hex('#FFF')

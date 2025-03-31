@@ -139,7 +139,7 @@ return function(ctx, scope)
   local quad = ctx:Quad()
 
   --[[
-  local ban_bg = ctx:Sprite('Graphics/square')
+  local ban_bg = ctx:Sprite('gimmick/assets/square')
   ban_bg:diffuse(1,1,1,1)
   ban_bg:stretchto(SCREEN_CENTER_X*0.4,SCREEN_CENTER_Y*0.6+20,SCREEN_CENTER_X*1.6,SCREEN_CENTER_Y*1.4+20)
   local ban_caption = ctx:BitmapText(FONTS.sans_serif,'You are permanently banned\nfrom using the console')
@@ -154,7 +154,7 @@ return function(ctx, scope)
   ban_btn:diffuse(samsung_button_ok_color:unpack())
   ]]
 
-  local disclaimer = ctx:Sprite('Graphics/warning')
+  local disclaimer = ctx:Sprite('gimmick/assets/warning')
   disclaimer:scaletocover(0,0,sw,sh)
 
   local t = TextInput.new()

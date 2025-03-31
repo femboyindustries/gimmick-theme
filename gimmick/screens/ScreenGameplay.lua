@@ -2,7 +2,7 @@ return {
   Init = function(self)
   end,
   overlay = gimmick.ActorScreen(function(self, ctx, scope)
-    local incorrect = ctx:Sprite('Graphics/incorrect.png')
+    local incorrect = ctx:Sprite('gimmick/assets/incorrect.png')
     local snd = ctx:ActorSound('Sounds/incorrect.ogg')
     local shouldPause = false
     local once = true

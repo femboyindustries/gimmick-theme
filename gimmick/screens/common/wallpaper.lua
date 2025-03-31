@@ -16,7 +16,7 @@ function gimmick.common.wallpaper(ctx)
       self:SetShader(actorgen.Proxy.getRaw(bgShader))
     end)
   else
-    bgShaderSpr = ctx:Sprite('Graphics/background.png')
+    bgShaderSpr = ctx:Sprite('gimmick/assets/background.png')
     bgShaderSpr:scaletocover(0, 0, sw, sh)
   end
 

@@ -261,7 +261,7 @@ return {
 
     local a1984
     if diff_int == 1984 then
-      a1984 = ctx:Sprite('Graphics/1984.jpg')
+      a1984 = ctx:Sprite('gimmick/assets/1984.jpg')
     end
 
 
@@ -472,7 +472,7 @@ return {
   end),
   underlay = gimmick.ActorScreen(function(self, ctx)
     if AWESOME then
-      local awesome = ctx:Sprite('Graphics/awesome.png')
+      local awesome = ctx:Sprite('gimmick/assets/awesome.png')
       awesome:xy(scx, scy)
       awesome:zoom(0.5)
 
@@ -492,7 +492,7 @@ return {
       return
     end
 
-    local winner = ctx:Sprite('Graphics/winner.png')
+    local winner = ctx:Sprite('gimmick/assets/winner.png')
     local bg_path = GAMESTATE:GetCurrentSong():GetBackgroundPath()
     if save.data.settings.mascot_enabled then
       bg_path = mascots.getPaths(save.data.settings.mascot).background

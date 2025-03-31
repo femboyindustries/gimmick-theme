@@ -62,7 +62,7 @@ return {
     text:zoom(0.35)
     local fold = ctx:Quad()
 
-    local lockIcon = ctx:Sprite('Graphics/lock.png')
+    local lockIcon = ctx:Sprite('gimmick/assets/lock.png')
 
     local quad = ctx:Quad()
 

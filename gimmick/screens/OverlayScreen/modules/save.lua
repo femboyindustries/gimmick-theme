@@ -1,6 +1,6 @@
 ---@param ctx Context
 return function(ctx)
-  local savefile = ctx:Sprite('Graphics/savefile.png')
+  local savefile = ctx:Sprite('gimmick/assets/savefile.png')
   savefile:xy(sw - 32, sh - 32)
 
   local text = ctx:BitmapText(FONTS.monospace, 'Saving...')

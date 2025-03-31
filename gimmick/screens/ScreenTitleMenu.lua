@@ -62,11 +62,11 @@ return {
     gradShader:uniform4f('col1', hex('fe8257'):unpack())
     gradShader:uniform4f('col2', hex('cd63f4'):unpack())
 
-    local grad = ctx:Sprite('Graphics/white.png')
+    local grad = ctx:Sprite('gimmick/assets/white.png')
 
     grad:addcommand('Init', function(s) s:SetShader(actorgen.Proxy.getRaw(gradShader)) end)
 
-    local logo = ctx:Sprite('Graphics/NotITG')
+    local logo = ctx:Sprite('gimmick/assets/NotITG')
 
     logo:addcommand('Init', function(s) s:SetShader(actorgen.Proxy.getRaw(gradShader)) end)
 
