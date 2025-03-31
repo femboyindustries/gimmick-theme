@@ -187,7 +187,7 @@ function player.judgment(self)
 end
 
 function player.getJudgements()
-  local judg = getFolderContents('Graphics/_Judgments/', true)
+  local judg = getFolderContents('gimmick/assets/_Judgments/', true)
   local names = {}
   for _, filename in ipairs(judg) do
     table.insert(names, stripFilename(filename))
@@ -196,7 +196,7 @@ function player.getJudgements()
 end
 
 function player.getHoldJudgements()
-  local judg = getFolderContents('Graphics/_HoldJudgments/', true)
+  local judg = getFolderContents('gimmick/assets/_HoldJudgments/', true)
   local names = {}
   for _, filename in ipairs(judg) do
     table.insert(names, stripFilename(filename))

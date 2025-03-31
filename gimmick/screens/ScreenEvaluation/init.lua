@@ -268,7 +268,7 @@ return {
     --Grades
     local grade_int = GetGradeFromPercent(stats:GetPercentDancePoints())
 
-    --error('/Graphics/Grades/'..grades[grade_int].file..'.png')
+    --error('/gimmick/assets/Grades/'..grades[grade_int].file..'.png')
     --TODO: Quads
 
 
@@ -307,7 +307,7 @@ return {
 
     --print(getFolderContents('Mascots/grades/'..save.data.settings.mascot..'/',true))
 
-    gradeActor = ctx:Sprite('Graphics/Grades/' .. grades[grade_int].file)
+    gradeActor = ctx:Sprite('gimmick/assets/Grades/' .. grades[grade_int].file)
     gradeActor:hidden(1)
 
     local rateOverlay = ctx:Quad()

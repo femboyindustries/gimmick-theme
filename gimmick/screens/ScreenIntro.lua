@@ -14,7 +14,7 @@ function unique(array)
   return result
 end
 
-local vids = getFolderContents('Graphics/intro/')
+local vids = getFolderContents('gimmick/assets/intro/')
 print('BITCH',pretty(vids))
 
 vids = filter(vids, function(value)
@@ -43,13 +43,13 @@ return {
   overlay = gimmick.ActorScreen(function(self, ctx)
     if save.data.settings.show_bootup then
       --[[
-      local intro = ctx:Sprite('Graphics/intro/' .. choice .. '.mp4')
+      local intro = ctx:Sprite('gimmick/assets/intro/' .. choice .. '.mp4')
 
       intro:stretchto(0, 0, sw, sh)
 
       local wait = 0
 
-      local sound = ctx:ActorSound('Graphics/intro/' .. choice .. '.ogg')
+      local sound = ctx:ActorSound('gimmick/assets/intro/' .. choice .. '.ogg')
 
       intro:animate(1)
       sound:addcommand('Init', function(s)
@@ -74,8 +74,8 @@ return {
 
       for index, value in ipairs(choices) do
         print('hello!', value)
-        local sound = ctx:ActorSound('Graphics/intro/' .. value .. '.ogg')
-        local video = ctx:Sprite('Graphics/intro/' .. value .. '.mp4')
+        local sound = ctx:ActorSound('gimmick/assets/intro/' .. value .. '.ogg')
+        local video = ctx:Sprite('gimmick/assets/intro/' .. value .. '.mp4')
         video:hidden(1)
         video:animate(0)
         video:stretchto(0, 0, sw, sh)
