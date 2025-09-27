@@ -156,6 +156,17 @@ function Proxy.isProxy(proxy)
   return rawget(proxy, '__proxy') ~= nil
 end
 
+function Proxy.setData(proxy, key, value)
+  assert(Proxy.isProxy(proxy), 'actor235: passed in value is not a Proxy')
+  proxy.__proxy.data[key] = value
+  return value
+end
+
+function Proxy.getData(proxy, key, value)
+  assert(Proxy.isProxy(proxy), 'actor235: passed in value is not a Proxy')
+  return proxy.__proxy.data[key]
+end
+
 -- Once you have the actual actor, call `Proxy.resolve`.
 ---@param name string
 function Proxy.new(name)
@@ -166,6 +177,8 @@ function Proxy.new(name)
       initCommands = {},
       methodQueue = {},
       methodCache = {},
+      -- custom user data
+      data = {},
     },
   }, {
     __name = name,
@@ -427,8 +440,7 @@ end
 -- Defining actors, actor queue
 
 ---@class Context
----@field actorQueue ({ proxy: unknown, toXML: fun(): AbstractActor | AbstractActorFrame })[]
----@field actorParents table<Actor, ActorFrame>
+---@field actorQueue ({ proxy: unknown, toXML: fun(): AbstractActor | AbstractActorFrame, subContext: Context? })[]
 ---@field locked boolean @ If locked, prevents new actors from being defined
 local Context = {}
 
@@ -586,7 +598,7 @@ function Context:Shader(frag, vert)
         ---@param actor Sprite
         Init = function(actor)
           actor:hidden(1)
-          local shader = actor:GetShader()
+          local shader = actor:GetShader() --[[@as RageShaderProgram]]
           Proxy.resolve(proxy, shader)
 
           if isFragShaderCode or isVertShaderCode then
@@ -630,30 +642,18 @@ function Context:ActorFrame()
   self:assertUnlocked()
 
   local proxy = Proxy.new('ActorFrame')
+  local subContext = Context.new()
+  Proxy.setData(proxy, 'subContext', subContext)
 
   table.insert(self.actorQueue, {
     proxy = proxy,
     toXML = function()
-      local children = {}
-
-      -- highly convoluted, but hey, it works
-
-      for actor, frame in pairs(self.actorParents) do
-        if frame == proxy then
-          for _, q in ipairs(self.actorQueue) do
-            if q.proxy == actor then
-              table.insert(children, q.toXML())
-            end
-          end
-        end
-      end
-
       return {
         Type = 'ActorFrame',
         Init = function(actor)
           Proxy.resolve(proxy, actor)
         end,
-        Children = children,
+        Children = subContext:toTree(),
       }
     end,
   })
@@ -661,7 +661,18 @@ function Context:ActorFrame()
   return proxy
 end
 
---- Adds a child to an ActorFrame. **Please be aware of the side-effects!**
+-- Creates a Context instance out of an ActorFrame.
+-- All actors created under the new Context will be automatically parented
+-- to the ActorFrame.
+---@param frame ActorFrame
+---@return Context
+function Context.getContext(frame)
+  return Proxy.getData(frame, 'subContext')
+end
+
+-- [deprecated, use Context.getContext preferably]
+--
+-- Adds a child to an ActorFrame. **Please be aware of the side-effects!**
 ---@param frame ActorFrame
 ---@param child Actor
 function Context:addChild(frame, child)
@@ -677,10 +688,20 @@ function Context:addChild(frame, child)
   if not Proxy.isProxy(child) then
     error('actor235: actor passed into addChild must be one instantiated w/ actor235', 2)
   end
-  if self.actorParents[child] then
-    error('actor235: actor is already a child of a different ActorFrame', 2)
+
+  -- hacky but it achieves what we need
+  local subContext = self.getContext(frame)
+  local movedActor
+  for i = #self.actorQueue, 1, -1 do
+    local actor = self.actorQueue[i]
+    if actor.proxy == child then
+      movedActor = actor
+      table.remove(self.actorQueue, i)
+      break
+    end
   end
-  self.actorParents[child] = frame
+  assert(movedActor, 'actor235: referenced child is not under given Context instance')
+  table.insert(subContext.actorQueue, movedActor)
 end
 
 ---@return (AbstractActor | AbstractActorFrame)[]
@@ -688,12 +709,7 @@ function Context:toTree()
   local root = {}
 
   for _, q in ipairs(self.actorQueue) do
-    local parent = self.actorParents[q.proxy]
-    -- If this actor is owned by an ActorFrame, the toXML() call to that
-    -- ActorFrame will handle all its loading, so we ignore actors with parents.
-    if not parent then
-      table.insert(root, q.toXML())
-    end
+    table.insert(root, q.toXML())
   end
 
   return root
@@ -704,7 +720,6 @@ function Context.new()
   return setmetatable({
     actorQueue = {},
     locked = false,
-    actorParents = {},
   }, Context)
 end
 
