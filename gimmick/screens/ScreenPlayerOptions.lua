@@ -88,10 +88,10 @@ local optionsTable = {
         local notes = {}
         for pn = 1, 2 do
           local container = ctx:ActorFrame()
+          local subCtx = ctx.getContext(container)
           table.insert(containers, container)
-          local note = ctx:Model('../../NoteSkins/dance/scalable/Down Tap Note 4th.model')
+          local note = subCtx:Model('../../NoteSkins/dance/scalable/Down Tap Note 4th.model')
           table.insert(notes, note)
-          ctx:addChild(container, note)
         end
         local shownSkin = { '', '' }
 
@@ -162,10 +162,10 @@ local optionsTable = {
         local judgments = {}
         for pn = 1, 2 do
           local container = ctx:ActorFrame()
+          local subCtx = ctx.getContext(container)
           table.insert(containers, container)
-          local judgment = ctx:Sprite('Graphics/_missing')
+          local judgment = subCtx:Sprite('Graphics/_missing')
           table.insert(judgments, judgment)
-          ctx:addChild(container, judgment)
         end
         local shownJudge = { '', '' }
 
@@ -252,11 +252,11 @@ local optionsTable = {
         local comboNum = { 6, 6 }
         for pn = 1, 2 do
           local container = ctx:ActorFrame()
+          local subCtx = ctx.getContext(container)
           table.insert(containers, container)
-          local combo = ctx:BitmapText('Numbers/Combo numbers', '00')
+          local combo = subCtx:BitmapText('Numbers/Combo numbers', '00')
           player.initCombo(combo, true)
           table.insert(combos, combo)
-          ctx:addChild(container, combo)
         end
 
         scope.event:on('judge', function(pn, judge)
@@ -315,11 +315,11 @@ local optionsTable = {
         local judges = {}
         for pn = 1, 2 do
           local container = ctx:ActorFrame()
+          local subCtx = ctx.getContext(container)
           table.insert(containers, container)
-          local judge = ctx:Sprite('Graphics/_missing')
+          local judge = subCtx:Sprite('Graphics/_missing')
           judge:animate(0)
           table.insert(judges, judge)
-          ctx:addChild(container, judge)
         end
 
         scope.event:on('judge', function(pn, judge)

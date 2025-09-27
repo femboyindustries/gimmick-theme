@@ -78,12 +78,12 @@ local shader = ctx:Shader(...)
 -- and so on, and so forth
 ```
 
-ActorFrame associations are also always handled through a `Context`:
+ActorFrame associations are handled through "sub-contexts":
 
 ```lua
 local frame = ctx:ActorFrame()
-local child = ctx:Quad()
-ctx:addChild(frame, child)
+local subCtx = ctx.getContext(frame)
+local child = subCtx:Quad()
 ```
 
 **Do not** try and store the `Context`, as after the function you're given it in
@@ -160,12 +160,11 @@ should be considered undefined behavior to avoid discovering weird issues down
 the line.
 
 ```lua
-local quad = ctx:Quad()
-quad:xywh(0, 0, 32, 32)
-
 local frame = ctx:ActorFrame()
 frame:xy(100, 100)
-ctx:addChild(frame, quad)
+
+local quad = ctx.getContext(frame):Quad()
+quad:xywh(0, 0, 32, 32)
 
 local parentlessQuad = ctx:Quad()
 parentlessQuad:xywh(0, 0, 32, 32)
