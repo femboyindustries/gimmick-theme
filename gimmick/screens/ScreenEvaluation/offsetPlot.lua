@@ -26,7 +26,7 @@ return function(ctx, scope)
 
   oplot_plotWidth, oplot_plotHeight = 301, 112
   oplot_plotWidthSml, oplot_plotHeightSml = 150, 112
-  oplot_xOffset, oplot_yOffset = 150, 0
+  oplot_xOffset, oplot_yOffset = 160, 0
   oplot_dotDims, oplot_plotMargin = 2, 4
   oplot_maxOffset = math.round(PREFSMAN:GetPreference('JudgeWindowScale') *
     PREFSMAN:GetPreference('JudgeWindowSecondsBoo') * 1000)
@@ -228,7 +228,7 @@ return function(ctx, scope)
   host:hidden(1)
 
   local background = ctx:Quad()
-  background:diffuse(0, 0, 0, 1)
+  background:diffuse(0, 0, 0, 0.6)
   background:y(-30)
   background:zoomto(305, 176)
   ctx:addChild(host, background)

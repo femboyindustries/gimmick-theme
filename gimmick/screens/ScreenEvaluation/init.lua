@@ -50,7 +50,7 @@ local grades = {
   },
   [GRADE_TIER11] = {
     string = 'B+',
-    file = 'b+plus'
+    file = 'b-plus'
   },
   [GRADE_TIER12] = {
     string = 'B',
@@ -312,7 +312,7 @@ return {
 
     local rateOverlay = ctx:Quad()
 
-    --local offsetPlot = offsetPlot(ctx, scope)
+    local offsetPlot = offsetPlot(ctx, scope)
 
     local timer = 0
 
@@ -463,8 +463,8 @@ return {
       end
 
       if offsetPlot then
-        --offsetPlot:xy(scx * 1.5, sh * 0.85)
-        --offsetPlot:Draw()
+        offsetPlot:xy(sw*0.8, sh * 0.85)
+        offsetPlot:Draw()
       else
         print("offsetPlot is nil")
       end
